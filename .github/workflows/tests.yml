@@ -9,6 +9,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: recursive
     - name: build Docker image
       run: docker build -t mam-test .
     - name: run tests in container
