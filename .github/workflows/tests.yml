@@ -14,4 +14,4 @@ jobs:
     - name: build Docker image
       run: docker build -t mam-test .
     - name: run tests in container
-      run: docker run -it mam-test bash -c 'cd /build; make test'
+      run: docker run -t mam-test bash -c 'cd /build; make test'
