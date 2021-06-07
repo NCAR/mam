@@ -1,3 +1,7 @@
+doc/*.gv
+doc/*.pdf
+doc/output/
+
 build/
 **/.DS_Store
 **/CMakeCache.txt
