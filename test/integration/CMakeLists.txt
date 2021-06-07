@@ -2,5 +2,6 @@
 # MAM Integration Tests
 
 add_subdirectory(radiation)
+add_subdirectory(current_cam)
 
 ################################################################################
