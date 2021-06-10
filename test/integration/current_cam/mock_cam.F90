@@ -32,6 +32,15 @@ program test_mock_cam
 
   real(r8) :: odap_aer(pcols,pver,nlwbands) ! [fraction] absorption optical depth, per layer
 
+  integer :: i_col
+
+  state = physics_state( pcols, pver, 1 ) ! the last dimension is the number of water species
+
+  nnite = 0
+  do i_col = 1, pcols
+    idxnite( i_col ) = i_col
+  end do
+
   call aer_rad_props_init( )
   call aer_rad_props_sw( list_idx, state, pbuf, nnite, idxnite, tau, tau_w, tau_w_g, tau_w_f )
   call aer_rad_props_lw( list_idx, state, pbuf, odap_aer )

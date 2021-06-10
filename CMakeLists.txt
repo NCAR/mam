@@ -55,7 +55,7 @@ find_library(PIO_FORTRAN_LIB piof
     usr/local/lib64
     opt/local/lib
     opt/local/lib64)
-  set(PIO_LIBS ${PIO_C_LIB} ${PIO_FORTRAN_LIB} ${NETCDF_C_LIB})
+set(PIO_LIBS ${PIO_FORTRAN_LIB} ${PIO_C_LIB} ${NETCDF_C_LIB})
 include_directories(${NETCDF_INCLUDE_DIR})
 include_directories(${PIO_C_INCLUDE_DIR})
 include_directories(${PIO_FORTRAN_INCLUDE_DIR})

@@ -27,9 +27,9 @@ contains
     real(r8), optional, intent(out) :: tropT(pcols) ! tropopause temperature (K)
     real(r8), optional, intent(out) :: tropZ(pcols) ! tropopause height (m)
     tropLev(:) = 10
-    tropP(:)   = 90000.0_r8
-    tropT(:)   = 195.0_r8
-    tropZ(:)   = 20000.0_r8
+    if( present( tropP ) ) tropP(:)   = 90000.0_r8
+    if( present( tropT ) ) tropT(:)   = 195.0_r8
+    if( present( tropZ ) ) tropZ(:)   = 20000.0_r8
   end subroutine tropopause_find
 
   subroutine tropopause_findChemTrop(pstate, tropLev, primary, backup)
