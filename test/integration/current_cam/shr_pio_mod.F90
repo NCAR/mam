@@ -590,7 +590,7 @@ contains
        unitn=shr_file_getunit()
        open( unitn, file=trim(nlfilename), status='old' , iostat=ierr)
        if( ierr /= 0) then
-          write(shr_log_unit,*) 'No ',trim(nlfilename),' found, using defaults for pio settings'
+          write(*,*) 'No ',trim(nlfilename),' found, using defaults for pio settings'
            pio_stride     = pio_default_stride
            pio_root       = pio_default_root
            pio_numiotasks = pio_default_numiotasks

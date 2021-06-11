@@ -408,6 +408,7 @@ subroutine rad_cnst_init()
 
    ! Allocate storage for the physical properties of each aerosol; read properties from
    ! the data files.
+   write(*,*) "Calling physprop_init()"
    call physprop_init()
 
    ! Start checking that specified radiative constituents are present in the constituent
@@ -1078,7 +1079,9 @@ integer function get_cam_idx(source, name, routine)
    integer :: idx
    integer :: errcode
    !-----------------------------------------------------------------------------
-   
+
+   write(*,*) "cam_get_idx for source: '"//trim( source )//"' name: '"//trim( name )//"'"
+
    if (source(1:1) == 'N') then
 
       idx = pbuf_get_index(trim(name),errcode)
@@ -1799,6 +1802,7 @@ subroutine parse_rad_specifier(specifier, namelist_data)
       number = number+1    
     end do parse_loop
 
+    write(*,*) "parse_rad_specifier ncnst: ", number
     namelist_data%ncnst = number
 
     if (number == 0) return

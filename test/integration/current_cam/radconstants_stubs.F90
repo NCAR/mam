@@ -46,6 +46,10 @@ module radconstants
 contains
   integer function rad_gas_index(gasname)
     character(len=*), intent(in) :: gasname
-    rad_gas_index = 1
+    do rad_gas_index = 1, size( gaslist )
+      if( trim( gasname )  .eq. trim( gaslist( rad_gas_index ) ) ) return
+    end do
+    write(*,*) "ERROR: gas species '"//trim( gasname )//"' not found"
+    call abort
   end function rad_gas_index
 end module radconstants

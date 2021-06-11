@@ -19,12 +19,26 @@ module physics_buffer
     module procedure :: get_pbuf1d_field_by_index_3d_r8
   end interface
 
+  ! pbuf variables
+  character(len=10), dimension(*), parameter :: kStateVariables = (/          &
+      'num_c1    ', 'so4_c1    ', 'pom_c1    ', 'soa_c1    ', 'bc_c1     ',   &
+      'dst_c1    ', 'ncl_c1    ', 'num_c2    ', 'so4_c2    ', 'soa_c2    ',   &
+      'ncl_c2    ', 'dst_c2    ', 'num_c3    ', 'dst_c3    ', 'ncl_c3    ',   &
+      'so4_c3    ', 'num_c4    ', 'pom_c4    ', 'bc_c4     ', 'ozone     ',   &
+      'O2        ', 'CO2       ', 'N2O       ', 'CH4       ', 'CFC11     ',   &
+      'CFC12     ', 'DGNUMWET  ', 'QAERWAT   ' /)
+
 contains
 
-  integer function pbuf_get_index(name, code)
+  integer function pbuf_get_index(name, code) result( idx )
     character(len=*), intent(in) :: name
     integer, intent(out), optional :: code
-    pbuf_get_index = 1
+    if( present( code ) ) code = 0
+    do idx = 1, size( kStateVariables )
+      if( trim( name ) .eq. trim( kStateVariables( idx ) ) ) return
+    end do
+    write(*,*) "pbuf_get_index cannot find species: '"//trim( name )//"'"
+    call abort
   end function pbuf_get_index
 
   subroutine get_pbuf1d_field_by_index_0d_int(pbuf, index, field, start,      &
@@ -37,6 +51,7 @@ contains
     logical,             intent(in),  optional    :: copy_if_needed
     integer,             intent(out), optional    :: errcode
     field => null( )
+    if( present( errcode ) ) errcode = 0
   end subroutine get_pbuf1d_field_by_index_0d_int
 
   subroutine get_pbuf1d_field_by_index_1d_r8(pbuf, index, field, start,       &
@@ -50,6 +65,7 @@ contains
     logical,             intent(in),  optional    :: copy_if_needed
     integer,             intent(out), optional    :: errcode
     field => null( )
+    if( present( errcode ) ) errcode = 0
   end subroutine get_pbuf1d_field_by_index_1d_r8
 
   subroutine get_pbuf1d_field_by_index_2d_r8(pbuf, index, field, start,       &
@@ -63,6 +79,7 @@ contains
     logical,             intent(in),  optional    :: copy_if_needed
     integer,             intent(out), optional    :: errcode
     field => null( )
+    if( present( errcode ) ) errcode = 0
   end subroutine get_pbuf1d_field_by_index_2d_r8
 
   subroutine get_pbuf1d_field_by_index_3d_r8(pbuf, index, field, start,       &
@@ -76,6 +93,7 @@ contains
     logical,             intent(in),  optional    :: copy_if_needed
     integer,             intent(out), optional    :: errcode
     field => null( )
+    if( present( errcode ) ) errcode = 0
   end subroutine get_pbuf1d_field_by_index_3d_r8
 
 end module physics_buffer

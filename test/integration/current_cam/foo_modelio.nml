@@ -1,0 +1,13 @@
+&modelio
+  diri = "/glade/scratch/fvitt/SMS_D_Ln9.f09_f09_mg17.QPC6.cheyenne_intel.cam-outfrq9s.rxtrate/bld/rof"
+  diro = "/glade/scratch/fvitt/SMS_D_Ln9.f09_f09_mg17.QPC6.cheyenne_intel.cam-outfrq9s.rxtrate/run"
+  logfile = "rof.log.8551756.chadmin1.ib0.cheyenne.ucar.edu.210604-084720"
+/
+&pio_inparm
+  pio_netcdf_format = "64bit_offset"
+  pio_numiotasks = 1
+  pio_rearranger = 1
+  pio_root = 0
+  pio_stride = 1
+  pio_typename = "netcdf"
+/

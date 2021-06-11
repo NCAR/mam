@@ -652,6 +652,8 @@ subroutine modal_aero_sw(list_idx, state, pbuf, nnite, idxnite, &
 
    ! loop over all aerosol modes
    call rad_cnst_get_info(list_idx, nmodes=nmodes)
+   write(*,*) "nmodes: ", nmodes
+   write(*,*) "list_idx: ", list_idx
 
    if (list_idx == 0) then
       ! water uptake and wet radius for the climate list has already been calculated
@@ -693,6 +695,9 @@ subroutine modal_aero_sw(list_idx, state, pbuf, nnite, idxnite, &
       call rad_cnst_get_info(list_idx, m, nspec=nspec)
 
       ! calc size parameter for all columns
+      write(*,*) "modal_aero_sw ncol: ", ncol
+      write(*,*) "modal_aero_sw sigma_logr_aer: ", sigma_logr_aer
+      write(*,*) "modal_aero_sw dgnumwet: ", dgnumwet
       call modal_size_parameters(ncol, sigma_logr_aer, dgnumwet, radsurf, logradsurf, cheb)
 
       do isw = 1, nswbands

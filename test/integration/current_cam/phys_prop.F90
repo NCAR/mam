@@ -194,8 +194,10 @@ subroutine physprop_init()
 
    !------------------------------------------------------------------------------------
 
+   write(*,*) "allocating physprops"
    allocate(physprop(numphysprops))
 
+   write(*,*) "number of phys_props files: ", numphysprops
    do fileindex = 1, numphysprops
       nullify(physprop(fileindex)%sw_hygro_ext)
       nullify(physprop(fileindex)%sw_hygro_ssa)
@@ -227,15 +229,20 @@ subroutine physprop_init()
       nullify(physprop(fileindex)%refrtablw)
       nullify(physprop(fileindex)%refitablw)
 
+      write(*,*) "getting file: ", trim(uniquefilenames(fileindex))
       call getfil(uniquefilenames(fileindex), locfn, 0)
+      write(*,*) "setting locfn: ", locfn
       physprop(fileindex)%sourcefile = locfn
 
       ! Open the physprop file
+      write(*,*) "openning file: ", locfn
       call cam_pio_openfile(nc_id, locfn, PIO_NOWRITE)
 
+      write(*,*) "initializing aerosol optics"
       call aerosol_optics_init(physprop(fileindex), nc_id)
 
       ! Close the physprop file
+      write(*,*) "closing file"
       call pio_closefile(nc_id)
 
    end do
