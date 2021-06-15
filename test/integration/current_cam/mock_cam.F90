@@ -88,5 +88,7 @@ program test_mock_cam
   write(*,*) tau_w_g(13,26,:)
   write(*,*) "tau_w_f"
   write(*,*) tau_w_f(13,26,:)
+  write(*,*) "odap_aer"
+  write(*,*) odap_aer(13,26,:)
 
 end program test_mock_cam
