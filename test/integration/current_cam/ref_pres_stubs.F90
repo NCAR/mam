@@ -8,5 +8,5 @@ module ref_pres
   use ppgrid,                          only : pver
   implicit none
   private
-  integer, parameter, public :: clim_modal_aero_top_lev = pver - 4
+  integer, parameter, public :: clim_modal_aero_top_lev = 4
 end module ref_pres

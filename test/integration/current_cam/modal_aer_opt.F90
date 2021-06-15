@@ -652,8 +652,6 @@ subroutine modal_aero_sw(list_idx, state, pbuf, nnite, idxnite, &
 
    ! loop over all aerosol modes
    call rad_cnst_get_info(list_idx, nmodes=nmodes)
-   write(*,*) "nmodes: ", nmodes
-   write(*,*) "list_idx: ", list_idx
 
    if (list_idx == 0) then
       ! water uptake and wet radius for the climate list has already been calculated
@@ -695,9 +693,6 @@ subroutine modal_aero_sw(list_idx, state, pbuf, nnite, idxnite, &
       call rad_cnst_get_info(list_idx, m, nspec=nspec)
 
       ! calc size parameter for all columns
-      write(*,*) "modal_aero_sw ncol: ", ncol
-      write(*,*) "modal_aero_sw sigma_logr_aer: ", sigma_logr_aer
-      write(*,*) "modal_aero_sw dgnumwet: ", dgnumwet
       call modal_size_parameters(ncol, sigma_logr_aer, dgnumwet, radsurf, logradsurf, cheb)
 
       do isw = 1, nswbands
@@ -1392,25 +1387,25 @@ subroutine modal_aero_lw(list_idx, state, pbuf, tauxar)
                      write(iulog,*) "ERROR: Negative aerosol optical depth &
                           &in this layer."
                   else
-                     write(iulog,*) "WARNING: Aerosol optical depth is &
-                          &unreasonably high in this layer."
+!                     write(iulog,*) "WARNING: Aerosol optical depth is &
+!                          &unreasonably high in this layer."
                   end if
 
-                  write(iulog,*) 'dopaer(',i,',',k,',',m,',',lchnk,')=', dopaer(i)
-                  write(iulog,*) 'k=',k,' pabs=', pabs(i)
-                  write(iulog,*) 'wetvol=',wetvol(i),' dryvol=',dryvol(i),     &
-                     ' watervol=',watervol(i)
-                  write(iulog,*) 'cabs=', (cabs(i,l),l=1,ncoef)
-                  write(iulog,*) 'crefin=', crefin(i)
-                  write(iulog,*) 'nspec=', nspec
+!                  write(iulog,*) 'dopaer(',i,',',k,',',m,',',lchnk,')=', dopaer(i)
+!                  write(iulog,*) 'k=',k,' pabs=', pabs(i)
+!                  write(iulog,*) 'wetvol=',wetvol(i),' dryvol=',dryvol(i),     &
+!                     ' watervol=',watervol(i)
+!                  write(iulog,*) 'cabs=', (cabs(i,l),l=1,ncoef)
+!                  write(iulog,*) 'crefin=', crefin(i)
+!                  write(iulog,*) 'nspec=', nspec
                   do l = 1,nspec
                      call rad_cnst_get_aer_mmr(list_idx, m, l, 'a', state, pbuf, specmmr)
                      call rad_cnst_get_aer_props(list_idx, m, l, density_aer=specdens, &
                                                  refindex_aer_lw=specrefindex)
                      volf = specmmr(i,k)/specdens
-                     write(iulog,*) 'l=',l,'vol(l)=',volf
-                     write(iulog,*) 'ilw=',ilw,' specrefindex(ilw)=',specrefindex(ilw)
-                     write(iulog,*) 'specdens=',specdens
+!                     write(iulog,*) 'l=',l,'vol(l)=',volf
+!                     write(iulog,*) 'ilw=',ilw,' specrefindex(ilw)=',specrefindex(ilw)
+!                     write(iulog,*) 'specdens=',specdens
                   end do
 
                   nerr_dopaer = nerr_dopaer + 1

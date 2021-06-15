@@ -11,10 +11,10 @@ module physics_types
   type, public :: physics_state
     integer :: lchnk = 1
     integer :: ncol
-    real(r8), dimension(:,:,:), allocatable :: q
-    real(r8), dimension(:,:),   allocatable :: pdeldry
-    real(r8), dimension(:,:),   allocatable :: pmid
-    real(r8), dimension(:,:),   allocatable :: t
+    real(r8), dimension(:,:,:), allocatable :: q       ! constituent mixing ratio [mol mol-1] (wet or dry)
+    real(r8), dimension(:,:),   allocatable :: pdeldry ! layer thickness [Pa]
+    real(r8), dimension(:,:),   allocatable :: pmid    ! midpoint pressure [Pa]
+    real(r8), dimension(:,:),   allocatable :: t       ! temperature [K]
   end type physics_state
 
   interface physics_state
@@ -25,40 +25,22 @@ contains
 
   function constructor( number_of_columns, number_of_layers,                  &
       number_of_species ) result( new_obj )
+    use test_utils,                    only : set_values
+    implicit none
     type(physics_state) :: new_obj
     integer, intent(in) :: number_of_columns
     integer, intent(in) :: number_of_layers
     integer, intent(in) :: number_of_species
-    integer :: i_col, i_layer, i_species
     allocate( new_obj%q(       number_of_columns, number_of_layers,           &
                                number_of_species ) )
     allocate( new_obj%pdeldry( number_of_columns, number_of_layers ) )
     allocate( new_obj%pmid(    number_of_columns, number_of_layers ) )
     allocate( new_obj%t(       number_of_columns, number_of_layers ) )
-    do i_col = 1, number_of_columns
-      do i_layer = 1, number_of_layers
-        do i_species = 1, number_of_species
-          call set_random_value( new_obj%q( i_col, i_layer, i_species),       &
-                                 1.0e-6_r8, 0.05_r8 )
-        end do
-        call set_random_value( new_obj%pdeldry( i_col, i_layer ),             &
-                                25.0_r8, 0.05_r8 )
-        call set_random_value( new_obj%pmid(    i_col, i_layer ),             &
-                               9.5e5_r8, 0.05_r8 )
-        call set_random_value( new_obj%t(       i_col, i_layer ),             &
-                               264.2_r8, 0.05_r8 )
-      end do
-    end do
+    call set_values( new_obj%q,       1.0e-6_r8, 0.05_r8 )
+    call set_values( new_obj%pdeldry,   25.0_r8, 0.05_r8 )
+    call set_values( new_obj%pmid,     9.5e5_r8, 0.05_r8 )
+    call set_values( new_obj%t,        264.2_r8, 0.05_r8 )
     new_obj%ncol = number_of_columns
   end function constructor
-
-  !! Set a random value given a mean and a fractional variability
-  subroutine set_random_value( random_value, mean, variability )
-    real(r8), intent(out) :: random_value
-    real(r8), intent(in)  :: mean
-    real(r8), intent(in)  :: variability
-    call random_number( random_value )
-    random_value = mean + ( 0.5_r8 - random_value ) * mean * variability
-  end subroutine set_random_value
 
 end module physics_types

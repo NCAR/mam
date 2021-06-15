@@ -43,6 +43,7 @@ add_executable(test_current_cam  aer_rad_props.F90
                                  shr_sys_mod_stubs.F90
                                  shr_timer_mod_stubs.F90
                                  spmd_utils_stubs.F90
+                                 test_utils.F90
                                  tropopause_stubs.F90
                                  units.F90
                                  wv_saturation_stubs.F90

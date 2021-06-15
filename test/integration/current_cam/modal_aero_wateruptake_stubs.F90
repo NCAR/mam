@@ -12,14 +12,14 @@ module modal_aero_wateruptake
   implicit none
   private
 
-  public :: modal_aero_wateruptake_dr
+  public :: modal_aero_wateruptake_init, modal_aero_wateruptake_dr
 
   integer, parameter :: nmodes = 4
 
   real(r8), dimension(pcols,pver,nmodes), target :: dgnumdry
   real(r8), dimension(pcols,pver,nmodes), target :: dgnumwet
   real(r8), dimension(pcols,pver,nmodes), target :: qaerwat
-  real(r8), dimension(pcols,pver,nmodes), target :: wetdens
+  real(r8), dimension(pcols,pver,nmodes), target :: wetdens    ! aerosol wet density [kg m-3]
   real(r8), dimension(pcols,pver,nmodes), target :: hygro
   real(r8), dimension(pcols,pver,nmodes), target :: dryvol
   real(r8), dimension(pcols,pver,nmodes), target :: dryrad
@@ -28,6 +28,20 @@ module modal_aero_wateruptake
   real(r8), dimension(pcols,pver,nmodes), target :: naer
 
 contains
+
+  subroutine modal_aero_wateruptake_init( )
+    use test_utils,                    only : set_values
+    call set_values( dgnumdry, 1.0e-8_r8, 0.5_r8 )
+    call set_values( dgnumwet, 1.0e-6_r8, 0.5_r8 )
+    call set_values( qaerwat,     1.0_r8, 0.5_r8 )
+    call set_values( wetdens,   1.0e3_r8, 0.5_r8 )
+    call set_values( hygro,    1.0e-5_r8, 0.4_r8 )
+    call set_values( dryvol,  4.2e-24_r8, 0.5_r8 )
+    call set_values( dryrad,  11.0e-8_r8, 0.5_r8 )
+    call set_values( drymass, 4.2e-21_r8, 0.5_r8 )
+    so4dryvol = dryvol * 0.4
+    call set_values( naer,      1.0e7_r8, 0.5_r8 )
+  end subroutine modal_aero_wateruptake_init
 
   subroutine modal_aero_wateruptake_dr(state, pbuf, list_idx_in, dgnumdry_m,  &
       dgnumwet_m, qaerwat_m, wetdens_m, hygro_m, dryvol_m, dryrad_m,          &
@@ -50,17 +64,6 @@ contains
     real(r8), optional,          pointer       :: so4dryvol_m(:,:,:)
     real(r8), optional,          pointer       :: naer_m(:,:,:)
 
-    dgnumdry( :,:,:) = 1.0_r8
-    dgnumwet( :,:,:) = 1.0_r8
-    qaerwat(  :,:,:) = 1.0_r8
-    wetdens(  :,:,:) = 1.0_r8
-    hygro(    :,:,:) = 1.0_r8
-    dryvol(   :,:,:) = 1.0_r8
-    dryrad(   :,:,:) = 1.0_r8
-    drymass(  :,:,:) = 1.0_r8
-    so4dryvol(:,:,:) = 1.0_r8
-    naer(     :,:,:) = 1.0_r8
-
     dgnumdry_m  => dgnumdry
     dgnumwet_m  => dgnumwet
     qaerwat_m   => qaerwat
@@ -71,9 +74,6 @@ contains
     drymass_m   => drymass
     so4dryvol_m => so4dryvol
     naer_m      => naer
-
-    write(*,*) "dgnumwet associated? ", associated( dgnumwet_m )
-    write(*,*) "dgnumwet ", dgnumwet_m
 
   end subroutine modal_aero_wateruptake_dr
 
