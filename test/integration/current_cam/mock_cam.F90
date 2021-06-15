@@ -81,6 +81,12 @@ program test_mock_cam
   call aer_rad_props_lw( list_idx, state, pbuf, odap_aer )
 
   write(*,*) "tau"
-  write(*,*) tau(3,3,:)
+  write(*,*) tau(13,26,:)
+  write(*,*) "tau_w"
+  write(*,*) tau_w(13,26,:)
+  write(*,*) "tau_w_g"
+  write(*,*) tau_w_g(13,26,:)
+  write(*,*) "tau_w_f"
+  write(*,*) tau_w_f(13,26,:)
 
 end program test_mock_cam
