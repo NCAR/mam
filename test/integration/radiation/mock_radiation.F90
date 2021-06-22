@@ -8,6 +8,7 @@
 module test_mock_radiation
 
   use ai_accessor,                     only : accessor_t
+  use ai_constants,                    only : kDouble
   use ai_optics,                       only : optics_t
   use ai_wavelength_grid,              only : wavelength_grid_t
 
@@ -18,12 +19,19 @@ module test_mock_radiation
 
   type :: core_t
     private
+    integer                    :: number_of_columns_ = 0
+    integer                    :: number_of_layers_  = 0
     type(wavelength_grid_t)    :: shortwave_grid_
     type(wavelength_grid_t)    :: longwave_grid_
     class(accessor_t), pointer :: shortwave_optics_accessor_
     class(accessor_t), pointer :: longwave_optics_accessor_
     type(optics_t)             :: shortwave_optics_
     type(optics_t)             :: longwave_optics_
+    !> @name Optical property values (wavelength, property, layer, column)
+    !! @{
+    real(kind=kDouble), allocatable :: shortwave_optics_values_(:,:,:,:)
+    real(kind=kDouble), allocatable :: longwave_optics_values_( :,:,:,:)
+    !! @}
   contains
     procedure :: run
   end type core_t
@@ -84,7 +92,9 @@ contains
     type(property_t), dimension(3) :: shortwave_props
     type(property_t), dimension(1) :: longwave_props
 
-    ! set up wavelength grids
+    new_core%number_of_columns_ = number_of_columns
+    new_core%number_of_layers_  = number_of_layers
+
     new_core%shortwave_grid_ = wavelength_grid_t( wavenum_low,                &
                                                   wavenum_high,               &
                                                   bounds_in    = kWavenumber, &
@@ -105,50 +115,75 @@ contains
         property_t( "layer absorption optical depth",            "unitless" )
 
     new_core%shortwave_optics_ = optics_t( shortwave_props,                   &
-                                           new_core%shortwave_grid_,          &
-                                           number_of_columns,                 &
-                                           number_of_layers )
+                                           new_core%shortwave_grid_ )
     new_core%longwave_optics_  = optics_t( longwave_props,                    &
-                                           new_core%longwave_grid_,           &
-                                           number_of_columns,                 &
-                                           number_of_layers  )
+                                           new_core%longwave_grid_  )
 
     new_core%shortwave_optics_accessor_ =>                                    &
         aerosol%optics_accessor( new_core%shortwave_optics_ )
     new_core%longwave_optics_accessor_  =>                                    &
         aerosol%optics_accessor( new_core%longwave_optics_  )
 
+    allocate( new_core%shortwave_optics_values_( nbndsw,                      &
+                                                 size( shortwave_props ),     &
+                                                 number_of_layers,            &
+                                                 number_of_columns ) )
+
+    allocate( new_core%longwave_optics_values_(  nlwbands,                    &
+                                                 size( longwave_props ),      &
+                                                 number_of_layers,            &
+                                                 number_of_columns ) )
+
   end function constructor
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Run-time radiation calculation
-  subroutine run( this, aerosol, environmental_state )
+  subroutine run( this, aerosol, aerosol_state, raw_aerosol_states,           &
+      environmental_states )
 
     use ai_aerosol,                    only : aerosol_t
+    use ai_aerosol_state,              only : aerosol_state_t
     use ai_environmental_state,        only : environmental_state_t
 
     !> Radiation model
     class(core_t), intent(inout) :: this
-    !> Aerosol state
+    !> Aerosol module
     class(aerosol_t), intent(in) :: aerosol
-    !> Environmental state
-    class(environmental_state_t), intent(in) :: environmental_state
+    !> Aerosol state object
+    class(aerosol_state_t), intent(inout) :: aerosol_state
+    !> Raw aerosol state data for the model grid (aerosol state, layer, column)
+    real(kind=kDouble), intent(inout) :: raw_aerosol_states(:,:,:)
+    !> Environmental states (layer, column)
+    class(environmental_state_t), intent(in) :: environmental_states(:,:)
 
-    call aerosol%get_optics( this%shortwave_optics_accessor_,                 &
-                             environmental_state,                             &
-                             this%shortwave_optics_ )
-    call aerosol%get_optics( this%longwave_optics_accessor_,                  &
-                             environmental_state,                             &
-                             this%longwave_optics_  )
+    integer :: i_column, i_layer, state_index
 
-    ! replace with assert statements
+    do i_column = 1, this%number_of_columns_
+      do i_layer = 1, this%number_of_layers_
+        state_index = 1
+        call aerosol_state%load_state(                                        &
+            raw_aerosol_states(:, i_layer, i_column), state_index )
+        call aerosol%get_optics( this%shortwave_optics_accessor_,             &
+                                 environmental_states( i_layer, i_column ),   &
+                                 aerosol_state,                               &
+                                 this%shortwave_optics_ )
+        this%shortwave_optics_values_( :, :, i_layer, i_column ) =            &
+            this%shortwave_optics_%values_(:,:)
+        call aerosol%get_optics( this%longwave_optics_accessor_,              &
+                                 environmental_states( i_layer, i_column ),   &
+                                 aerosol_state,                               &
+                                 this%longwave_optics_  )
+        this%longwave_optics_values_( :, :, i_layer, i_column ) =             &
+            this%longwave_optics_%values_(:,:)
+      end do
+    end do
 
     write(*,*) "shortwave tau_w at layer 1 of column 12"
-    write(*,*) this%shortwave_optics_%values_(:, kShortTauW, 1, 12 )
+    write(*,*) this%shortwave_optics_values_(:, kShortTauW, 1, 12 )
 
     write(*,*) "longwave absorption at layer 5 of column 20"
-    write(*,*) this%longwave_optics_%values_(:, kLongAbs, 5, 20 )
+    write(*,*) this%longwave_optics_values_(:, kLongAbs, 5, 20 )
 
   end subroutine run
 

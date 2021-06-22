@@ -8,6 +8,8 @@
 program test_mock_host
 
   use ai_aerosol,                      only : aerosol_t
+  use ai_aerosol_state,                only : aerosol_state_t
+  use ai_constants,                    only : kDouble
   use ai_environmental_state,          only : environmental_state_t
   use mam_core,                        only : mam_core_t => core_t
   use test_mock_radiation,             only : rad_core_t => core_t
@@ -18,17 +20,33 @@ program test_mock_host
   integer, parameter :: kNumberOfColumnsPerNode  = 150
 
   class(aerosol_t), pointer :: aerosol
+  class(aerosol_state_t), pointer :: aerosol_state
+  real(kind=kDouble), allocatable :: raw_aerosol_states(:,:,:)
   type(rad_core_t) :: rad_core
-  type(environmental_state_t) :: environmental_state
+  type(environmental_state_t), allocatable :: environmental_states(:,:)
 
-  aerosol => mam_core_t( kNumberOfColumnsPerNode, kNumberOfLayersPerColumn )
+  aerosol => mam_core_t( )
+  aerosol_state => aerosol%get_new_state( )
+  allocate( raw_aerosol_states( aerosol_state%raw_size( ),                    &
+                                kNumberOfLayersPerColumn,                     &
+                                kNumberOfColumnsPerNode ) )
+
+  allocate( environmental_states( kNumberOfLayersPerColumn,                   &
+                                  kNumberOfColumnsPerNode ) )
+
+  ! replace with initialization
+  raw_aerosol_states(:,:,:) = 0.0_kDouble
+
   rad_core = rad_core_t( aerosol, kNumberOfColumnsPerNode,                    &
                          kNumberOfLayersPerColumn )
 
   ! do time loops
 
-    call rad_core%run( aerosol, environmental_state )
+    call rad_core%run( aerosol, aerosol_state, raw_aerosol_states,            &
+                       environmental_states )
 
   ! end time loops
+
+  deallocate( aerosol )
 
 end program test_mock_host
