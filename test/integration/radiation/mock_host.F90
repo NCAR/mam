@@ -12,6 +12,7 @@ program test_mock_host
   use ai_constants,                    only : kDouble
   use ai_environmental_state,          only : environmental_state_t
   use mam_core,                        only : mam_core_t => core_t
+  use musica_config,                   only : config_t
   use test_mock_radiation,             only : rad_core_t => core_t
 
   implicit none
@@ -24,8 +25,11 @@ program test_mock_host
   real(kind=kDouble), allocatable :: raw_aerosol_states(:,:,:)
   type(rad_core_t) :: rad_core
   type(environmental_state_t), allocatable :: environmental_states(:,:)
+  type(config_t) :: mam_config
+  integer :: i_column, i_layer
 
-  aerosol => mam_core_t( )
+  call mam_config%from_file( "mam_config.json" )
+  aerosol => mam_core_t( mam_config )
   aerosol_state => aerosol%get_new_state( )
   allocate( raw_aerosol_states( aerosol_state%raw_size( ),                    &
                                 kNumberOfLayersPerColumn,                     &
@@ -33,6 +37,15 @@ program test_mock_host
 
   allocate( environmental_states( kNumberOfLayersPerColumn,                   &
                                   kNumberOfColumnsPerNode ) )
+
+  ! initialize the environmental conditions
+  do i_column = 1, kNumberOfColumnsPerNode
+    do i_layer = 1, kNumberOfLayersPerColumn
+    associate( state => environmental_states( i_column, i_layer ) )
+      call state%set_layer_thickness__Pa( 152.3_kDouble )
+    end associate
+    end do
+  end do
 
   ! replace with initialization
   raw_aerosol_states(:,:,:) = 0.0_kDouble

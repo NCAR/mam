@@ -40,10 +40,11 @@ module test_mock_radiation
     module procedure :: constructor
   end interface
 
-  integer, parameter :: kShortTau   = 1
-  integer, parameter :: kShortTauW  = 2
-  integer, parameter :: kShortTauWG = 3
-  integer, parameter :: kLongAbs    = 1
+  integer, parameter :: kShortTau = 1
+  integer, parameter :: kShortWa  = 2
+  integer, parameter :: kShortGa  = 3
+  integer, parameter :: kShortFa  = 4
+  integer, parameter :: kLongAbs  = 1
 
 contains
 
@@ -89,7 +90,7 @@ contains
       (/  350._r8,  500._r8,  630._r8,  700._r8,  820._r8,  980._r8, 1080._r8, 1180._r8, &
          1390._r8, 1480._r8, 1800._r8, 2080._r8, 2250._r8, 2390._r8, 2600._r8, 3250._r8 /)
 
-    type(property_t), dimension(3) :: shortwave_props
+    type(property_t), dimension(4) :: shortwave_props
     type(property_t), dimension(1) :: longwave_props
 
     new_core%number_of_columns_ = number_of_columns
@@ -106,13 +107,15 @@ contains
                                                  base_unit    = kCentimeter )
 
     shortwave_props(kShortTau)   =                                            &
-        property_t( "layer optical depth",                       "unitless" )
-    shortwave_props(kShortTauW)  =                                            &
-        property_t( "layer scattering optical depth",            "unitless" )
-    shortwave_props(kShortTauWG) =                                            &
-        property_t( "layer asymmetric scattering optical depth", "unitless" )
+        property_t( "layer extinction optical depth",    "unitless" )
+    shortwave_props(kShortWa)  =                                              &
+        property_t( "layer single-scatter albedo depth", "unitless" )
+    shortwave_props(kShortGa) =                                               &
+        property_t( "asymmetry factor",                  "unitless" )
+    shortwave_props(kShortFa) =                                               &
+        property_t( "forward scattered fraction",        "unitless" )
     longwave_props(kLongAbs)     =                                            &
-        property_t( "layer absorption optical depth",            "unitless" )
+        property_t( "layer absorption optical depth",    "unitless" )
 
     new_core%shortwave_optics_ = optics_t( shortwave_props,                   &
                                            new_core%shortwave_grid_ )
@@ -179,8 +182,8 @@ contains
       end do
     end do
 
-    write(*,*) "shortwave tau_w at layer 1 of column 12"
-    write(*,*) this%shortwave_optics_values_(:, kShortTauW, 1, 12 )
+    write(*,*) "shortwave wa at layer 1 of column 12"
+    write(*,*) this%shortwave_optics_values_(:, kShortWa, 1, 12 )
 
     write(*,*) "longwave absorption at layer 5 of column 20"
     write(*,*) this%longwave_optics_values_(:, kLongAbs, 5, 20 )

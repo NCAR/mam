@@ -23,17 +23,19 @@ module mam_optics_accessor
     logical :: is_longwave_      = .false.
     logical :: do_interpolation_ = .false.
     type(interpolator_t) :: interpolator_
-    integer :: layer_optical_depth_index_                       = -1
-    integer :: layer_scattering_optical_depth_index_            = -1
-    integer :: layer_asymmetric_scattering_optical_depth_index_ = -1
-    integer :: layer_absorption_optical_depth_index_            = -1
+    integer :: layer_extinction_optical_depth_index_ = -1
+    integer :: layer_single_scatter_albedo_index_    = -1
+    integer :: asymmetry_factor_index_               = -1
+    integer :: forward_scattered_fraction_index_     = -1
+    integer :: layer_absorption_optical_depth_index_ = -1
   contains
     procedure :: is_shortwave
     procedure :: is_longwave
     procedure :: get_interpolator
-    procedure :: layer_optical_depth_index
-    procedure :: layer_scattering_optical_depth_index
-    procedure :: layer_asymmetric_scattering_optical_depth_index
+    procedure :: layer_extinction_optical_depth_index
+    procedure :: layer_single_scatter_albedo_index
+    procedure :: asymmetry_factor_index
+    procedure :: forward_scattered_fraction_index
     procedure :: layer_absorption_optical_depth_index
   end type optics_accessor_t
 
@@ -66,14 +68,17 @@ contains
 
     do i_prop = 1, optics%number_of_properties( )
       property = optics%property_name( i_prop )
-      if( property .eq. "layer optical depth" ) then
-        new_obj%layer_optical_depth_index_ = i_prop
+      if( property .eq. "layer extinction optical depth" ) then
+        new_obj%layer_extinction_optical_depth_index_ = i_prop
         new_obj%is_shortwave_ = .true.
-      else if( property .eq. "layer scattering optical depth" ) then
-        new_obj%layer_scattering_optical_depth_index_ = i_prop
+      else if( property .eq. "layer single-scatter albedo depth" ) then
+        new_obj%layer_single_scatter_albedo_index_ = i_prop
         new_obj%is_shortwave_ = .true.
-      else if( property .eq. "layer asymmetric scattering optical depth" ) then
-        new_obj%layer_asymmetric_scattering_optical_depth_index_ = i_prop
+      else if( property .eq. "asymmetry factor" ) then
+        new_obj%asymmetry_factor_index_ = i_prop
+        new_obj%is_shortwave_ = .true.
+      else if( property .eq. "forward scattered fraction" ) then
+        new_obj%forward_scattered_fraction_index_ = i_prop
         new_obj%is_shortwave_ = .true.
       else if( property .eq. "layer absorption optical depth" ) then
         new_obj%layer_absorption_optical_depth_index_ = i_prop
@@ -134,45 +139,57 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Returns the index for layer optical depth in optics_t%values_
+  !> Returns the index for layer extiction optical depth in optics_t%values_
   !!
   !! Returns -1 if this property is not included in the accessor
-  integer function layer_optical_depth_index( this )
+  integer function layer_extinction_optical_depth_index( this )
 
     class(optics_accessor_t), intent(in) :: this
 
-    layer_optical_depth_index = this%layer_optical_depth_index_
+    layer_extinction_optical_depth_index =                                    &
+        this%layer_extinction_optical_depth_index_
 
-  end function layer_optical_depth_index
+  end function layer_extinction_optical_depth_index
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Returns the index for layer scattering optical depth in optics_t%values_
+  !> Returns the index for layer single-scatter albedo in optics_t%values_
   !!
   !! Returns -1 if this property is not included in the accessor
-  integer function layer_scattering_optical_depth_index( this )
+  integer function layer_single_scatter_albedo_index( this )
 
     class(optics_accessor_t), intent(in) :: this
 
-    layer_scattering_optical_depth_index =                                    &
-        this%layer_scattering_optical_depth_index_
+    layer_single_scatter_albedo_index =                                       &
+        this%layer_single_scatter_albedo_index_
 
-  end function layer_scattering_optical_depth_index
+  end function layer_single_scatter_albedo_index
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Returns the index for layer asymmetric scattering optical depth in
-  !! optics_t%values_
+  !> Returns the index for asymmetry factor in optics_t%values_
   !!
   !! Returns -1 if this property is not included in the accessor
-  integer function layer_asymmetric_scattering_optical_depth_index( this )
+  integer function asymmetry_factor_index( this )
 
     class(optics_accessor_t), intent(in) :: this
 
-    layer_asymmetric_scattering_optical_depth_index =                         &
-        this%layer_asymmetric_scattering_optical_depth_index_
+    asymmetry_factor_index = this%asymmetry_factor_index_
 
-  end function layer_asymmetric_scattering_optical_depth_index
+  end function asymmetry_factor_index
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Returns the index for forward scattered fraction in optics_t%values_
+  !!
+  !! Returns -1 if this property is not included in the accessor
+  integer function forward_scattered_fraction_index( this )
+
+    class(optics_accessor_t), intent(in) :: this
+
+    forward_scattered_fraction_index = this%forward_scattered_fraction_index_
+
+  end function forward_scattered_fraction_index
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

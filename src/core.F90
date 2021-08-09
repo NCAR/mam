@@ -19,11 +19,13 @@ module mam_core
   !> The Modal Aerosol Model core
   type, extends(aerosol_t) :: core_t
     private
-    type(mode_t), allocatable :: modes_(:)
+    type(mode_t), allocatable          :: modes_(:)
   contains
     procedure :: get_new_state
     procedure :: optics_accessor
     procedure :: get_optics
+    procedure, private :: calculate_shortwave_optics
+    procedure, private :: calculate_longwave_optics
   end type core_t
 
   interface core_t
@@ -45,29 +47,33 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Constructor of the MAM core
-  function constructor( ) result( new_obj )
+  function constructor( config ) result( new_obj )
 
     use ai_constants,                  only : r8 => kDouble
     use mam_species,                   only : species_t
+    use musica_config,                 only : config_t
+    use musica_iterator,               only : iterator_t
+    use musica_string,                 only : string_t
 
-    type(core_t), pointer :: new_obj
+    type(core_t),    pointer       :: new_obj
+    class(config_t), intent(inout) :: config
 
-    type(species_t) :: species(3)
+    character(len=*), parameter :: my_name = "MAM core_t constructor"
+    type(config_t)              :: modes, mode
+    type(string_t)              :: file_name
+    class(iterator_t), pointer  :: iter
+    integer                     :: i_mode
 
     allocate( new_obj )
-
-    ! Get current MAM 4 configuration
-
-    species( 1 ) = species_t( "sulfate" )
-    species( 2 ) = species_t( "nitrate" )
-    species( 3 ) = species_t( "ammonia" )
-
-    allocate( new_obj%modes_( 4 ) )
-
-    new_obj%modes_( 1 ) = mode_t( 8e-8_r8, 2.1_r8, species )
-    new_obj%modes_( 2 ) = mode_t( 9e-8_r8, 2.0_r8, species )
-    new_obj%modes_( 3 ) = mode_t( 1e-7_r8, 1.9_r8, species )
-    new_obj%modes_( 4 ) = mode_t( 2e-7_r8, 1.8_r8, species )
+    call config%get( "modes", modes, my_name )
+    allocate( new_obj%modes_( modes%number_of_children( ) ) )
+    iter => modes%get_iterator( )
+    i_mode = 1
+    do while( iter%next( ) )
+      call modes%get( iter, mode, my_name )
+      new_obj%modes_( i_mode ) = mode_t( mode )
+      i_mode = i_mode + 1
+    end do
 
   end function constructor
 
@@ -153,8 +159,15 @@ contains
     class is( optics_accessor_t )
       select type( aerosol_state )
       class is( state_t )
-        call calculate_optics( this, optics_accessor, environmental_state,    &
-                               aerosol_state, optics )
+        if( optics_accessor%is_shortwave( ) ) then
+          call this%calculate_shortwave_optics( optics_accessor,             &
+                                                environmental_state,         &
+                                                aerosol_state, optics )
+        else if( optics_accessor%is_longwave( ) ) then
+          call this%calculate_longwave_optics(  optics_accessor,             &
+                                                environmental_state,         &
+                                                aerosol_state, optics )
+        end if
       class default
         call die_msg( 522911428, "Invalid aerosol state for MAM aerosol" )
       end select
@@ -166,37 +179,73 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Calculate optical properties for a given state
-  subroutine calculate_optics( core, optics_accessor, environmental_state,    &
-      aerosol_state, optics )
+  !> Calculates shortwave optical properties for a given state
+  subroutine calculate_shortwave_optics( this, optics_accessor,               &
+      environmental_state, aerosol_state, optics )
 
+    use ai_constants,                  only : r8 => kDouble
     use ai_environmental_state,        only : environmental_state_t
     use ai_optics,                     only : optics_t
     use mam_optics_accessor,           only : optics_accessor_t
 
-    class(core_t),                intent(in)    :: core
+    class(core_t),                intent(in)    :: this
     class(optics_accessor_t),     intent(in)    :: optics_accessor
     class(environmental_state_t), intent(in)    :: environmental_state
     class(state_t),               intent(in)    :: aerosol_state
     class(optics_t),              intent(inout) :: optics
 
-    type(optics_t) :: mode_optics
-    integer :: i_mode
+    type(optics_t)   :: mode_optics
+    integer          :: i_mode
 
+    optics%values_(:,:)  = 0.0_r8
     mode_optics = optics
-    optics%values_(:,:) = 0.0
-    do i_mode = 1, size( core%modes_ )
-    associate( mode_state => aerosol_state%mode_states_( i_mode ) )
-      mode_optics%values_(:,:) = 0.0
-      call core%modes_( i_mode )%get_optics( optics_accessor,                 &
-                                             environmental_state,             &
-                                             mode_state,                      &
-                                             mode_optics )
+    do i_mode = 1, size( this%modes_ )
+    associate( mode_state => aerosol_state%mode_states_( i_mode ),            &
+               mode       => this%modes_( i_mode ) )
+      call mode%calculate_shortwave_optics( optics_accessor,                  &
+                                            environmental_state,              &
+                                            mode_state,                       &
+                                            mode_optics )
       optics%values_(:,:) = optics%values_(:,:) + mode_optics%values_(:,:)
     end associate
     end do
 
-  end subroutine calculate_optics
+  end subroutine calculate_shortwave_optics
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Calculates longwave optical properties for a given state
+  subroutine calculate_longwave_optics( this, optics_accessor,                &
+      environmental_state, aerosol_state, optics )
+
+    use ai_constants,                  only : r8 => kDouble
+    use ai_environmental_state,        only : environmental_state_t
+    use ai_optics,                     only : optics_t
+    use mam_optics_accessor,           only : optics_accessor_t
+
+    class(core_t),                intent(in)    :: this
+    class(optics_accessor_t),     intent(in)    :: optics_accessor
+    class(environmental_state_t), intent(in)    :: environmental_state
+    class(state_t),               intent(in)    :: aerosol_state
+    class(optics_t),              intent(inout) :: optics
+
+    type(optics_t)   :: mode_optics
+    integer          :: i_mode
+
+    optics%values_(:,:)  = 0.0_r8
+    mode_optics = optics
+    do i_mode = 1, size( this%modes_ )
+    associate( mode_state => aerosol_state%mode_states_( i_mode ),            &
+               mode       => this%modes_( i_mode ) )
+      call mode%calculate_longwave_optics( optics_accessor,                   &
+                                           environmental_state,               &
+                                           mode_state,                        &
+                                           mode_optics )
+      optics%values_(:,:) = optics%values_(:,:) + mode_optics%values_(:,:)
+    end associate
+    end do
+
+  end subroutine calculate_longwave_optics
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!
