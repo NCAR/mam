@@ -40,6 +40,7 @@ module mam_core
     procedure :: raw_size
     procedure :: load_state
     procedure :: dump_state
+    procedure :: randomize
   end type state_t
 
 contains
@@ -276,7 +277,7 @@ contains
 
     class(state_t),             intent(inout) :: this
     real(kind=kDouble), target, intent(inout) :: raw_state(:)
-    integer,                    intent(inout) :: index
+    integer, optional,          intent(inout) :: index
 
     integer :: i_mode
 
@@ -295,7 +296,7 @@ contains
 
     class(state_t),     intent(inout) :: this
     real(kind=kDouble), intent(inout) :: raw_state(:)
-    integer,            intent(inout) :: index
+    integer, optional,  intent(inout) :: index
 
     integer :: i_mode
 
@@ -304,6 +305,25 @@ contains
     end do
 
   end subroutine dump_state
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Sets the MAM state to a random, but reasonable, state. For testing only.
+  subroutine randomize( this )
+
+    use musica_assert,                 only : assert_msg
+
+    class(state_t), intent(inout) :: this
+
+    integer :: i_mode
+
+    call assert_msg( 652075662, allocated( this%mode_states_ ),               &
+                     "Trying to randomize uninitialized MAM state" )
+    do i_mode = 1, size( this%mode_states_ )
+      call this%mode_states_( i_mode )%randomize( )
+    end do
+
+  end subroutine randomize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

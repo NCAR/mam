@@ -164,21 +164,19 @@ contains
 
     do i_column = 1, this%number_of_columns_
       do i_layer = 1, this%number_of_layers_
-        state_index = 1
-        call aerosol_state%load_state(                                        &
-            raw_aerosol_states(:, i_layer, i_column), state_index )
-        call aerosol%get_optics( this%shortwave_optics_accessor_,             &
-                                 environmental_states( i_layer, i_column ),   &
-                                 aerosol_state,                               &
-                                 this%shortwave_optics_ )
+      associate( raw_aero_state => raw_aerosol_states( :, i_layer, i_column ),&
+                 env_state => environmental_states( i_layer, i_column ) )
+        call aerosol_state%load_state( raw_aero_state )
+        call aerosol%get_optics( this%shortwave_optics_accessor_, env_state,  &
+                                 aerosol_state, this%shortwave_optics_ )
         this%shortwave_optics_values_( :, :, i_layer, i_column ) =            &
             this%shortwave_optics_%values_(:,:)
-        call aerosol%get_optics( this%longwave_optics_accessor_,              &
-                                 environmental_states( i_layer, i_column ),   &
-                                 aerosol_state,                               &
-                                 this%longwave_optics_  )
+        call aerosol%get_optics( this%longwave_optics_accessor_, env_state,   &
+                                 aerosol_state, this%longwave_optics_ )
         this%longwave_optics_values_( :, :, i_layer, i_column ) =             &
             this%longwave_optics_%values_(:,:)
+        call aerosol_state%dump_state( raw_aero_state )
+      end associate
       end do
     end do
 

@@ -38,17 +38,17 @@ program test_mock_host
   allocate( environmental_states( kNumberOfLayersPerColumn,                   &
                                   kNumberOfColumnsPerNode ) )
 
-  ! initialize the environmental conditions
+  ! initialize the model state to random values
   do i_column = 1, kNumberOfColumnsPerNode
     do i_layer = 1, kNumberOfLayersPerColumn
-    associate( state => environmental_states( i_column, i_layer ) )
-      call state%set_layer_thickness__Pa( 152.3_kDouble )
-    end associate
+      call environmental_states( i_layer, i_column )%randomize( )
+      associate( raw_state => raw_aerosol_states( :, i_layer, i_column ) )
+        call aerosol_state%load_state( raw_state )
+        call aerosol_state%randomize( )
+        call aerosol_state%dump_state( raw_state )
+      end associate
     end do
   end do
-
-  ! replace with initialization
-  raw_aerosol_states(:,:,:) = 0.0_kDouble
 
   rad_core = rad_core_t( aerosol, kNumberOfColumnsPerNode,                    &
                          kNumberOfLayersPerColumn )

@@ -61,12 +61,15 @@ module mam_mode
   type, extends(aerosol_state_t) :: mode_state_t
     private
     integer                     :: number_of_species_
+    !> Mode diameter of the wet aerosol number distribution [m]
     real(kind=musica_dk), pointer :: wet_number_mode_diameter__m_ => null( )
+    !> Mass mixing ratio of each mode species relative to dry air [kg kg-1]
     real(kind=musica_dk), pointer :: mass_mixing_ratio__kg_kg_(:) => null( )
   contains
     procedure :: raw_size
     procedure :: load_state
     procedure :: dump_state
+    procedure :: randomize
   end type mode_state_t
 
 contains
@@ -622,38 +625,62 @@ contains
   !> Loads raw mode state data to the mode_state_t object
   subroutine load_state( this, raw_state, index )
 
-    class(mode_state_t),         intent(inout) :: this
-    real(kind=musica_dk),  target, intent(inout) :: raw_state(:)
-    integer,                     intent(inout) :: index
+    class(mode_state_t),          intent(inout) :: this
+    real(kind=musica_dk), target, intent(inout) :: raw_state(:)
+    integer, optional,            intent(inout) :: index
 
-    integer :: last_index
+    integer :: id, last_id
 
-    this%wet_number_mode_diameter__m_ => raw_state( index )
-    index = index + 1
-    last_index = index + this%number_of_species_ - 1
-    this%mass_mixing_ratio__kg_kg_ => raw_state( index : last_index )
-    index = last_index + 1
+    id = 1
+    if( present( index ) ) id = index
+    this%wet_number_mode_diameter__m_ => raw_state( id )
+    id = id + 1
+    last_id = id + this%number_of_species_ - 1
+    this%mass_mixing_ratio__kg_kg_ => raw_state( id : last_id )
+    if( present( index ) ) index = last_id + 1
 
   end subroutine load_state
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Dumps the raw mode state data into an double array
+  !> Nullifies the raw mode state pointers
   subroutine dump_state( this, raw_state, index )
 
-    class(mode_state_t), intent(inout) :: this
-    real(kind=musica_dk),  intent(inout) :: raw_state(:)
-    integer,             intent(inout) :: index
-
-    integer :: last_index
+    class(mode_state_t),  intent(inout) :: this
+    real(kind=musica_dk), intent(inout) :: raw_state(:)
+    integer, optional,    intent(inout) :: index
 
     this%wet_number_mode_diameter__m_ => null( )
-    index = index + 1
-    last_index = index + this%number_of_species_ - 1
     this%mass_mixing_ratio__kg_kg_ => null( )
-    index = last_index + 1
+    if( present( index ) ) index = index + 1 + this%number_of_species_
 
   end subroutine dump_state
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Set the mode state to a random, but reasonable, state. For testing only.
+  subroutine randomize( this )
+
+    use musica_assert,                 only : assert_msg
+
+    class(mode_state_t), intent(inout) :: this
+
+    real(kind=musica_dk) :: rand_val
+    integer              :: i_species
+
+    !> \todo Make sure random mode state is reasonable
+    call assert_msg( 175218277,                                               &
+                     associated( this%wet_number_mode_diameter__m_ ) .and.    &
+                     associated( this%mass_mixing_ratio__kg_kg_ ),            &
+                     "Trying to randomize an unassociated mode state" )
+    call random_number( rand_val )
+    this%wet_number_mode_diameter__m_ = 10.0**( rand_val * 3 - 5 )
+    do i_species = 1, size( this%mass_mixing_ratio__kg_kg_ )
+      call random_number( rand_val )
+      this%mass_mixing_ratio__kg_kg_( i_species ) = rand_val * 2.0e-9
+    end do
+
+  end subroutine randomize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
