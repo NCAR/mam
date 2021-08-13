@@ -71,8 +71,10 @@ module physics_buffer
 contains
 
   ! initialize state data
-  subroutine pbuf_init( )
+  subroutine pbuf_init( pbuf )
     use test_utils,                    only : set_values
+    type(physics_buffer_desc), pointer, intent(inout) :: pbuf(:)
+    allocate( pbuf( 0 ) )
     call set_values( dgnumwet, 1.0e-6_r8, 0.5_r8 )
     call set_values( qaerwat,  1.0e-4_r8, 0.9_r8 )
   end subroutine pbuf_init
@@ -97,7 +99,7 @@ contains
     integer,             intent(in),  optional    :: col_type
     logical,             intent(in),  optional    :: copy_if_needed
     integer,             intent(out), optional    :: errcode
-    write(*,*) "int request for '"//trim( kStateVariables( index ) )//"'"
+    !write(*,*) "int request for '"//trim( kStateVariables( index ) )//"'"
     field => null( )
     if( present( errcode ) ) errcode = 0
     stop 3
@@ -113,7 +115,7 @@ contains
     integer,             intent(in),  optional    :: col_type
     logical,             intent(in),  optional    :: copy_if_needed
     integer,             intent(out), optional    :: errcode
-    write(*,*) "*double request for '"//trim( kStateVariables( index ) )//"'"
+    !write(*,*) "*double request for '"//trim( kStateVariables( index ) )//"'"
     field => null( )
     if( present( errcode ) ) errcode = 0
     stop 3
@@ -129,7 +131,7 @@ contains
     integer,             intent(in),  optional    :: col_type
     logical,             intent(in),  optional    :: copy_if_needed
     integer,             intent(out), optional    :: errcode
-    write(*,*) "**double request for '"//trim( kStateVariables( index ) )//"'"
+    !write(*,*) "**double request for '"//trim( kStateVariables( index ) )//"'"
     field => null( )
     if( present( errcode ) ) errcode = 0
     stop 3
@@ -145,7 +147,7 @@ contains
     integer,             intent(in),  optional    :: col_type
     logical,             intent(in),  optional    :: copy_if_needed
     integer,             intent(out), optional    :: errcode
-    write(*,*) "***double request for '"//trim( kStateVariables( index ) )//"'"
+    !write(*,*) "***double request for '"//trim( kStateVariables( index ) )//"'"
     select case( index )
     case( index_DGNUMWET )
       field => dgnumwet

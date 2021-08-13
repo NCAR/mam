@@ -1,0 +1,42 @@
+{
+  "modes" : [
+    {
+      "geometric mean diameter of number distribution [m]" : 1.1e-7,
+      "geometric standard deviation of number distribution" : 1.6,
+      "species" : {
+        "so4" : {
+          "density [kg m-3]" : 1770.0,
+          "optics" : {
+            "file name" : "mam_data/sulfate_rrtmg_c080918.nc",
+            "real refractive index - shortwave" : "refindex_real_aer_sw",
+            "real refractive index - longwave" : "refindex_real_aer_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
+            "imaginary refractive index - longwave" : "refindex_im_aer_lw"
+          }
+        }
+      },
+      "shortwave lookup tables": {
+        "file path" : "mam_data/mode1.nc",
+        "axis 1" : "refindex_real_sw",
+        "axis 2" : "refindex_im_sw",
+        "specific extinction lookup" : {
+          "variable name" : "extpsw"
+        },
+        "specific absorption lookup" : {
+          "variable name" : "abspsw"
+        },
+        "asymmetry factor lookup" : {
+          "variable name" : "asmpsw"
+        }
+      },
+      "longwave lookup tables" : {
+        "file path" : "mam_data/mode1.nc",
+        "axis 1" : "refindex_real_lw",
+        "axis 2" : "refindex_im_lw",
+        "specific absorption lookup" : {
+          "variable name" : "absplw"
+        }
+      }
+    }
+  ]
+}
