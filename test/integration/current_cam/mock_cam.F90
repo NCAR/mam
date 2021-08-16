@@ -42,6 +42,9 @@ program test_mock_cam
   integer, parameter :: kShortFa  = 4
   integer, parameter :: kLongAbs  = 1
 
+  integer, parameter :: kTestColumn = 13
+  integer, parameter :: kTestLayer  = 26
+
   class(aerosol_t),            pointer :: aerosol
   class(aerosol_state_t),      pointer :: aerosol_state
   type(environmental_state_t)          :: environmental_state
@@ -124,7 +127,7 @@ program test_mock_cam
       call set_mam_states( i_column, i_layer, pbuf, state, aerosol_state, environmental_state )
       call aerosol%get_optics( sw_accessor, environmental_state, aerosol_state, sw_optics )
       call aerosol%get_optics( lw_accessor, environmental_state, aerosol_state, lw_optics )
-      if( i_column .eq. 13 .and. i_layer .eq. 26 ) then
+      if( i_column .eq. kTestColumn .and. i_layer .eq. kTestLayer ) then
         write(*,*) "MAM results"
         write(*,*) "tau"
         write(*,*) sw_optics%values_(:, kShortTau )
@@ -135,22 +138,22 @@ program test_mock_cam
         write(*,*) "tau_w_f"
         write(*,*) sw_optics%values_(:, kShortFa )
         write(*,*) "odap_aer"
-        write(*,*) sw_optics%values_(:, kLongAbs )
+        write(*,*) lw_optics%values_(:, kLongAbs )
       end if
     end do
   end do
 
   write(*,*) "CAM results"
   write(*,*) "tau"
-  write(*,*) tau(13,26,:)
+  write(*,*) tau(kTestColumn,kTestLayer,:)
   write(*,*) "tau_w"
-  write(*,*) tau_w(13,26,:)
+  write(*,*) tau_w(kTestColumn,kTestLayer,:)
   write(*,*) "tau_w_g"
-  write(*,*) tau_w_g(13,26,:)
+  write(*,*) tau_w_g(kTestColumn,kTestLayer,:)
   write(*,*) "tau_w_f"
-  write(*,*) tau_w_f(13,26,:)
+  write(*,*) tau_w_f(kTestColumn,kTestLayer,:)
   write(*,*) "odap_aer"
-  write(*,*) odap_aer(13,26,:)
+  write(*,*) odap_aer(kTestColumn,kTestLayer,:)
 
   deallocate( sw_accessor )
   deallocate( lw_accessor )

@@ -13,6 +13,56 @@
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
             "imaginary refractive index - longwave" : "refindex_im_aer_lw"
           }
+        },
+        "pom" : {
+          "density [kg m-3]" : 1000.0,
+          "optics" : {
+            "file name" : "mam_data/ocpho_rrtmg_c130709.nc",
+            "real refractive index - shortwave" : "refindex_real_aer_sw",
+            "real refractive index - longwave" : "refindex_real_aer_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
+            "imaginary refractive index - longwave" : "refindex_im_aer_lw"
+          }
+        },
+        "soa" : {
+          "density [kg m-3]" : 1000.0,
+          "optics" : {
+            "file name" : "mam_data/ocphi_rrtmg_c100508.nc",
+            "real refractive index - shortwave" : "refindex_real_aer_sw",
+            "real refractive index - longwave" : "refindex_real_aer_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
+            "imaginary refractive index - longwave" : "refindex_im_aer_lw"
+          }
+        },
+        "bc" : {
+          "density [kg m-3]" : 1700.0,
+          "optics" : {
+            "file name" : "mam_data/bcpho_rrtmg_c100508.nc",
+            "real refractive index - shortwave" : "refindex_real_aer_sw",
+            "real refractive index - longwave" : "refindex_real_aer_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
+            "imaginary refractive index - longwave" : "refindex_im_aer_lw"
+          }
+        },
+        "dst" : {
+          "density [kg m-3]" : 2600.0,
+          "optics" : {
+            "file name" : "mam_data/dust_aeronet_rrtmg_c141106.nc",
+            "real refractive index - shortwave" : "refindex_real_aer_sw",
+            "real refractive index - longwave" : "refindex_real_aer_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
+            "imaginary refractive index - longwave" : "refindex_im_aer_lw"
+          }
+        },
+        "ncl" : {
+          "density [kg m-3]" : 1900.0,
+          "optics" : {
+            "file name" : "mam_data/ssam_rrtmg_c100508.nc",
+            "real refractive index - shortwave" : "refindex_real_aer_sw",
+            "real refractive index - longwave" : "refindex_real_aer_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
+            "imaginary refractive index - longwave" : "refindex_im_aer_lw"
+          }
         }
       },
       "shortwave lookup tables": {
@@ -31,6 +81,180 @@
       },
       "longwave lookup tables" : {
         "file path" : "mam_data/mode1.nc",
+        "axis 1" : "refindex_real_lw",
+        "axis 2" : "refindex_im_lw",
+        "specific absorption lookup" : {
+          "variable name" : "absplw"
+        }
+      }
+    },
+    {
+      "geometric mean diameter of number distribution [m]" : 2.6e-8,
+      "geometric standard deviation of number distribution" : 1.6,
+      "species" : {
+        "so4" : {
+          "density [kg m-3]" : 1770.0,
+          "optics" : {
+            "file name" : "mam_data/sulfate_rrtmg_c080918.nc",
+            "real refractive index - shortwave" : "refindex_real_aer_sw",
+            "real refractive index - longwave" : "refindex_real_aer_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
+            "imaginary refractive index - longwave" : "refindex_im_aer_lw"
+          }
+        },
+        "soa" : {
+          "density [kg m-3]" : 1000.0,
+          "optics" : {
+            "file name" : "mam_data/ocphi_rrtmg_c100508.nc",
+            "real refractive index - shortwave" : "refindex_real_aer_sw",
+            "real refractive index - longwave" : "refindex_real_aer_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
+            "imaginary refractive index - longwave" : "refindex_im_aer_lw"
+          }
+        },
+        "ncl" : {
+          "density [kg m-3]" : 1900.0,
+          "optics" : {
+            "file name" : "mam_data/ssam_rrtmg_c100508.nc",
+            "real refractive index - shortwave" : "refindex_real_aer_sw",
+            "real refractive index - longwave" : "refindex_real_aer_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
+            "imaginary refractive index - longwave" : "refindex_im_aer_lw"
+          }
+        },
+        "dst" : {
+          "density [kg m-3]" : 2600.0,
+          "optics" : {
+            "file name" : "mam_data/dust_aeronet_rrtmg_c141106.nc",
+            "real refractive index - shortwave" : "refindex_real_aer_sw",
+            "real refractive index - longwave" : "refindex_real_aer_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
+            "imaginary refractive index - longwave" : "refindex_im_aer_lw"
+          }
+        }
+      },
+      "shortwave lookup tables": {
+        "file path" : "mam_data/mode2.nc",
+        "axis 1" : "refindex_real_sw",
+        "axis 2" : "refindex_im_sw",
+        "specific extinction lookup" : {
+          "variable name" : "extpsw"
+        },
+        "specific absorption lookup" : {
+          "variable name" : "abspsw"
+        },
+        "asymmetry factor lookup" : {
+          "variable name" : "asmpsw"
+        }
+      },
+      "longwave lookup tables" : {
+        "file path" : "mam_data/mode2.nc",
+        "axis 1" : "refindex_real_lw",
+        "axis 2" : "refindex_im_lw",
+        "specific absorption lookup" : {
+          "variable name" : "absplw"
+        }
+      }
+    },
+    {
+      "geometric mean diameter of number distribution [m]" : 9e-7,
+      "geometric standard deviation of number distribution" : 1.2,
+      "species" : {
+        "dst" : {
+          "density [kg m-3]" : 2600.0,
+          "optics" : {
+            "file name" : "mam_data/dust_aeronet_rrtmg_c141106.nc",
+            "real refractive index - shortwave" : "refindex_real_aer_sw",
+            "real refractive index - longwave" : "refindex_real_aer_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
+            "imaginary refractive index - longwave" : "refindex_im_aer_lw"
+          }
+        },
+        "ncl" : {
+          "density [kg m-3]" : 1900.0,
+          "optics" : {
+            "file name" : "mam_data/ssam_rrtmg_c100508.nc",
+            "real refractive index - shortwave" : "refindex_real_aer_sw",
+            "real refractive index - longwave" : "refindex_real_aer_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
+            "imaginary refractive index - longwave" : "refindex_im_aer_lw"
+          }
+        },
+        "so4" : {
+          "density [kg m-3]" : 1770.0,
+          "optics" : {
+            "file name" : "mam_data/sulfate_rrtmg_c080918.nc",
+            "real refractive index - shortwave" : "refindex_real_aer_sw",
+            "real refractive index - longwave" : "refindex_real_aer_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
+            "imaginary refractive index - longwave" : "refindex_im_aer_lw"
+          }
+        }
+      },
+      "shortwave lookup tables": {
+        "file path" : "mam_data/mode3.nc",
+        "axis 1" : "refindex_real_sw",
+        "axis 2" : "refindex_im_sw",
+        "specific extinction lookup" : {
+          "variable name" : "extpsw"
+        },
+        "specific absorption lookup" : {
+          "variable name" : "abspsw"
+        },
+        "asymmetry factor lookup" : {
+          "variable name" : "asmpsw"
+        }
+      },
+      "longwave lookup tables" : {
+        "file path" : "mam_data/mode3.nc",
+        "axis 1" : "refindex_real_lw",
+        "axis 2" : "refindex_im_lw",
+        "specific absorption lookup" : {
+          "variable name" : "absplw"
+        }
+      }
+    },
+    {
+      "geometric mean diameter of number distribution [m]" : 5e-8,
+      "geometric standard deviation of number distribution" : 1.6,
+      "species" : {
+        "pom" : {
+          "density [kg m-3]" : 1000.0,
+          "optics" : {
+            "file name" : "mam_data/ocpho_rrtmg_c130709.nc",
+            "real refractive index - shortwave" : "refindex_real_aer_sw",
+            "real refractive index - longwave" : "refindex_real_aer_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
+            "imaginary refractive index - longwave" : "refindex_im_aer_lw"
+          }
+        },
+        "bc" : {
+          "density [kg m-3]" : 1700.0,
+          "optics" : {
+            "file name" : "mam_data/bcpho_rrtmg_c100508.nc",
+            "real refractive index - shortwave" : "refindex_real_aer_sw",
+            "real refractive index - longwave" : "refindex_real_aer_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
+            "imaginary refractive index - longwave" : "refindex_im_aer_lw"
+          }
+        }
+      },
+      "shortwave lookup tables": {
+        "file path" : "mam_data/mode4.nc",
+        "axis 1" : "refindex_real_sw",
+        "axis 2" : "refindex_im_sw",
+        "specific extinction lookup" : {
+          "variable name" : "extpsw"
+        },
+        "specific absorption lookup" : {
+          "variable name" : "abspsw"
+        },
+        "asymmetry factor lookup" : {
+          "variable name" : "asmpsw"
+        }
+      },
+      "longwave lookup tables" : {
+        "file path" : "mam_data/mode4.nc",
         "axis 1" : "refindex_real_lw",
         "axis 2" : "refindex_im_lw",
         "specific absorption lookup" : {
