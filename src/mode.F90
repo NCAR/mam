@@ -48,6 +48,7 @@ module mam_mode
     procedure :: wet_number_mode_diameter__m
     procedure :: wet_surface_mode_radius__m
     procedure :: wet_surface_mode_diameter__m
+    procedure :: number_mixing_ratio__num_mol
     procedure, private :: specific_absorption__m2_kg
     procedure, private :: specific_extinction__m2_kg
     procedure, private :: asymmetry_parameter
@@ -63,6 +64,9 @@ module mam_mode
     integer                     :: number_of_species_
     !> Mode diameter of the wet aerosol number distribution [m]
     real(kind=musica_dk), pointer :: wet_number_mode_diameter__m_ => null( )
+    !> Particle number mixing ratio per mol_air [# mol-1]
+    !! \todo Is this dry air or wet air?
+    real(kind=musica_dk), pointer :: number_mixing_ratio__num_mol_ => null( )
     !> Mass mixing ratio of each mode species relative to dry air [kg kg-1]
     real(kind=musica_dk), pointer :: mass_mixing_ratio__kg_kg_(:) => null( )
   contains
@@ -484,6 +488,20 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+  !> Returns the particle number mixing ratio per mole air [# mol-1]
+  !! \todo is this per mole dry or wet air?
+  real(kind=musica_dk) elemental function number_mixing_ratio__num_mol( this, &
+      mode_state ) result( mixing_ratio )
+
+    class(mode_t),       intent(in) :: this
+    class(mode_state_t), intent(in) :: mode_state
+
+    mixing_ratio = mode_state%number_mixing_ratio__num_mol_
+
+  end function number_mixing_ratio__num_mol
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
   !> Calculates the specific absorption [m2 kg-1] for a given Chebyshev
   !! function
   pure function specific_absorption__m2_kg( this, mode_state, number_of_bands,&
@@ -616,7 +634,7 @@ contains
 
     class(mode_state_t), intent(in) :: this
 
-    raw_size = 1 + this%number_of_species_
+    raw_size = 2 + this%number_of_species_
 
   end function raw_size
 
@@ -634,7 +652,8 @@ contains
     id = 1
     if( present( index ) ) id = index
     this%wet_number_mode_diameter__m_ => raw_state( id )
-    id = id + 1
+    this%number_mixing_ratio__num_mol_ => raw_state( id + 1 )
+    id = id + 2
     last_id = id + this%number_of_species_ - 1
     this%mass_mixing_ratio__kg_kg_ => raw_state( id : last_id )
     if( present( index ) ) index = last_id + 1
@@ -651,8 +670,9 @@ contains
     integer, optional,    intent(inout) :: index
 
     this%wet_number_mode_diameter__m_ => null( )
+    this%number_mixing_ratio__num_mol_ => null( )
     this%mass_mixing_ratio__kg_kg_ => null( )
-    if( present( index ) ) index = index + 1 + this%number_of_species_
+    if( present( index ) ) index = index + 2 + this%number_of_species_
 
   end subroutine dump_state
 
@@ -675,6 +695,7 @@ contains
                      "Trying to randomize an unassociated mode state" )
     call random_number( rand_val )
     this%wet_number_mode_diameter__m_ = 10.0**( rand_val * 3 - 5 )
+    this%number_mixing_ratio__num_mol_ = 10.0**( rand_val * 6 )
     do i_species = 1, size( this%mass_mixing_ratio__kg_kg_ )
       call random_number( rand_val )
       this%mass_mixing_ratio__kg_kg_( i_species ) = rand_val * 2.0e-9

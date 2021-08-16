@@ -36,10 +36,17 @@ contains
     allocate( new_obj%pdeldry( number_of_columns, number_of_layers ) )
     allocate( new_obj%pmid(    number_of_columns, number_of_layers ) )
     allocate( new_obj%t(       number_of_columns, number_of_layers ) )
-    call set_values( new_obj%q,       1.0e-6_r8, 0.05_r8 )
-    call set_values( new_obj%pdeldry,   25.0_r8, 0.05_r8 )
-    call set_values( new_obj%pmid,     9.5e5_r8, 0.05_r8 )
-    call set_values( new_obj%t,        264.2_r8, 0.05_r8 )
+    call set_values( new_obj%q(:,:,1:1),    1.0e3_r8, 0.05_r8 )
+    call set_values( new_obj%q(:,:,2:7),   1.0e-6_r8, 0.05_r8 )
+    call set_values( new_obj%q(:,:,8:8),    1.0e3_r8, 0.05_r8 )
+    call set_values( new_obj%q(:,:,9:12),  1.0e-6_r8, 0.05_r8 )
+    call set_values( new_obj%q(:,:,13:13),  1.0e3_r8, 0.05_r8 )
+    call set_values( new_obj%q(:,:,14:16), 1.0e-6_r8, 0.05_r8 )
+    call set_values( new_obj%q(:,:,17:17),  1.0e3_r8, 0.05_r8 )
+    call set_values( new_obj%q(:,:,18:19), 1.0e-6_r8, 0.05_r8 )
+    call set_values( new_obj%pdeldry,        25.0_r8, 0.05_r8 )
+    call set_values( new_obj%pmid,          9.5e5_r8, 0.05_r8 )
+    call set_values( new_obj%t,             264.2_r8, 0.05_r8 )
     new_obj%ncol = number_of_columns
   end function constructor
 

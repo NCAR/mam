@@ -9,11 +9,11 @@ module constituents
   private
   public :: cnst_get_ind
   integer, parameter, public :: pcnst = 100 ! number of advected constituents
-  character(len=10), parameter :: q_names(15) = &
-    (/ 'so4_a1    ', 'pom_a1    ', 'soa_a1    ', 'bc_a1     ',&
-       'dst_a1    ', 'ncl_a1    ', 'so4_a2    ', 'soa_a2    ',&
-       'ncl_a2    ', 'dst_a2    ', 'dst_a3    ', 'ncl_a3    ',&
-       'so4_a3    ', 'pom_a4    ', 'bc_a4     ' /)
+  character(len=10), parameter :: q_names(19) = &
+    (/ 'num_a1    ', 'so4_a1    ', 'pom_a1    ', 'soa_a1    ', 'bc_a1     ',&
+       'dst_a1    ', 'ncl_a1    ', 'num_a2    ', 'so4_a2    ', 'soa_a2    ',&
+       'ncl_a2    ', 'dst_a2    ', 'num_a3    ', 'dst_a3    ', 'ncl_a3    ',&
+       'so4_a3    ', 'num_a4    ', 'pom_a4    ', 'bc_a4     ' /)
 contains
   subroutine cnst_get_ind(name, ind, abort)
     character(len=*),  intent(in)  :: name

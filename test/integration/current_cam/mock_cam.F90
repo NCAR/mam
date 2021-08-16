@@ -92,8 +92,8 @@ program test_mock_cam
 
   call modal_aero_calcsize_init( )
 
-  state = physics_state( pcols, pver, 6 + 4 + 3 + 2 ) ! the last dimension is the number of constituents
-                                                      ! (species in each mode)
+  state = physics_state( pcols, pver, 4 + 6 + 4 + 3 + 2 ) ! the last dimension is the number of constituents
+                                                          ! (number mr and species for each mode)
 
   call pbuf_init( pbuf )
 
@@ -209,7 +209,7 @@ contains
 
     integer                :: pbuf_id, errcode
     real(kind=r8), pointer :: pbuf_array(:,:,:)
-    real(kind=r8)          :: dgnumwet(4), qaerwat(4), mam_state(23)
+    real(kind=r8)          :: dgnumwet(4), qaerwat(4), mam_state(27)
 
     pbuf_id = -1
     pbuf_id = pbuf_get_index('DGNUMWET', errcode)
@@ -224,17 +224,17 @@ contains
     qaerwat  = pbuf_array( i_column, i_layer, : )
 
     mam_state(1)     = dgnumwet(1)
-    mam_state(2:7)   = state%q( i_column, i_layer, 1:6 )
-    mam_state(8)     = qaerwat(1)
-    mam_state(9)     = dgnumwet(2)
-    mam_state(10:13) = state%q( i_column, i_layer, 7:10 )
-    mam_state(14)    = qaerwat(2)
-    mam_state(15)    = dgnumwet(3)
-    mam_state(16:18) = state%q( i_column, i_layer, 11:13 )
-    mam_state(19)    = qaerwat(3)
-    mam_state(20)    = dgnumwet(4)
-    mam_state(21:22) = state%q( i_column, i_layer, 14:15 )
-    mam_state(23)    = qaerwat(4)
+    mam_state(2:8)   = state%q( i_column, i_layer, 1:7 )
+    mam_state(9)     = qaerwat(1)
+    mam_state(10)    = dgnumwet(2)
+    mam_state(11:15) = state%q( i_column, i_layer, 8:12 )
+    mam_state(16)    = qaerwat(2)
+    mam_state(17)    = dgnumwet(3)
+    mam_state(18:21) = state%q( i_column, i_layer, 13:16 )
+    mam_state(22)    = qaerwat(3)
+    mam_state(23)    = dgnumwet(4)
+    mam_state(24:26) = state%q( i_column, i_layer, 17:19 )
+    mam_state(27)    = qaerwat(4)
 
     call environmental_state%set_layer_thickness__Pa(                         &
                                           state%pdeldry( i_column, i_layer ) )
