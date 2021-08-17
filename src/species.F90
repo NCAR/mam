@@ -26,6 +26,7 @@ module mam_species
     complex(kind=musica_dk), dimension( kNumberOfLongwaveBands  ) ::          &
         longwave_refractive_index_
   contains
+    procedure :: name
     procedure :: volume__m3
     procedure :: shortwave_refractive_index
     procedure :: longwave_refractive_index
@@ -82,6 +83,17 @@ contains
         cmplx( real_values(:), imag_values(:) )
 
   end function constructor
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Returns the species name
+  type(string_t) function name( this )
+
+    class(species_t), intent(in) :: this
+
+    name = this%name_
+
+  end function name
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

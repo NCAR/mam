@@ -24,6 +24,7 @@ module mam_core
     procedure :: get_new_state
     procedure :: optics_accessor
     procedure :: get_optics
+    procedure :: print_state
     procedure, private :: calculate_shortwave_optics
     procedure, private :: calculate_longwave_optics
   end type core_t
@@ -177,6 +178,48 @@ contains
     end select
 
   end subroutine get_optics
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Ouptuts the current aerosol state
+  subroutine print_state( this, aerosol_state, io_unit )
+
+    use ai_util,                       only : die_msg
+    use musica_string,                 only : to_char
+
+    class(core_t),          intent(in) :: this
+    class(aerosol_state_t), intent(in) :: aerosol_state
+    !> Optional output unit (defaults to 6)
+    integer, optional,      intent(in) :: io_unit
+
+    integer :: lunit, i_mode
+
+    lunit = 6
+    if( present( io_unit ) ) lunit = io_unit
+    select type( aerosol_state )
+    class is( state_t )
+      write(lunit,*) "**** MAM Aerosol State ****"
+      if( .not. allocated( this%modes_ ) ) then
+        write(lunit,*) "--- Uninitialized MAM core ---"
+        write(lunit,*) "**** End MAM Aerosol State ****"
+        return
+      end if
+      if( .not. allocated( aerosol_state%mode_states_ ) ) then
+        write(lunit,*) "--- Uninitialized MAM state ---"
+        write(lunit,*) "**** End MAM Aerosol State ****"
+        return
+      end if
+      do i_mode = 1, size( this%modes_ )
+        write(lunit,*) "*** Mode "//trim( to_char( i_mode ) )//" ***"
+        call this%modes_( i_mode )%print_state(                               &
+                               aerosol_state%mode_states_( i_mode ), io_unit )
+      end do
+      write(lunit,*) "**** End MAM Aerosol State ****"
+    class default
+      call die_msg( 970908819, "Invalid state passed to MAM aerosol" )
+    end select
+
+  end subroutine print_state
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

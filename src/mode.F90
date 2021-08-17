@@ -39,6 +39,7 @@ module mam_mode
     procedure :: get_new_state
     procedure :: optics_accessor
     procedure :: get_optics
+    procedure :: print_state
     procedure :: calculate_shortwave_optics
     procedure :: calculate_longwave_optics
     procedure :: geometric_mean_diameter_of_number_distribution__m
@@ -208,6 +209,53 @@ contains
     end select
 
   end subroutine get_optics
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Outputs the current mode state
+  subroutine print_state( this, aerosol_state, io_unit )
+
+    use ai_util,                       only : die_msg
+    use musica_string,                 only : to_char
+
+    class(mode_t),          intent(in) :: this
+    class(aerosol_state_t), intent(in) :: aerosol_state
+    !> Optional output unit (defaults to 6)
+    integer, optional,      intent(in) :: io_unit
+
+    integer :: lunit, i_species
+
+    lunit = 6
+    if( present( io_unit ) ) lunit = io_unit
+    select type( aerosol_state )
+    class is( mode_state_t )
+      write(lunit,*) "** MAM Mode State **"
+      if( .not. allocated( this%species_ ) ) then
+        write(lunit,*) "--- Uninitialized MAM Mode ---"
+        write(lunit,*) "** End MAM Mode State **"
+        return
+      end if
+      if( .not. associated( aerosol_state%mass_mixing_ratio__kg_kg_ ) ) then
+        write(lunit,*) "--- Uninitialized MAM Mode State ---"
+        write(lunit,*) "** End MAM Mode State **"
+        return
+      end if
+      write(lunit,*) "wet mode diameter of number distribution [m]: "//       &
+                     trim( to_char(                                           &
+                         aerosol_state%wet_number_mode_diameter__m_ ) )
+      write(lunit,*) "number mixing ratio [# mol]: "//trim( to_char(          &
+                     aerosol_state%number_mixing_ratio__num_mol_ ) )
+      do i_species = 1, size( this%species_ )
+        write(lunit,*) "species '"//this%species_( i_species )%name( )//      &
+                       "' mass mixing ratio [kg kg-1]: "//                    &
+                       trim( to_char(                                         &
+                       aerosol_state%mass_mixing_ratio__kg_kg_( i_species ) ) )
+      end do
+    class default
+      call die_msg( 285756314, "Invalid state passed to MAM mode" )
+    end select
+
+  end subroutine print_state
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
