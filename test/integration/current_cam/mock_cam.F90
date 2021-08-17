@@ -51,6 +51,7 @@ program test_mock_cam
   type(config_t)                       :: mam_config
   class(accessor_t),           pointer :: sw_accessor, lw_accessor
   type(optics_t)                       :: sw_optics, lw_optics
+  real(r8),                    target  :: raw_mam_state(pcols,pver,27)
 
   integer                            :: list_idx = 0 ! indicator of a diagnostic? 0 seems to be the regular calculation
   type(physics_state),       target  :: state
@@ -113,6 +114,7 @@ program test_mock_cam
   call set_up_optics( sw_optics, lw_optics )
   sw_accessor => aerosol%optics_accessor( sw_optics )
   lw_accessor => aerosol%optics_accessor( lw_optics )
+  call set_raw_mam_states( pbuf, state, raw_mam_state )
 
   !! Current CAM code run
 
@@ -124,7 +126,8 @@ program test_mock_cam
 
   do i_column = 1, pcols
     do i_layer = 1, pver
-      call set_mam_states( i_column, i_layer, pbuf, state, aerosol_state, environmental_state )
+      call environmental_state%set_layer_thickness__Pa( state%pdeldry( i_column, i_layer ) )
+      call aerosol_state%load_state( raw_mam_state( i_column, i_layer, : ) )
       call aerosol%get_optics( sw_accessor, environmental_state, aerosol_state, sw_optics )
       call aerosol%get_optics( lw_accessor, environmental_state, aerosol_state, lw_optics )
       if( i_column .eq. kTestColumn .and. i_layer .eq. kTestLayer ) then
@@ -197,52 +200,51 @@ contains
 
   end subroutine set_up_optics
 
-  subroutine set_mam_states( i_column, i_layer, pbuf, state, aerosol_state,   &
-      environmental_state )
+  subroutine set_raw_mam_states( pbuf, state, raw_states )
 
     use musica_assert,                 only : assert
     use physics_buffer,                only : pbuf_get_index, pbuf_get_field
 
-    integer,                            intent(in)    :: i_column
-    integer,                            intent(in)    :: i_layer
     type(physics_buffer_desc), pointer, intent(inout) :: pbuf(:)
     class(physics_state),      target,  intent(in)    :: state
-    class(aerosol_state_t),             intent(inout) :: aerosol_state
-    class(environmental_state_t),       intent(inout) :: environmental_state
+    real(kind=r8),                      intent(inout) :: raw_states(:,:,:)
 
+    integer                :: i_column, i_layer
     integer                :: pbuf_id, errcode
-    real(kind=r8), pointer :: pbuf_array(:,:,:)
-    real(kind=r8)          :: dgnumwet(4), qaerwat(4), mam_state(27)
+    real(kind=r8), pointer :: dgnumwet_array(:,:,:), qaerwat_array(:,:,:)
+    real(kind=r8)          :: dgnumwet(4), qaerwat(4)
 
     pbuf_id = -1
     pbuf_id = pbuf_get_index('DGNUMWET', errcode)
     call assert( 343719600, errcode .eq. 0 )
-    call pbuf_get_field( pbuf, pbuf_id, pbuf_array )
-    dgnumwet = pbuf_array( i_column, i_layer, : )
+    call pbuf_get_field( pbuf, pbuf_id, dgnumwet_array )
 
     pbuf_id = -1
     pbuf_id = pbuf_get_index('QAERWAT',  errcode)
     call assert( 894782711, errcode .eq. 0 )
-    call pbuf_get_field( pbuf, pbuf_id, pbuf_array )
-    qaerwat  = pbuf_array( i_column, i_layer, : )
+    call pbuf_get_field( pbuf, pbuf_id, qaerwat_array )
 
-    mam_state(1)     = dgnumwet(1)
-    mam_state(2:8)   = state%q( i_column, i_layer, 1:7 )
-    mam_state(9)     = qaerwat(1)
-    mam_state(10)    = dgnumwet(2)
-    mam_state(11:15) = state%q( i_column, i_layer, 8:12 )
-    mam_state(16)    = qaerwat(2)
-    mam_state(17)    = dgnumwet(3)
-    mam_state(18:21) = state%q( i_column, i_layer, 13:16 )
-    mam_state(22)    = qaerwat(3)
-    mam_state(23)    = dgnumwet(4)
-    mam_state(24:26) = state%q( i_column, i_layer, 17:19 )
-    mam_state(27)    = qaerwat(4)
+    do i_column = 1, size( raw_states, 1 )
+      do i_layer = 1, size( raw_states, 2 )
+      associate( mam_state => raw_states( i_column, i_layer, : ) )
+        dgnumwet = dgnumwet_array( i_column, i_layer, : )
+        qaerwat  = qaerwat_array( i_column, i_layer, : )
+        mam_state(1)     = dgnumwet(1)
+        mam_state(2:8)   = state%q( i_column, i_layer, 1:7 )
+        mam_state(9)     = qaerwat(1)
+        mam_state(10)    = dgnumwet(2)
+        mam_state(11:15) = state%q( i_column, i_layer, 8:12 )
+        mam_state(16)    = qaerwat(2)
+        mam_state(17)    = dgnumwet(3)
+        mam_state(18:21) = state%q( i_column, i_layer, 13:16 )
+        mam_state(22)    = qaerwat(3)
+        mam_state(23)    = dgnumwet(4)
+        mam_state(24:26) = state%q( i_column, i_layer, 17:19 )
+        mam_state(27)    = qaerwat(4)
+      end associate
+      end do
+    end do
 
-    call environmental_state%set_layer_thickness__Pa(                         &
-                                          state%pdeldry( i_column, i_layer ) )
-    call aerosol_state%load_state( mam_state )
-
-  end subroutine set_mam_states
+  end subroutine set_raw_mam_states
 
 end program test_mock_cam
