@@ -322,11 +322,14 @@ contains
     real(kind=kDouble), target, intent(inout) :: raw_state(:)
     integer, optional,          intent(inout) :: index
 
-    integer :: i_mode
+    integer :: i_mode, lindex
 
+    lindex = 1
+    if( present( index ) ) lindex = index
     do i_mode = 1, size( this%mode_states_ )
-      call this%mode_states_( i_mode )%load_state( raw_state, index )
+      call this%mode_states_( i_mode )%load_state( raw_state, lindex )
     end do
+    if( present( index ) ) index = lindex
 
   end subroutine load_state
 
@@ -341,11 +344,14 @@ contains
     real(kind=kDouble), intent(inout) :: raw_state(:)
     integer, optional,  intent(inout) :: index
 
-    integer :: i_mode
+    integer :: i_mode, lindex
 
+    lindex = 1
+    if( present( index ) ) lindex = index
     do i_mode = 1, size( this%mode_states_ )
-      call this%mode_states_( i_mode )%dump_state( raw_state, index )
+      call this%mode_states_( i_mode )%dump_state( raw_state, lindex )
     end do
+    if( present( index ) ) index = lindex
 
   end subroutine dump_state
 

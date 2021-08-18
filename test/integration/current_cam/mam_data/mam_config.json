@@ -63,6 +63,9 @@
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
             "imaginary refractive index - longwave" : "refindex_im_aer_lw"
           }
+        },
+        "water" : {
+          "density [kg m-3]" : 1000.0
         }
       },
       "shortwave lookup tables": {
@@ -131,6 +134,9 @@
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
             "imaginary refractive index - longwave" : "refindex_im_aer_lw"
           }
+        },
+        "water" : {
+          "density [kg m-3]" : 1000.0
         }
       },
       "shortwave lookup tables": {
@@ -189,6 +195,9 @@
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
             "imaginary refractive index - longwave" : "refindex_im_aer_lw"
           }
+        },
+        "water" : {
+          "density [kg m-3]" : 1000.0
         }
       },
       "shortwave lookup tables": {
@@ -237,6 +246,9 @@
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
             "imaginary refractive index - longwave" : "refindex_im_aer_lw"
           }
+        },
+        "water" : {
+          "density [kg m-3]" : 1000.0
         }
       },
       "shortwave lookup tables": {

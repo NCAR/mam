@@ -54,33 +54,39 @@ contains
     type(string_t) :: sw_real_ri, sw_imag_ri, lw_real_ri, lw_imag_ri
     type(config_t) :: optics
     real(kind=musica_dk), allocatable :: real_values(:), imag_values(:)
+    logical :: found
 
     call config%get( "name",              new_obj%name_,           my_name )
     call config%get( "density", "kg m-3", new_obj%density__kg_m3_, my_name )
-    call config%get( "optics",            optics,                  my_name )
-    call optics%get( "file name",         file_name,               my_name )
-    call optics%get( "real refractive index - shortwave",      sw_real_ri,    &
-                     my_name )
-    call optics%get( "real refractive index - longwave",       lw_real_ri,    &
-                     my_name )
-    call optics%get( "imaginary refractive index - shortwave", sw_imag_ri,    &
-                     my_name )
-    call optics%get( "imaginary refractive index - longwave",  lw_imag_ri,    &
-                     my_name )
-    allocate( real_values( kNumberOfShortwaveBands ) )
-    allocate( imag_values( kNumberOfShortwaveBands ) )
-    call get_file_data( file_name, sw_real_ri, real_values, my_name )
-    call get_file_data( file_name, sw_imag_ri, imag_values, my_name )
-    new_obj%shortwave_refractive_index_(:) =                                  &
-        cmplx( real_values(:), imag_values(:) )
-    deallocate( real_values )
-    deallocate( imag_values )
-    allocate( real_values( kNumberOfLongwaveBands ) )
-    allocate( imag_values( kNumberOfLongwaveBands ) )
-    call get_file_data( file_name, lw_real_ri, real_values, my_name )
-    call get_file_data( file_name, lw_imag_ri, imag_values, my_name )
-    new_obj%longwave_refractive_index_(:) =                                   &
-        cmplx( real_values(:), imag_values(:) )
+    call config%get( "optics",            optics,   my_name, found = found )
+    if( found ) then
+      call optics%get( "file name",         file_name,               my_name )
+      call optics%get( "real refractive index - shortwave",      sw_real_ri,  &
+                       my_name )
+      call optics%get( "real refractive index - longwave",       lw_real_ri,  &
+                       my_name )
+      call optics%get( "imaginary refractive index - shortwave", sw_imag_ri,  &
+                       my_name )
+      call optics%get( "imaginary refractive index - longwave",  lw_imag_ri,  &
+                       my_name )
+      allocate( real_values( kNumberOfShortwaveBands ) )
+      allocate( imag_values( kNumberOfShortwaveBands ) )
+      call get_file_data( file_name, sw_real_ri, real_values, my_name )
+      call get_file_data( file_name, sw_imag_ri, imag_values, my_name )
+      new_obj%shortwave_refractive_index_(:) =                                &
+          cmplx( real_values(:), imag_values(:) )
+      deallocate( real_values )
+      deallocate( imag_values )
+      allocate( real_values( kNumberOfLongwaveBands ) )
+      allocate( imag_values( kNumberOfLongwaveBands ) )
+      call get_file_data( file_name, lw_real_ri, real_values, my_name )
+      call get_file_data( file_name, lw_imag_ri, imag_values, my_name )
+      new_obj%longwave_refractive_index_(:) =                                 &
+          cmplx( real_values(:), imag_values(:) )
+    else
+      new_obj%shortwave_refractive_index_(:) = cmplx( 0.0, 0.0 )
+      new_obj%longwave_refractive_index_(:)  = cmplx( 0.0, 0.0 )
+    end if
 
   end function constructor
 
