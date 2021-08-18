@@ -41,6 +41,13 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Constructs species_t objects
+  !!
+  !! \todo The complex refractive indices in the NetCDF files use a different
+  !!       convention for specifying the complex index of refraction that
+  !!       results in the need to take the absolute value of the imaginary
+  !!       part to get the complex index of refraction used in MAM.
+  !!       The NetCDF files should be updated to use positive values for the
+  !!       imaginary part.
   function constructor( config ) result( new_obj )
 
     use musica_config,                 only : config_t
@@ -74,7 +81,7 @@ contains
       call get_file_data( file_name, sw_real_ri, real_values, my_name )
       call get_file_data( file_name, sw_imag_ri, imag_values, my_name )
       new_obj%shortwave_refractive_index_(:) =                                &
-          cmplx( real_values(:), imag_values(:) )
+          cmplx( real_values(:), abs( imag_values(:) ) )
       deallocate( real_values )
       deallocate( imag_values )
       allocate( real_values( kNumberOfLongwaveBands ) )
@@ -82,7 +89,7 @@ contains
       call get_file_data( file_name, lw_real_ri, real_values, my_name )
       call get_file_data( file_name, lw_imag_ri, imag_values, my_name )
       new_obj%longwave_refractive_index_(:) =                                 &
-          cmplx( real_values(:), imag_values(:) )
+          cmplx( real_values(:), abs( imag_values(:) ) )
     else
       new_obj%shortwave_refractive_index_(:) = cmplx( 0.0, 0.0 )
       new_obj%longwave_refractive_index_(:)  = cmplx( 0.0, 0.0 )

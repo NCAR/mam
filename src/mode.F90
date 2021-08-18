@@ -394,7 +394,7 @@ contains
                    mode_state%mass_mixing_ratio__kg_kg_( i_species ) )
       species_volume_to_mass_mr = species%volume__m3( species_mmr )
       do i_band = 1, kNLB
-        species_refractive_index = species%shortwave_refractive_index( i_band )
+        species_refractive_index = species%longwave_refractive_index( i_band )
         net_refractive_index( i_band ) = net_refractive_index( i_band ) +     &
                                          species_refractive_index *           &
                                          species_volume_to_mass_mr

@@ -65,7 +65,14 @@
           }
         },
         "water" : {
-          "density [kg m-3]" : 1000.0
+          "density [kg m-3]" : 1000.0,
+          "optics" : {
+            "file name" : "mam_data/water_refindex_rrtmg_c080910.nc",
+            "real refractive index - shortwave" : "refindex_real_water_sw",
+            "real refractive index - longwave" : "refindex_real_water_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_water_sw",
+            "imaginary refractive index - longwave" : "refindex_im_water_lw"
+          }
         }
       },
       "shortwave lookup tables": {
@@ -136,7 +143,14 @@
           }
         },
         "water" : {
-          "density [kg m-3]" : 1000.0
+          "density [kg m-3]" : 1000.0,
+          "optics" : {
+            "file name" : "mam_data/water_refindex_rrtmg_c080910.nc",
+            "real refractive index - shortwave" : "refindex_real_water_sw",
+            "real refractive index - longwave" : "refindex_real_water_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_water_sw",
+            "imaginary refractive index - longwave" : "refindex_im_water_lw"
+          }
         }
       },
       "shortwave lookup tables": {
@@ -197,7 +211,14 @@
           }
         },
         "water" : {
-          "density [kg m-3]" : 1000.0
+          "density [kg m-3]" : 1000.0,
+          "optics" : {
+            "file name" : "mam_data/water_refindex_rrtmg_c080910.nc",
+            "real refractive index - shortwave" : "refindex_real_water_sw",
+            "real refractive index - longwave" : "refindex_real_water_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_water_sw",
+            "imaginary refractive index - longwave" : "refindex_im_water_lw"
+          }
         }
       },
       "shortwave lookup tables": {
@@ -248,7 +269,14 @@
           }
         },
         "water" : {
-          "density [kg m-3]" : 1000.0
+          "density [kg m-3]" : 1000.0,
+          "optics" : {
+            "file name" : "mam_data/water_refindex_rrtmg_c080910.nc",
+            "real refractive index - shortwave" : "refindex_real_water_sw",
+            "real refractive index - longwave" : "refindex_real_water_lw",
+            "imaginary refractive index - shortwave" : "refindex_im_water_sw",
+            "imaginary refractive index - longwave" : "refindex_im_water_lw"
+          }
         }
       },
       "shortwave lookup tables": {
