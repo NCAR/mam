@@ -331,10 +331,9 @@ contains
                                                  size_function,               &
                                                  max_absorption = extinction )
     absorption(:) = min( absorption(:), extinction(:) )
-    asymmetry_parameter =                                                     &
-        this%specific_extinction__m2_kg( mode_state, kNSB, kNCC,              &
-                                         asymmetry_parameter_coefficients,    &
-                                         size_function )
+    asymmetry_parameter = this%asymmetry_parameter( mode_state, kNSB, kNCC,   &
+                                             asymmetry_parameter_coefficients,&
+                                             size_function )
     ssa(:) = 1.0_musica_dk - absorption(:)                                    &
              / ( max( extinction(:), 1.0e-40_musica_dk ) )
     layer_aod = extinction(:) * environmental_state%layer_thickness__Pa( )    &
@@ -649,20 +648,20 @@ contains
     use musica_math,                   only : weighted_chebyshev
 
     real(kind=musica_dk) :: asymmetry_parameter( number_of_bands )
-    class(mode_t),       intent(in)  :: this
-    class(mode_state_t), intent(in)  :: mode_state
+    class(mode_t),        intent(in) :: this
+    class(mode_state_t),  intent(in) :: mode_state
     integer,              intent(in) :: number_of_bands
-    integer,             intent(in)  :: number_of_coefficients
+    integer,              intent(in) :: number_of_coefficients
     !> Chebyshev coefficients for asymmetry parameter calculation
     real(kind=musica_dk), intent(in) :: coefficients( number_of_coefficients, &
-                                                       number_of_bands )
+                                                      number_of_bands )
     !> Chebyshev function for the current surface mode radius
     real(kind=musica_dk), intent(in) :: size_function( number_of_coefficients )
 
     integer :: i_band
 
     do i_band = 1, number_of_bands
-    associate( asym => asymmetry_parameter )
+    associate( asym => asymmetry_parameter( i_band ) )
       asym = weighted_chebyshev( number_of_coefficients,                      &
                                  coefficients( :, i_band ),                   &
                                  size_function )

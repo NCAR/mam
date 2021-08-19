@@ -245,8 +245,8 @@
       }
     },
     {
-      "geometric mean diameter of number distribution [m]" : 5e-8,
-      "geometric standard deviation of number distribution" : 1.6,
+      "geometric mean diameter of number distribution [m]" : 5.00000005843049e-08,
+      "geometric standard deviation of number distribution" : 1.60000002384186,
       "species" : {
         "pom" : {
           "density [kg m-3]" : 1000.0,
