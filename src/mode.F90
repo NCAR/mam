@@ -320,7 +320,7 @@ contains
                       asymmetry_parameter = asymmetry_parameter_coefficients )
     ! get Chebyshev function for normalized wet number mode diameter
     normalized_radius = this%shortwave_lookup_%normalize_radius(              &
-                              this%wet_number_mode_diameter__m( mode_state ) )
+                              this%wet_surface_mode_radius__m( mode_state ) )
     call chebyshev_function( normalized_radius, size_function )
     ! calculate optical properties
     extinction = this%specific_extinction__m2_kg( mode_state, kNSB, kNCC,     &
@@ -410,7 +410,7 @@ contains
                                         absorption = absorption_coefficients )
     ! get Chebyshev function for normalized wet number mode diameter
     normalized_radius = this%shortwave_lookup_%normalize_radius(              &
-                              this%wet_number_mode_diameter__m( mode_state ) )
+                              this%wet_surface_mode_radius__m( mode_state ) )
     call chebyshev_function( normalized_radius, size_function )
     ! calculate optical properties
     absorption = this%specific_absorption__m2_kg( mode_state, kNLB, kNCC,     &
