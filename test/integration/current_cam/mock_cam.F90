@@ -25,12 +25,15 @@ program test_mock_cam
   use modal_aero_calcsize,             only : modal_aero_calcsize_init
   use modal_aero_wateruptake,          only : modal_aero_wateruptake_init
   use mpi
+  use musica_assert,                   only : assert, almost_equal
   use musica_config,                   only : config_t
+  use musica_constants,                only : musica_dk
   use physics_types,                   only : physics_state
   use physics_buffer,                  only : physics_buffer_desc, pbuf_init
   use ppgrid,                          only : pcols, pver
   use rad_constituents,                only : rad_cnst_readnl, rad_cnst_init
   use radconstants,                    only : nswbands, nlwbands
+  use ref_pres,                        only : top_lev => clim_modal_aero_top_lev
   use shr_kind_mod,                    only : r8 => shr_kind_r8
   use shr_pio_mod,                     only : shr_pio_init1, shr_pio_init2
 
@@ -41,9 +44,6 @@ program test_mock_cam
   integer, parameter :: kShortGa  = 3
   integer, parameter :: kShortFa  = 4
   integer, parameter :: kLongAbs  = 1
-
-  integer, parameter :: kTestColumn = 13
-  integer, parameter :: kTestLayer  = 26
 
   class(aerosol_t),            pointer :: aerosol
   class(aerosol_state_t),      pointer :: aerosol_state
@@ -70,7 +70,7 @@ program test_mock_cam
   character(len=20), dimension(1) :: comp_name
   logical, dimension(1) :: comp_iamin
 
-  integer :: i_column, i_layer, error_code, compute_comm
+  integer :: i_column, i_layer, i_band, error_code, compute_comm
 
 
   !! Current CAM code initialization
@@ -125,38 +125,37 @@ program test_mock_cam
   !! MAM run
 
   do i_column = 1, pcols
-    do i_layer = 1, pver
+    do i_layer = top_lev, pver
       call environmental_state%set_layer_thickness__Pa( state%pdeldry( i_column, i_layer ) )
       call aerosol_state%load_state( raw_mam_state( i_column, i_layer, : ) )
       call aerosol%get_optics( sw_accessor, environmental_state, aerosol_state, sw_optics )
       call aerosol%get_optics( lw_accessor, environmental_state, aerosol_state, lw_optics )
-      if( i_column .eq. kTestColumn .and. i_layer .eq. kTestLayer ) then
-        write(*,*) "MAM results"
-        write(*,*) "tau"
-        write(*,*) sw_optics%values_(:, kShortTau )
-        write(*,*) "tau_w"
-        write(*,*) sw_optics%values_(:, kShortWa )
-        write(*,*) "tau_w_g"
-        write(*,*) sw_optics%values_(:, kShortGa )
-        write(*,*) "tau_w_f"
-        write(*,*) sw_optics%values_(:, kShortFa )
-        write(*,*) "odap_aer"
-        write(*,*) lw_optics%values_(:, kLongAbs )
-      end if
+      do i_band = 1, nswbands
+        call assert( 282393958, &
+                     almost_equal( sw_optics%values_( i_band, kShortTau ), &
+                                   tau( i_column, i_layer, i_band ), &
+                                   relative_tolerance = 1.0e-5_musica_dk ) )
+        call assert( 444380077, &
+                     almost_equal( sw_optics%values_( i_band, kShortWa ), &
+                                   tau_w( i_column, i_layer, i_band ), &
+                                   relative_tolerance = 1.0e-5_musica_dk ) )
+        call assert( 274223173, &
+                     almost_equal( sw_optics%values_( i_band, kShortGa ), &
+                                   tau_w_g( i_column, i_layer, i_band ), &
+                                   relative_tolerance = 1.0e-5_musica_dk ) )
+        call assert( 439115770, &
+                     almost_equal( sw_optics%values_( i_band, kShortFa ), &
+                                   tau_w_f( i_column, i_layer, i_band ), &
+                                   relative_tolerance = 1.0e-5_musica_dk ) )
+      end do
+      do i_band = 1, nlwbands
+        call assert( 282393958, &
+                     almost_equal( lw_optics%values_( i_band, kLongAbs ), &
+                                   odap_aer( i_column, i_layer, i_band ), &
+                                   relative_tolerance = 1.0e-5_musica_dk ) )
+      end do
     end do
   end do
-
-  write(*,*) "CAM results"
-  write(*,*) "tau"
-  write(*,*) tau(kTestColumn,kTestLayer,:)
-  write(*,*) "tau_w"
-  write(*,*) tau_w(kTestColumn,kTestLayer,:)
-  write(*,*) "tau_w_g"
-  write(*,*) tau_w_g(kTestColumn,kTestLayer,:)
-  write(*,*) "tau_w_f"
-  write(*,*) tau_w_f(kTestColumn,kTestLayer,:)
-  write(*,*) "odap_aer"
-  write(*,*) odap_aer(kTestColumn,kTestLayer,:)
 
   deallocate( sw_accessor )
   deallocate( lw_accessor )
