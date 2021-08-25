@@ -105,16 +105,16 @@ include_directories(${PIO_C_INCLUDE_DIR})
 include_directories(${PIO_FORTRAN_INCLUDE_DIR})
 
 ################################################################################
+# musica-core library
+
+add_subdirectory(libs/aerosol-interface/libs/musica-core/src)
+include_directories(${CMAKE_BINARY_DIR}/libs/aerosol-interface/libs/musica-core/src)
+
+################################################################################
 # Aerosol-interface library
 
 add_subdirectory(libs/aerosol-interface/src)
 include_directories(${CMAKE_BINARY_DIR}/libs/aerosol-interface/src)
-
-################################################################################
-# musica-core library
-
-add_subdirectory(libs/musica-core/src)
-include_directories(${CMAKE_BINARY_DIR}/libs/musica-core/src)
 
 ################################################################################
 # MAM library
