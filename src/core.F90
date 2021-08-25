@@ -51,7 +51,6 @@ contains
   !> Constructor of the MAM core
   function constructor( config ) result( new_obj )
 
-    use ai_constants,                  only : r8 => kDouble
     use mam_species,                   only : species_t
     use musica_config,                 only : config_t
     use musica_iterator,               only : iterator_t
@@ -113,11 +112,11 @@ contains
 
     use ai_accessor,                   only : accessor_t
     use ai_optics,                     only : optics_t
-    use ai_wavelength_grid,            only : wavelength_grid_t, kWavenumber, &
-                                              kCentimeter
     use mam_optics_accessor,           only : optics_accessor_t
     use mam_optics_constants,          only : shortwave_lower, longwave_lower,&
                                               shortwave_upper, longwave_upper
+    use musica_wavelength_grid,        only : wavelength_grid_t, kWavenumber, &
+                                              kCentimeter
 
     class(accessor_t), pointer    :: optics_accessor
     class(core_t),     intent(in) :: this
@@ -148,8 +147,8 @@ contains
     use ai_accessor,                   only : accessor_t
     use ai_environmental_state,        only : environmental_state_t
     use ai_optics,                     only : optics_t
-    use ai_util,                       only : die_msg
     use mam_optics_accessor,           only : optics_accessor_t
+    use musica_assert,                 only : die_msg
 
     class(core_t),                intent(in)    :: this
     class(accessor_t),            intent(in)    :: optics_accessor
@@ -184,7 +183,7 @@ contains
   !> Ouptuts the current aerosol state
   subroutine print_state( this, aerosol_state, io_unit )
 
-    use ai_util,                       only : die_msg
+    use musica_assert,                 only : die_msg
     use musica_string,                 only : to_char
 
     class(core_t),          intent(in) :: this
@@ -227,10 +226,10 @@ contains
   subroutine calculate_shortwave_optics( this, optics_accessor,               &
       environmental_state, aerosol_state, optics )
 
-    use ai_constants,                  only : r8 => kDouble
     use ai_environmental_state,        only : environmental_state_t
     use ai_optics,                     only : optics_t
     use mam_optics_accessor,           only : optics_accessor_t
+    use musica_constants,              only : r8 => musica_dk
 
     class(core_t),                intent(in)    :: this
     class(optics_accessor_t),     intent(in)    :: optics_accessor
@@ -262,10 +261,10 @@ contains
   subroutine calculate_longwave_optics( this, optics_accessor,                &
       environmental_state, aerosol_state, optics )
 
-    use ai_constants,                  only : r8 => kDouble
     use ai_environmental_state,        only : environmental_state_t
     use ai_optics,                     only : optics_t
     use mam_optics_accessor,           only : optics_accessor_t
+    use musica_constants,              only : r8 => musica_dk
 
     class(core_t),                intent(in)    :: this
     class(optics_accessor_t),     intent(in)    :: optics_accessor
@@ -316,10 +315,10 @@ contains
   !> Loads raw MAM state data to the state_t object
   subroutine load_state( this, raw_state, index )
 
-    use ai_constants,                  only : kDouble
+    use musica_constants,              only : musica_dk
 
     class(state_t),             intent(inout) :: this
-    real(kind=kDouble), target, intent(inout) :: raw_state(:)
+    real(kind=musica_dk), target, intent(inout) :: raw_state(:)
     integer, optional,          intent(inout) :: index
 
     integer :: i_mode, lindex
@@ -338,10 +337,10 @@ contains
   !> Dumps the raw MAM state data to an array
   subroutine dump_state( this, raw_state, index )
 
-    use ai_constants,                  only : kDouble
+    use musica_constants,              only : musica_dk
 
     class(state_t),     intent(inout) :: this
-    real(kind=kDouble), intent(inout) :: raw_state(:)
+    real(kind=musica_dk), intent(inout) :: raw_state(:)
     integer, optional,  intent(inout) :: index
 
     integer :: i_mode, lindex

@@ -142,11 +142,11 @@ contains
 
     use ai_accessor,                   only : accessor_t
     use ai_optics,                     only : optics_t
-    use ai_wavelength_grid,            only : wavelength_grid_t, kWavenumber, &
-                                              kCentimeter
     use mam_optics_accessor,           only : optics_accessor_t
     use mam_optics_constants,          only : shortwave_lower, longwave_lower,&
                                               shortwave_upper, longwave_upper
+    use musica_wavelength_grid,        only : wavelength_grid_t, kWavenumber, &
+                                              kCentimeter
 
     class(accessor_t), pointer    :: optics_accessor
     class(mode_t),     intent(in) :: this
@@ -178,8 +178,8 @@ contains
     use ai_aerosol_state,              only : aerosol_state_t
     use ai_environmental_state,        only : environmental_state_t
     use ai_optics,                     only : optics_t
-    use ai_util,                       only : die_msg
     use mam_optics_accessor,           only : optics_accessor_t
+    use musica_assert,                 only : die_msg
 
     class(mode_t),                intent(in)    :: this
     class(accessor_t),            intent(in)    :: optics_accessor
@@ -215,7 +215,7 @@ contains
   !> Outputs the current mode state
   subroutine print_state( this, aerosol_state, io_unit )
 
-    use ai_util,                       only : die_msg
+    use musica_assert,                 only : die_msg
     use musica_string,                 only : to_char
 
     class(mode_t),          intent(in) :: this

@@ -7,7 +7,7 @@
 !> Constants used to calculate MAM optical properties
 module mam_optics_constants
 
-  use ai_constants,                    only : r8 => kDouble
+  use musica_constants,                only : r8 => musica_dk
 
   implicit none
 

@@ -7,7 +7,7 @@
 !> The interpolator_t type and related functions
 module mam_interpolator
 
-  use ai_constants,                    only : kDouble
+  use musica_constants,                only : musica_dk
 
   implicit none
   private
@@ -15,9 +15,9 @@ module mam_interpolator
   public :: interpolator_t
 
   type :: map_element_t
-    integer            :: from_index_
-    integer            :: to_index_
-    real(kind=kDouble) :: weight_
+    integer              :: from_index_
+    integer              :: to_index_
+    real(kind=musica_dk) :: weight_
   end type map_element_t
 
   !> Interpolator between wavelength grids
@@ -39,7 +39,7 @@ contains
   !> Constructs an interpolator_t for a given pair of wavelength grids
   function constructor( from_grid, to_grid ) result( new_obj )
 
-    use ai_wavelength_grid,            only : wavelength_grid_t
+    use musica_wavelength_grid,        only : wavelength_grid_t
 
     type(interpolator_t) :: new_obj
     class(wavelength_grid_t), intent(in) :: from_grid
@@ -56,8 +56,8 @@ contains
   subroutine interpolate( this, from, to )
 
     class(interpolator_t), intent(in)    :: this
-    real(kind=kDouble),    intent(in)    :: from(:)
-    real(kind=kDouble),    intent(inout) :: to(:)
+    real(kind=musica_dk),  intent(in)    :: from(:)
+    real(kind=musica_dk),  intent(inout) :: to(:)
 
     integer :: i_map
 

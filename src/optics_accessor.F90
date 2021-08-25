@@ -50,43 +50,51 @@ contains
   !> Constructs an optics accessor
   function constructor( shortwave, longwave, optics ) result( new_obj )
 
-    use ai_constants,                  only : r8 => kDouble
     use ai_optics,                     only : optics_t
-    use ai_wavelength_grid,            only : wavelength_grid_t, kWavenumber, &
+    use musica_assert,                 only : assert_msg, die_msg
+    use musica_constants,              only : r8 => musica_dk
+    use musica_property,               only : property_t
+    use musica_property_set,           only : property_set_t
+    use musica_string,                 only : string_t
+    use musica_wavelength_grid,        only : wavelength_grid_t, kWavenumber, &
                                               kCentimeter
-    use ai_util,                       only : assert_msg, die_msg
 
     type(optics_accessor_t),  pointer    :: new_obj
     class(wavelength_grid_t), intent(in) :: shortwave
     class(wavelength_grid_t), intent(in) :: longwave
     class(optics_t),          intent(in) :: optics
 
-    character(len=:), allocatable :: property
+    type(string_t) :: property_name
+    type(property_set_t) :: property_set
+    class(property_t), pointer :: property
     integer :: i_prop
 
     allocate( new_obj )
 
-    do i_prop = 1, optics%number_of_properties( )
-      property = optics%property_name( i_prop )
-      if( property .eq. "layer extinction optical depth" ) then
+    property_set = optics%property_set( )
+    do i_prop = 1, property_set%size( )
+      property => property_set%get( i_prop )
+      property_name = property%name( )
+      if( property_name .eq. "layer extinction optical depth" ) then
         new_obj%layer_extinction_optical_depth_index_ = i_prop
         new_obj%is_shortwave_ = .true.
-      else if( property .eq. "layer single-scatter albedo depth" ) then
+      else if( property_name .eq. "layer single-scatter albedo depth" ) then
         new_obj%layer_single_scatter_albedo_index_ = i_prop
         new_obj%is_shortwave_ = .true.
-      else if( property .eq. "asymmetry factor" ) then
+      else if( property_name .eq. "asymmetry factor" ) then
         new_obj%asymmetry_factor_index_ = i_prop
         new_obj%is_shortwave_ = .true.
-      else if( property .eq. "forward scattered fraction" ) then
+      else if( property_name .eq. "forward scattered fraction" ) then
         new_obj%forward_scattered_fraction_index_ = i_prop
         new_obj%is_shortwave_ = .true.
-      else if( property .eq. "layer absorption optical depth" ) then
+      else if( property_name .eq. "layer absorption optical depth" ) then
         new_obj%layer_absorption_optical_depth_index_ = i_prop
         new_obj%is_longwave_ = .true.
       else
         call die_msg( 312536255, "Unsupported optical property: "//           &
-                      trim( property ) )
+                      trim( property_name%to_char( ) ) )
       end if
+      deallocate( property )
     end do
 
     call assert_msg( 195405898,                                               &

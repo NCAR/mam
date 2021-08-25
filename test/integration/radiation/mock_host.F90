@@ -9,10 +9,10 @@ program test_mock_host
 
   use ai_aerosol,                      only : aerosol_t
   use ai_aerosol_state,                only : aerosol_state_t
-  use ai_constants,                    only : kDouble
   use ai_environmental_state,          only : environmental_state_t
   use mam_core,                        only : mam_core_t => core_t
   use musica_config,                   only : config_t
+  use musica_constants,                only : musica_dk
   use test_mock_radiation,             only : rad_core_t => core_t
 
   implicit none
@@ -22,7 +22,7 @@ program test_mock_host
 
   class(aerosol_t), pointer :: aerosol
   class(aerosol_state_t), pointer :: aerosol_state
-  real(kind=kDouble), allocatable :: raw_aerosol_states(:,:,:)
+  real(kind=musica_dk), allocatable :: raw_aerosol_states(:,:,:)
   type(rad_core_t) :: rad_core
   type(environmental_state_t), allocatable :: environmental_states(:,:)
   type(config_t) :: mam_config

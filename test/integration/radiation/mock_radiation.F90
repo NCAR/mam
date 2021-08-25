@@ -8,9 +8,9 @@
 module test_mock_radiation
 
   use ai_accessor,                     only : accessor_t
-  use ai_constants,                    only : kDouble
   use ai_optics,                       only : optics_t
-  use ai_wavelength_grid,              only : wavelength_grid_t
+  use musica_constants,                only : musica_dk
+  use musica_wavelength_grid,          only : wavelength_grid_t
 
   implicit none
   private
@@ -29,8 +29,8 @@ module test_mock_radiation
     type(optics_t)             :: longwave_optics_
     !> @name Optical property values (wavelength, property, layer, column)
     !! @{
-    real(kind=kDouble), allocatable :: shortwave_optics_values_(:,:,:,:)
-    real(kind=kDouble), allocatable :: longwave_optics_values_( :,:,:,:)
+    real(kind=musica_dk), allocatable :: shortwave_optics_values_(:,:,:,:)
+    real(kind=musica_dk), allocatable :: longwave_optics_values_( :,:,:,:)
     !! @}
   contains
     procedure :: run
@@ -55,9 +55,10 @@ contains
       result( new_core )
 
     use ai_aerosol,                    only : aerosol_t
-    use ai_constants,                  only : r8 => kDouble
-    use ai_property,                   only : property_t
-    use ai_wavelength_grid,            only : kWavenumber, kCentimeter
+    use musica_constants,              only : r8 => musica_dk
+    use musica_property,               only : property_t
+    use musica_property_set,           only : property_set_t
+    use musica_wavelength_grid,        only : kWavenumber, kCentimeter
 
     !> New radiation core
     type(core_t) :: new_core
@@ -67,6 +68,8 @@ contains
     integer, intent(in) :: number_of_columns
     !> Number of layers
     integer, intent(in) :: number_of_layers
+
+    character(len=*), parameter :: my_name = "mock radiation consttructor"
 
     ! number of shorwave spectral intervals
     integer, parameter :: nswbands = 14
@@ -90,8 +93,8 @@ contains
       (/  350._r8,  500._r8,  630._r8,  700._r8,  820._r8,  980._r8, 1080._r8, 1180._r8, &
          1390._r8, 1480._r8, 1800._r8, 2080._r8, 2250._r8, 2390._r8, 2600._r8, 3250._r8 /)
 
-    type(property_t), dimension(4) :: shortwave_props
-    type(property_t), dimension(1) :: longwave_props
+    type(property_set_t), pointer :: shortwave_props, longwave_props
+    class(property_t),    pointer :: property
 
     new_core%number_of_columns_ = number_of_columns
     new_core%number_of_layers_  = number_of_layers
@@ -106,16 +109,34 @@ contains
                                                  bounds_in    = kWavenumber,  &
                                                  base_unit    = kCentimeter )
 
-    shortwave_props(kShortTau)   =                                            &
-        property_t( "layer extinction optical depth",    "unitless" )
-    shortwave_props(kShortWa)  =                                              &
-        property_t( "layer single-scatter albedo depth", "unitless" )
-    shortwave_props(kShortGa) =                                               &
-        property_t( "asymmetry factor",                  "unitless" )
-    shortwave_props(kShortFa) =                                               &
-        property_t( "forward scattered fraction",        "unitless" )
-    longwave_props(kLongAbs)     =                                            &
-        property_t( "layer absorption optical depth",    "unitless" )
+    shortwave_props => property_set_t( )
+    property => property_t( my_name,                                          &
+                            name  = "layer extinction optical depth",         &
+                            units = "unitless" )
+    call shortwave_props%add( property )
+    deallocate( property )
+    property => property_t( my_name,                                          &
+                            name  = "layer single-scatter albedo depth",      &
+                            units = "unitless" )
+    call shortwave_props%add( property )
+    deallocate( property )
+    property => property_t( my_name,                                          &
+                            name  = "asymmetry factor",                       &
+                            units = "unitless" )
+    call shortwave_props%add( property )
+    deallocate( property )
+    property => property_t( my_name,                                          &
+                            name  = "forward scattered fraction",             &
+                            units = "unitless" )
+    call shortwave_props%add( property )
+    deallocate( property )
+
+    longwave_props => property_set_t( )
+    property => property_t( my_name,                                          &
+                            name  = "layer absorption optical depth",         &
+                            units = "unitless" )
+    call longwave_props%add( property )
+    deallocate( property )
 
     new_core%shortwave_optics_ = optics_t( shortwave_props,                   &
                                            new_core%shortwave_grid_ )
@@ -128,12 +149,12 @@ contains
         aerosol%optics_accessor( new_core%longwave_optics_  )
 
     allocate( new_core%shortwave_optics_values_( nbndsw,                      &
-                                                 size( shortwave_props ),     &
+                                                 shortwave_props%size( ),     &
                                                  number_of_layers,            &
                                                  number_of_columns ) )
 
     allocate( new_core%longwave_optics_values_(  nlwbands,                    &
-                                                 size( longwave_props ),      &
+                                                 longwave_props%size( ),      &
                                                  number_of_layers,            &
                                                  number_of_columns ) )
 
@@ -156,7 +177,7 @@ contains
     !> Aerosol state object
     class(aerosol_state_t), intent(inout) :: aerosol_state
     !> Raw aerosol state data for the model grid (aerosol state, layer, column)
-    real(kind=kDouble), intent(inout) :: raw_aerosol_states(:,:,:)
+    real(kind=musica_dk), intent(inout) :: raw_aerosol_states(:,:,:)
     !> Environmental states (layer, column)
     class(environmental_state_t), intent(in) :: environmental_states(:,:)
 

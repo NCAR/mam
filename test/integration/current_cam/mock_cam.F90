@@ -11,7 +11,6 @@ program test_mock_cam
   use ai_accessor,                     only : accessor_t
   use ai_aerosol,                      only : aerosol_t
   use ai_aerosol_state,                only : aerosol_state_t
-  use ai_constants,                    only : kDouble
   use ai_environmental_state,          only : environmental_state_t
   use ai_optics,                       only : optics_t
   use cam_abortutils,                  only : endrun
@@ -164,9 +163,10 @@ contains
 
   subroutine set_up_optics( sw_optics, lw_optics )
 
-    use ai_wavelength_grid,            only : wavelength_grid_t,              &
+    use musica_property,               only : property_t
+    use musica_property_set,           only : property_set_t
+    use musica_wavelength_grid,        only : wavelength_grid_t,              &
                                               kWavenumber, kCentimeter
-    use ai_property,                   only : property_t
     use radconstants,                  only : wavenum_low, wavenum_high,      &
                                               wavenumber1_longwave,           &
                                               wavenumber2_longwave
@@ -174,9 +174,11 @@ contains
     type(optics_t), intent(inout) :: sw_optics
     type(optics_t), intent(inout) :: lw_optics
 
+    character(len=*), parameter :: my_name = "CAM set up optics"
     type(wavelength_grid_t)        :: sw_grid, lw_grid
-    type(property_t), dimension(4) :: sw_props
-    type(property_t), dimension(1) :: lw_props
+
+    type(property_set_t), pointer :: sw_props, lw_props
+    class(property_t),    pointer :: property
 
     sw_grid = wavelength_grid_t( wavenum_low, wavenum_high,                   &
                                  bounds_in = kWavenumber,                     &
@@ -184,16 +186,34 @@ contains
     lw_grid = wavelength_grid_t( wavenumber1_longwave, wavenumber2_longwave,  &
                                  bounds_in = kWavenumber,                     &
                                  base_unit = kCentimeter )
-    sw_props(kShortTau) =                                                     &
-        property_t( "layer extinction optical depth",    "unitless" )
-    sw_props(kShortWa)  =                                                     &
-        property_t( "layer single-scatter albedo depth", "unitless" )
-    sw_props(kShortGa)  =                                                     &
-        property_t( "asymmetry factor",                  "unitless" )
-    sw_props(kShortFa)  =                                                     &
-        property_t( "forward scattered fraction",        "unitless" )
-    lw_props(kLongAbs)  =                                                     &
-        property_t( "layer absorption optical depth",    "unitless" )
+    sw_props => property_set_t( )
+    property => property_t( my_name,                                          &
+                            name  = "layer extinction optical depth",         &
+                            units = "unitless" )
+    call sw_props%add( property )
+    deallocate( property )
+    property => property_t( my_name,                                          &
+                            name  = "layer single-scatter albedo depth",      &
+                            units = "unitless" )
+    call sw_props%add( property )
+    deallocate( property )
+    property => property_t( my_name,                                          &
+                            name  = "asymmetry factor",                       &
+                            units = "unitless" )
+    call sw_props%add( property )
+    deallocate( property )
+    property => property_t( my_name,                                          &
+                            name  = "forward scattered fraction",             &
+                            units = "unitless" )
+    call sw_props%add( property )
+    deallocate( property )
+
+    lw_props => property_set_t( )
+    property => property_t( my_name,                                          &
+                            name  = "layer absorption optical depth",         &
+                            units = "unitless" )
+    call lw_props%add( property )
+    deallocate( property )
     sw_optics = optics_t( sw_props, sw_grid )
     lw_optics = optics_t( lw_props, lw_grid )
 
