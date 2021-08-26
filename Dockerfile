@@ -15,6 +15,7 @@ RUN sudo dnf -y install \
         gcc \
         cmake \
         make \
+        gcovr \
         netcdf-fortran-devel \
         openmpi-devel \
         git \
@@ -51,6 +52,6 @@ RUN mkdir build \
     && export JSON_FORTRAN_HOME="/usr/local/jsonfortran-gnu-8.2.0" \
     && cmake -D CMAKE_C_COMPILER="mpicc" \
              -D CMAKE_Fortran_COMPILER="mpif90" \
-             -D CMAKE_BUILD_TYPE=DEBUG \
+             -D CMAKE_BUILD_TYPE=COVERAGE \
              ../mam \
     && make

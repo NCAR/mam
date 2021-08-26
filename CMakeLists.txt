@@ -3,9 +3,25 @@ project(MAM)
 enable_language(Fortran)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-modules)
 
 ################################################################################
 # options
+
+option(ENABLE_COVERAGE "Enable code coverage output" ON)
+
+################################################################################
+# Test code coverage
+
+if(ENABLE_COVERAGE)
+  include(CodeCoverage)
+  if(CMAKE_COMPILER_IS_GNUCXX)
+    setup_target_for_coverage_gcovr_xml(
+        NAME coverage
+        EXECUTABLE "ctest"
+        BASE_DIRECTORY "${PROJECT_SOURCE_DIR}/src")
+  endif()
+endif()
 
 ################################################################################
 # json-fortran library
