@@ -407,7 +407,7 @@ contains
     call this%longwave_lookup_%get_optics( net_refractive_index,              &
                                         absorption = absorption_coefficients )
     ! get Chebyshev function for normalized wet number mode diameter
-    normalized_radius = this%shortwave_lookup_%normalize_radius(              &
+    normalized_radius = this%longwave_lookup_%normalize_radius(               &
                               this%wet_surface_mode_radius__m( mode_state ) )
     call chebyshev_function( normalized_radius, size_function )
     ! calculate optical properties

@@ -7,7 +7,7 @@ add_custom_target(copy_test_data ALL ${CMAKE_COMMAND} -E copy_directory
 ################################################################################
 # MAM Tests
 
-add_subdirectory(integration)
 add_subdirectory(unit)
+add_subdirectory(integration)
 
 ################################################################################

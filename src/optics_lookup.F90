@@ -83,30 +83,15 @@ contains
     logical :: found
 
     call config%get( "file path", file_path, my_name )
-    new_lookup%data_( kAbsorption      ) =                                    &
-        optics_data_t( "specific absorption lookup", file_path, config )
-    new_lookup%data_( kExtinction      ) =                                    &
-        optics_data_t( "specific extinction lookup", file_path, config )
-    new_lookup%data_( kAsymmetryFactor ) =                                    &
-        optics_data_t( "asymmetry factor lookup",    file_path, config )
-    new_lookup%number_of_wavelength_bands_ =                                  &
-        size( new_lookup%data_( 1 )%values_, 4 )
-    do i_param = 2, kNumberOfParameters
-      if( .not. new_lookup%data_( i_param )%is_loaded_ ) cycle
-      call assert_msg( 284936197,                                             &
-                       size( new_lookup%data_( i_param )%values_, 4 )         &
-                       .eq. new_lookup%number_of_wavelength_bands_,           &
-                       "Dimension mismatch in optics_lookup_t data" )
-    end do
     call config%get( "axis 1", axis_1_name, my_name )
     call get_file_data( file_path, axis_1_name, axis_1_values, my_name )
     call config%get( "axis 2", axis_2_name, my_name )
     call get_file_data( file_path, axis_2_name, axis_2_values, my_name )
+    call assert_msg( 756675500, size( axis_1_values, 2 ) .eq.                 &
+                                size( axis_2_values, 2 ),                     &
+                     "Optics lookup axis dimension mismatch" )
+    new_lookup%number_of_wavelength_bands_ = size( axis_1_values, 2 )
     allocate( new_lookup%axes_( new_lookup%number_of_wavelength_bands_ ) )
-    call assert( 756675500, size( axis_1_values, 2 ) .eq.                     &
-                            new_lookup%number_of_wavelength_bands_ )
-    call assert( 469388239, size( axis_2_values, 2 ) .eq.                     &
-                            new_lookup%number_of_wavelength_bands_ )
     do i_band = 1, new_lookup%number_of_wavelength_bands_
       axis_1 = lookup_axis_t( axis_1_name, axis_1_values( :, i_band ) )
       axis_2 = lookup_axis_t( axis_2_name, axis_2_values( :, i_band ) )
@@ -120,6 +105,19 @@ contains
     call get_file_data( file_path, variable_name,                             &
                         new_lookup%maximum_ln_radius_, my_name )
     new_lookup%maximum_ln_radius_ = log( new_lookup%maximum_ln_radius_ )
+    new_lookup%data_( kAbsorption      ) =                                    &
+        optics_data_t( "specific absorption lookup", file_path, config )
+    new_lookup%data_( kExtinction      ) =                                    &
+        optics_data_t( "specific extinction lookup", file_path, config )
+    new_lookup%data_( kAsymmetryFactor ) =                                    &
+        optics_data_t( "asymmetry factor lookup",    file_path, config )
+    do i_param = 1, kNumberOfParameters
+      if( .not. new_lookup%data_( i_param )%is_loaded_ ) cycle
+      call assert_msg( 284936197,                                             &
+                       size( new_lookup%data_( i_param )%values_, 4 )         &
+                       .eq. new_lookup%number_of_wavelength_bands_,           &
+                       "Dimension mismatch in optics_lookup_t data" )
+    end do
 
   end function constructor
 
