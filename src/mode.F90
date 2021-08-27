@@ -9,8 +9,7 @@ module mam_mode
 
   use ai_aerosol,                      only : aerosol_t
   use ai_aerosol_state,                only : aerosol_state_t
-  use mam_mode_longwave_optics_lookup, only : mode_longwave_optics_lookup_t
-  use mam_mode_shortwave_optics_lookup,only : mode_shortwave_optics_lookup_t
+  use mam_optics_lookup,               only : optics_lookup_t
   use mam_species,                     only : species_t
   use musica_constants,                only : musica_dk
 
@@ -26,15 +25,15 @@ module mam_mode
   type, extends(aerosol_t) :: mode_t
     private
     !> Geometric mean diameter [m] of number distribution
-    real(kind=musica_dk)           :: geometric_mean_diameter__m_
+    real(kind=musica_dk)         :: geometric_mean_diameter__m_
     !> Geometric standard deviation of number distribution
-    real(kind=musica_dk)           :: geometric_standard_deviation_
+    real(kind=musica_dk)         :: geometric_standard_deviation_
     !> Chemical species that can be present in the mode
     type(species_t), allocatable :: species_(:)
     !> Shortwave optical property lookup table
-    type(mode_shortwave_optics_lookup_t) :: shortwave_lookup_
+    type(optics_lookup_t)        :: shortwave_lookup_
     !> Longwave optical property lookup table
-    type(mode_longwave_optics_lookup_t)  :: longwave_lookup_
+    type(optics_lookup_t)        :: longwave_lookup_
   contains
     procedure :: get_new_state
     procedure :: optics_accessor
@@ -52,7 +51,7 @@ module mam_mode
     procedure :: number_mixing_ratio__num_mol
     procedure, private :: specific_absorption__m2_kg
     procedure, private :: specific_extinction__m2_kg
-    procedure, private :: asymmetry_parameter
+    procedure, private :: asymmetry_factor
   end type mode_t
 
   interface mode_t
@@ -91,7 +90,7 @@ contains
     class(config_t), intent(inout) :: config
 
     character(len=*), parameter :: my_name = "MAM mode_t constructor"
-    type(config_t) :: spectrum, species_set, species
+    type(config_t) :: optics_config, species_set, species
     class(iterator_t), pointer :: iter
     integer :: i_species
 
@@ -109,10 +108,10 @@ contains
       new_obj%species_( i_species ) = species_t( species )
       i_species = i_species + 1
     end do
-    call config%get( "shortwave lookup tables", spectrum, my_name )
-    new_obj%shortwave_lookup_ = mode_shortwave_optics_lookup_t( spectrum )
-    call config%get( "longwave lookup tables",  spectrum, my_name )
-    new_obj%longwave_lookup_  = mode_longwave_optics_lookup_t(  spectrum )
+    call config%get( "shortwave lookup tables", optics_config, my_name )
+    new_obj%shortwave_lookup_ = optics_lookup_t( optics_config )
+    call config%get( "longwave lookup tables",  optics_config, my_name )
+    new_obj%longwave_lookup_  = optics_lookup_t( optics_config )
     deallocate( iter )
 
   end function constructor
@@ -280,7 +279,7 @@ contains
     integer                 :: i_species, i_band, i_prop
     real(kind=musica_dk)    :: absorption_coefficients( kNCC, kNSB )
     real(kind=musica_dk)    :: extinction_coefficients( kNCC, kNSB )
-    real(kind=musica_dk)    :: asymmetry_parameter_coefficients( kNCC, kNSB )
+    real(kind=musica_dk)    :: asymmetry_factor_coefficients( kNCC, kNSB )
     real(kind=musica_dk)    :: size_function( kNCC )
     complex(kind=musica_dk) :: net_refractive_index( kNSB )
     complex(kind=musica_dk) :: species_refractive_index
@@ -288,7 +287,7 @@ contains
     real(kind=musica_dk)    :: total_volume_to_mass_mr   ! [m3 kg-1]
     real(kind=musica_dk)    :: absorption( kNSB )
     real(kind=musica_dk)    :: extinction( kNSB )
-    real(kind=musica_dk)    :: asymmetry_parameter( kNSB )
+    real(kind=musica_dk)    :: asymmetry_factor( kNSB )
     real(kind=musica_dk)    :: normalized_radius
     real(kind=musica_dk)    :: ssa( kNSB )       ! single scattering albedo
     reaL(kind=musica_dk)    :: layer_aod( kNSB ) ! layer aerosol optical depth
@@ -317,7 +316,7 @@ contains
     call this%shortwave_lookup_%get_optics( net_refractive_index,             &
                       absorption = absorption_coefficients,                   &
                       extinction = extinction_coefficients,                   &
-                      asymmetry_parameter = asymmetry_parameter_coefficients )
+                      asymmetry_factor = asymmetry_factor_coefficients )
     ! get Chebyshev function for normalized wet number mode diameter
     normalized_radius = this%shortwave_lookup_%normalize_radius(              &
                               this%wet_surface_mode_radius__m( mode_state ) )
@@ -331,8 +330,8 @@ contains
                                                  size_function,               &
                                                  max_absorption = extinction )
     absorption(:) = min( absorption(:), extinction(:) )
-    asymmetry_parameter = this%asymmetry_parameter( mode_state, kNSB, kNCC,   &
-                                             asymmetry_parameter_coefficients,&
+    asymmetry_factor = this%asymmetry_factor( mode_state, kNSB, kNCC,         &
+                                              asymmetry_factor_coefficients,  &
                                              size_function )
     ssa(:) = 1.0_musica_dk - absorption(:)                                    &
              / ( max( extinction(:), 1.0e-40_musica_dk ) )
@@ -344,11 +343,11 @@ contains
     if( i_prop .gt. 0 ) optics%values_(:,i_prop) = layer_aod(:) * ssa(:)
     i_prop = optics_accessor%asymmetry_factor_index( )
     if( i_prop .gt. 0 ) optics%values_(:,i_prop) = layer_aod(:) * ssa(:)      &
-                                                   * asymmetry_parameter(:)
+                                                   * asymmetry_factor(:)
     i_prop = optics_accessor%forward_scattered_fraction_index( )
     if( i_prop .gt. 0 ) optics%values_(:,i_prop) = layer_aod(:) * ssa(:)      &
-                                                   * asymmetry_parameter(:)   &
-                                                   * asymmetry_parameter(:)
+                                                   * asymmetry_factor(:)      &
+                                                   * asymmetry_factor(:)
 
   end subroutine calculate_shortwave_optics
 
@@ -641,13 +640,13 @@ contains
 
   !> Calculates the asymmetry parameter [unitless ratio] for a given Chebyshev
   !! function
-  pure function asymmetry_parameter( this, mode_state, number_of_bands,       &
+  pure function asymmetry_factor( this, mode_state, number_of_bands,          &
       number_of_coefficients, coefficients, size_function )
 
     use mam_constants,                 only : kWaterDensitySTP
     use musica_math,                   only : weighted_chebyshev
 
-    real(kind=musica_dk) :: asymmetry_parameter( number_of_bands )
+    real(kind=musica_dk) :: asymmetry_factor( number_of_bands )
     class(mode_t),        intent(in) :: this
     class(mode_state_t),  intent(in) :: mode_state
     integer,              intent(in) :: number_of_bands
@@ -661,14 +660,14 @@ contains
     integer :: i_band
 
     do i_band = 1, number_of_bands
-    associate( asym => asymmetry_parameter( i_band ) )
+    associate( asym => asymmetry_factor( i_band ) )
       asym = weighted_chebyshev( number_of_coefficients,                      &
                                  coefficients( :, i_band ),                   &
                                  size_function )
     end associate
     end do
 
-  end function asymmetry_parameter
+  end function asymmetry_factor
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!

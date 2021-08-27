@@ -5,10 +5,9 @@ set( MAM_SRC constants.F90
              core.F90
              interpolator.F90
              mode.F90
-             mode_shortwave_optics_lookup.F90
-             mode_longwave_optics_lookup.F90
              optics_accessor.F90
              optics_constants.F90
+             optics_lookup.F90
              species.F90
    )
 
