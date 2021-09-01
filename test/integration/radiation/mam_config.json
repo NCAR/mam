@@ -7,7 +7,7 @@
         "hydrophilic organics" : {
           "density [kg m-3]" : 772.0,
           "optics" : {
-            "file name" : "mam_data/hydrophilic_organics_optics.nc",
+            "file path" : "mam_data/hydrophilic_organics_optics.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
@@ -17,7 +17,7 @@
         "hydrophobic organics" : {
           "density [kg m-3]" : 981.0,
           "optics" : {
-            "file name" : "mam_data/hydrophobic_organics_optics.nc",
+            "file path" : "mam_data/hydrophobic_organics_optics.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
@@ -55,7 +55,7 @@
         "SO4" : {
           "density [kg m-3]" : 814.0,
           "optics" : {
-            "file name" : "mam_data/SO4_optics.nc",
+            "file path" : "mam_data/SO4_optics.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",

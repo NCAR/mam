@@ -7,7 +7,7 @@
         "so4" : {
           "density [kg m-3]" : 1770.0,
           "optics" : {
-            "file name" : "mam_data/sulfate_rrtmg_c080918.nc",
+            "file path" : "mam_data/sulfate_rrtmg_c080918.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
@@ -17,7 +17,7 @@
         "pom" : {
           "density [kg m-3]" : 1000.0,
           "optics" : {
-            "file name" : "mam_data/ocpho_rrtmg_c130709.nc",
+            "file path" : "mam_data/ocpho_rrtmg_c130709.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
@@ -27,7 +27,7 @@
         "soa" : {
           "density [kg m-3]" : 1000.0,
           "optics" : {
-            "file name" : "mam_data/ocphi_rrtmg_c100508.nc",
+            "file path" : "mam_data/ocphi_rrtmg_c100508.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
@@ -37,7 +37,7 @@
         "bc" : {
           "density [kg m-3]" : 1700.0,
           "optics" : {
-            "file name" : "mam_data/bcpho_rrtmg_c100508.nc",
+            "file path" : "mam_data/bcpho_rrtmg_c100508.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
@@ -47,7 +47,7 @@
         "dst" : {
           "density [kg m-3]" : 2600.0,
           "optics" : {
-            "file name" : "mam_data/dust_aeronet_rrtmg_c141106.nc",
+            "file path" : "mam_data/dust_aeronet_rrtmg_c141106.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
@@ -57,7 +57,7 @@
         "ncl" : {
           "density [kg m-3]" : 1900.0,
           "optics" : {
-            "file name" : "mam_data/ssam_rrtmg_c100508.nc",
+            "file path" : "mam_data/ssam_rrtmg_c100508.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
@@ -67,7 +67,7 @@
         "water" : {
           "density [kg m-3]" : 1000.0,
           "optics" : {
-            "file name" : "mam_data/water_refindex_rrtmg_c080910.nc",
+            "file path" : "mam_data/water_refindex_rrtmg_c080910.nc",
             "real refractive index - shortwave" : "refindex_real_water_sw",
             "real refractive index - longwave" : "refindex_real_water_lw",
             "imaginary refractive index - shortwave" : "refindex_im_water_sw",
@@ -105,7 +105,7 @@
         "so4" : {
           "density [kg m-3]" : 1770.0,
           "optics" : {
-            "file name" : "mam_data/sulfate_rrtmg_c080918.nc",
+            "file path" : "mam_data/sulfate_rrtmg_c080918.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
@@ -115,7 +115,7 @@
         "soa" : {
           "density [kg m-3]" : 1000.0,
           "optics" : {
-            "file name" : "mam_data/ocphi_rrtmg_c100508.nc",
+            "file path" : "mam_data/ocphi_rrtmg_c100508.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
@@ -125,7 +125,7 @@
         "ncl" : {
           "density [kg m-3]" : 1900.0,
           "optics" : {
-            "file name" : "mam_data/ssam_rrtmg_c100508.nc",
+            "file path" : "mam_data/ssam_rrtmg_c100508.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
@@ -135,7 +135,7 @@
         "dst" : {
           "density [kg m-3]" : 2600.0,
           "optics" : {
-            "file name" : "mam_data/dust_aeronet_rrtmg_c141106.nc",
+            "file path" : "mam_data/dust_aeronet_rrtmg_c141106.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
@@ -145,7 +145,7 @@
         "water" : {
           "density [kg m-3]" : 1000.0,
           "optics" : {
-            "file name" : "mam_data/water_refindex_rrtmg_c080910.nc",
+            "file path" : "mam_data/water_refindex_rrtmg_c080910.nc",
             "real refractive index - shortwave" : "refindex_real_water_sw",
             "real refractive index - longwave" : "refindex_real_water_lw",
             "imaginary refractive index - shortwave" : "refindex_im_water_sw",
@@ -183,7 +183,7 @@
         "dst" : {
           "density [kg m-3]" : 2600.0,
           "optics" : {
-            "file name" : "mam_data/dust_aeronet_rrtmg_c141106.nc",
+            "file path" : "mam_data/dust_aeronet_rrtmg_c141106.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
@@ -193,7 +193,7 @@
         "ncl" : {
           "density [kg m-3]" : 1900.0,
           "optics" : {
-            "file name" : "mam_data/ssam_rrtmg_c100508.nc",
+            "file path" : "mam_data/ssam_rrtmg_c100508.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
@@ -203,7 +203,7 @@
         "so4" : {
           "density [kg m-3]" : 1770.0,
           "optics" : {
-            "file name" : "mam_data/sulfate_rrtmg_c080918.nc",
+            "file path" : "mam_data/sulfate_rrtmg_c080918.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
@@ -213,7 +213,7 @@
         "water" : {
           "density [kg m-3]" : 1000.0,
           "optics" : {
-            "file name" : "mam_data/water_refindex_rrtmg_c080910.nc",
+            "file path" : "mam_data/water_refindex_rrtmg_c080910.nc",
             "real refractive index - shortwave" : "refindex_real_water_sw",
             "real refractive index - longwave" : "refindex_real_water_lw",
             "imaginary refractive index - shortwave" : "refindex_im_water_sw",
@@ -251,7 +251,7 @@
         "pom" : {
           "density [kg m-3]" : 1000.0,
           "optics" : {
-            "file name" : "mam_data/ocpho_rrtmg_c130709.nc",
+            "file path" : "mam_data/ocpho_rrtmg_c130709.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
@@ -261,7 +261,7 @@
         "bc" : {
           "density [kg m-3]" : 1700.0,
           "optics" : {
-            "file name" : "mam_data/bcpho_rrtmg_c100508.nc",
+            "file path" : "mam_data/bcpho_rrtmg_c100508.nc",
             "real refractive index - shortwave" : "refindex_real_aer_sw",
             "real refractive index - longwave" : "refindex_real_aer_lw",
             "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
@@ -271,7 +271,7 @@
         "water" : {
           "density [kg m-3]" : 1000.0,
           "optics" : {
-            "file name" : "mam_data/water_refindex_rrtmg_c080910.nc",
+            "file path" : "mam_data/water_refindex_rrtmg_c080910.nc",
             "real refractive index - shortwave" : "refindex_real_water_sw",
             "real refractive index - longwave" : "refindex_real_water_lw",
             "imaginary refractive index - shortwave" : "refindex_im_water_sw",
