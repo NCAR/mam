@@ -175,6 +175,8 @@ contains
   !! coefficients
   !!
   !! Radii are converted to ln(radius) prior to normalization
+  !!
+  !! Normalized radii range from -1...1
   real(kind=musica_dk) elemental function normalize_radius( this, radius__m )
 
     class(optics_lookup_t), intent(in) :: this
