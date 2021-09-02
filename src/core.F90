@@ -75,6 +75,7 @@ contains
       new_obj%modes_( i_mode ) = mode_t( mode )
       i_mode = i_mode + 1
     end do
+    deallocate( iter )
 
   end function constructor
 

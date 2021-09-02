@@ -61,5 +61,8 @@ program test_mock_host
   ! end time loops
 
   deallocate( aerosol )
+  deallocate( aerosol_state )
+  deallocate( raw_aerosol_states )
+  deallocate( environmental_states )
 
 end program test_mock_host

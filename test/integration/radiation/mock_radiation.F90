@@ -34,6 +34,7 @@ module test_mock_radiation
     !! @}
   contains
     procedure :: run
+    final :: finalize
   end type core_t
 
   interface core_t
@@ -157,6 +158,8 @@ contains
                                                  longwave_props%size( ),      &
                                                  number_of_layers,            &
                                                  number_of_columns ) )
+    deallocate( shortwave_props )
+    deallocate( longwave_props )
 
   end function constructor
 
@@ -208,6 +211,24 @@ contains
     write(*,*) this%longwave_optics_values_(:, kLongAbs, 5, 20 )
 
   end subroutine run
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize the core
+  subroutine finalize( this )
+
+    type(core_t), intent(inout) :: this
+
+    if( associated( this%shortwave_optics_accessor_ ) )                       &
+      deallocate( this%shortwave_optics_accessor_ )
+    if( associated( this%longwave_optics_accessor_ ) )                        &
+      deallocate( this%longwave_optics_accessor_ )
+    if( allocated( this%shortwave_optics_values_ ) )                          &
+      deallocate( this%shortwave_optics_values_ )
+    if( allocated( this%longwave_optics_values_ ) )                           &
+      deallocate( this%longwave_optics_values_ )
+
+  end subroutine finalize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

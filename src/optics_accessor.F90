@@ -65,13 +65,13 @@ contains
     class(optics_t),          intent(in) :: optics
 
     type(string_t) :: property_name
-    type(property_set_t) :: property_set
+    type(property_set_t), pointer :: property_set
     class(property_t), pointer :: property
     integer :: i_prop
 
     allocate( new_obj )
 
-    property_set = optics%property_set( )
+    property_set => optics%property_set( )
     do i_prop = 1, property_set%size( )
       property => property_set%get( i_prop )
       property_name = property%name( )
@@ -96,6 +96,7 @@ contains
       end if
       deallocate( property )
     end do
+    deallocate( property_set )
 
     call assert_msg( 195405898,                                               &
                      new_obj%is_shortwave_ .neqv. new_obj%is_longwave_,       &
