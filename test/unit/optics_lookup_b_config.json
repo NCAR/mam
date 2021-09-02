@@ -1,0 +1,8 @@
+{
+  "file path" : "optics_lookup_b_data.nc",
+  "axis 1" : "real_refractive_index",
+  "axis 2" : "imaginary_refractive_index",
+  "specific absorption lookup" : {
+    "variable name" : "absorption"
+  }
+}

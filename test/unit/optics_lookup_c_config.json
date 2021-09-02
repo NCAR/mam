@@ -1,0 +1,14 @@
+{
+  "file path" : "optics_lookup_c_data.nc",
+  "axis 1" : "real_refractive_index",
+  "axis 2" : "imaginary_refractive_index",
+  "specific absorption lookup" : {
+    "variable name" : "absorption"
+  },
+  "specific extinction lookup" : {
+    "variable name" : "extinction"
+  },
+  "asymmetry factor lookup" : {
+    "variable name" : "asymmetry_factor"
+  }
+}
