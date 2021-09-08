@@ -8,8 +8,8 @@
 module mam_optics_accessor
 
   use ai_accessor,                     only : accessor_t
-  use mam_interpolator,                only : interpolator_t
   use mam_optics_constants
+  use musica_interpolator,             only : interpolator_t
 
   implicit none
   private
