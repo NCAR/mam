@@ -9,8 +9,8 @@ module test_mock_radiation
 
   use ai_accessor,                     only : accessor_t
   use ai_optics,                       only : optics_t
+  use ai_wavelength_grid,              only : wavelength_grid_t
   use musica_constants,                only : musica_dk
-  use musica_wavelength_grid,          only : wavelength_grid_t
 
   implicit none
   private
@@ -56,10 +56,10 @@ contains
       result( new_core )
 
     use ai_aerosol,                    only : aerosol_t
+    use ai_wavelength_grid,            only : kWavenumber, kCentimeter
     use musica_constants,              only : r8 => musica_dk
     use musica_property,               only : property_t
     use musica_property_set,           only : property_set_t
-    use musica_wavelength_grid,        only : kWavenumber, kCentimeter
 
     !> New radiation core
     type(core_t) :: new_core

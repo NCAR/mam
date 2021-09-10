@@ -51,13 +51,13 @@ contains
   function constructor( shortwave, longwave, optics ) result( new_obj )
 
     use ai_optics,                     only : optics_t
+    use ai_wavelength_grid,            only : wavelength_grid_t, kWavenumber, &
+                                              kCentimeter
     use musica_assert,                 only : assert_msg, die_msg
     use musica_constants,              only : r8 => musica_dk
     use musica_property,               only : property_t
     use musica_property_set,           only : property_set_t
     use musica_string,                 only : string_t
-    use musica_wavelength_grid,        only : wavelength_grid_t, kWavenumber, &
-                                              kCentimeter
 
     type(optics_accessor_t),  pointer    :: new_obj
     class(wavelength_grid_t), intent(in) :: shortwave

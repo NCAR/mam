@@ -141,11 +141,11 @@ contains
 
     use ai_accessor,                   only : accessor_t
     use ai_optics,                     only : optics_t
+    use ai_wavelength_grid,            only : wavelength_grid_t, kWavenumber, &
+                                              kCentimeter
     use mam_optics_accessor,           only : optics_accessor_t
     use mam_optics_constants,          only : shortwave_lower, longwave_lower,&
                                               shortwave_upper, longwave_upper
-    use musica_wavelength_grid,        only : wavelength_grid_t, kWavenumber, &
-                                              kCentimeter
 
     class(accessor_t), pointer    :: optics_accessor
     class(mode_t),     intent(in) :: this
