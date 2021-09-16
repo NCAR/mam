@@ -163,10 +163,10 @@ contains
 
   subroutine set_up_optics( sw_optics, lw_optics )
 
+    use ai_wavelength_grid,            only : wavelength_grid_t,              &
+                                              kWavenumber, kCentimeter
     use musica_property,               only : property_t
     use musica_property_set,           only : property_set_t
-    use musica_wavelength_grid,        only : wavelength_grid_t,              &
-                                              kWavenumber, kCentimeter
     use radconstants,                  only : wavenum_low, wavenum_high,      &
                                               wavenumber1_longwave,           &
                                               wavenumber2_longwave

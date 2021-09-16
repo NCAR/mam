@@ -3,7 +3,6 @@
 
 set( MAM_SRC constants.F90
              core.F90
-             interpolator.F90
              mode.F90
              optics_accessor.F90
              optics_constants.F90
