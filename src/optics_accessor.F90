@@ -55,6 +55,7 @@ contains
                                               kCentimeter
     use musica_assert,                 only : assert_msg, die_msg
     use musica_constants,              only : r8 => musica_dk
+    use musica_interpolator_linear_1D, only : strategy
     use musica_property,               only : property_t
     use musica_property_set,           only : property_set_t
     use musica_string,                 only : string_t
@@ -104,11 +105,13 @@ contains
                      "longwave grids not supported." )
 
     if( new_obj%is_shortwave_ ) then
-      new_obj%interpolator_ = interpolator_t( shortwave, optics%grid( ) )
+      new_obj%interpolator_ =                                                 &
+          interpolator_t( strategy, shortwave, optics%grid( ) )
     end if
 
     if( new_obj%is_longwave_ ) then
-      new_obj%interpolator_ = interpolator_t( longwave, optics%grid( ) )
+      new_obj%interpolator_ =                                                 &
+          interpolator_t( strategy, longwave, optics%grid( ) )
     end if
 
   end function constructor
