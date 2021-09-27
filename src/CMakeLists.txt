@@ -4,9 +4,8 @@
 set( MAM_SRC constants.F90
              core.F90
              mode.F90
-             optics_accessor.F90
-             optics_constants.F90
              optics_lookup.F90
+             optics_util.F90
              species.F90
    )
 

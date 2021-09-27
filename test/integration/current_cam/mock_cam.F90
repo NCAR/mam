@@ -8,11 +8,10 @@
 !! optics code
 program test_mock_cam
 
-  use ai_accessor,                     only : accessor_t
   use ai_aerosol,                      only : aerosol_t
   use ai_aerosol_state,                only : aerosol_state_t
   use ai_environmental_state,          only : environmental_state_t
-  use ai_optics,                       only : optics_t
+  use ai_optics,                       only : optics_t, optics_ptr
   use cam_abortutils,                  only : endrun
   use aer_rad_props,                   only : aer_rad_props_init,             &
                                               aer_rad_props_sw,               &
@@ -48,8 +47,10 @@ program test_mock_cam
   class(aerosol_state_t),      pointer :: aerosol_state
   type(environmental_state_t)          :: environmental_state
   type(config_t)                       :: mam_config
-  class(accessor_t),           pointer :: sw_accessor, lw_accessor
-  type(optics_t)                       :: sw_optics, lw_optics
+  class(optics_t),             pointer :: sw_extinction, sw_single_scatter_albedo
+  class(optics_t),             pointer :: sw_asymmetry_factor, sw_forward_scattered_fraction
+  class(optics_t),             pointer :: lw_absorption
+  type(optics_ptr)                     :: sw_optics(4)
   real(r8),                    target  :: raw_mam_state(pcols,pver,27)
 
   integer                            :: list_idx = 0 ! indicator of a diagnostic? 0 seems to be the regular calculation
@@ -62,6 +63,9 @@ program test_mock_cam
   real(r8) :: tau_w  (pcols,0:pver,nswbands) ! aerosol single scattering albedo * tau
   real(r8) :: tau_w_g(pcols,0:pver,nswbands) ! aerosol assymetry parameter * tau * w
   real(r8) :: tau_w_f(pcols,0:pver,nswbands) ! aerosol forward scattered fraction * tau * w
+
+  real(r8) :: lw_values(nlwbands) ! temporary storage for optics comparisons
+  real(r8) :: sw_values(nswbands,4) ! temporary storage for optics comparisons
 
   real(r8) :: odap_aer(pcols,pver,nlwbands) ! [fraction] absorption optical depth, per layer
 
@@ -109,10 +113,8 @@ program test_mock_cam
 
   call mam_config%from_file( "mam_data/mam_config.json" )
   aerosol => mam_core_t( mam_config )
-  aerosol_state => aerosol%get_new_state( )
-  call set_up_optics( sw_optics, lw_optics )
-  sw_accessor => aerosol%optics_accessor( sw_optics )
-  lw_accessor => aerosol%optics_accessor( lw_optics )
+  aerosol_state => aerosol%new_state( )
+  call set_up_optics( )
   call set_raw_mam_states( pbuf, state, raw_mam_state )
 
   !! Current CAM code run
@@ -127,41 +129,43 @@ program test_mock_cam
     do i_layer = top_lev, pver
       call environmental_state%set_layer_thickness__Pa( state%pdeldry( i_column, i_layer ) )
       call aerosol_state%load_state( raw_mam_state( i_column, i_layer, : ) )
-      call aerosol%get_optics( sw_accessor, environmental_state, aerosol_state, sw_optics )
-      call aerosol%get_optics( lw_accessor, environmental_state, aerosol_state, lw_optics )
+      call aerosol%shortwave_optics( environmental_state, aerosol_state, sw_optics )
+      call aerosol%longwave_optics(  environmental_state, aerosol_state, lw_absorption )
+      call sw_extinction%get_values(                 sw_values( :, kShortTau ) )
+      call sw_single_scatter_albedo%get_values(      sw_values( :, kShortWa  ) )
+      call sw_asymmetry_factor%get_values(           sw_values( :, kShortGa  ) )
+      call sw_forward_scattered_fraction%get_values( sw_values( :, kShortFa  ) )
       do i_band = 1, nswbands
         call assert( 282393958, &
-                     almost_equal( sw_optics%values_( i_band, kShortTau ), &
+                     almost_equal( sw_values( i_band, kShortTau ), &
                                    tau( i_column, i_layer, i_band ), &
-                                   relative_tolerance = 1.0e-5_musica_dk ) )
+                                   relative_tolerance = 1.0e-6_musica_dk ) )
         call assert( 444380077, &
-                     almost_equal( sw_optics%values_( i_band, kShortWa ), &
+                     almost_equal( sw_values( i_band, kShortWa ), &
                                    tau_w( i_column, i_layer, i_band ), &
-                                   relative_tolerance = 1.0e-5_musica_dk ) )
+                                   relative_tolerance = 1.0e-6_musica_dk ) )
         call assert( 274223173, &
-                     almost_equal( sw_optics%values_( i_band, kShortGa ), &
+                     almost_equal( sw_values( i_band, kShortGa ), &
                                    tau_w_g( i_column, i_layer, i_band ), &
-                                   relative_tolerance = 1.0e-5_musica_dk ) )
+                                   relative_tolerance = 1.0e-6_musica_dk ) )
         call assert( 439115770, &
-                     almost_equal( sw_optics%values_( i_band, kShortFa ), &
+                     almost_equal( sw_values( i_band, kShortFa ), &
                                    tau_w_f( i_column, i_layer, i_band ), &
-                                   relative_tolerance = 1.0e-5_musica_dk ) )
+                                   relative_tolerance = 1.0e-6_musica_dk ) )
       end do
+      call lw_absorption%get_values( lw_values )
       do i_band = 1, nlwbands
-        call assert( 282393958, &
-                     almost_equal( lw_optics%values_( i_band, kLongAbs ), &
+        call assert( 331834483, &
+                     almost_equal( lw_values( i_band ), &
                                    odap_aer( i_column, i_layer, i_band ), &
-                                   relative_tolerance = 1.0e-5_musica_dk ) )
+                                   relative_tolerance = 1.0e-6_musica_dk ) )
       end do
     end do
   end do
 
-  deallocate( sw_accessor )
-  deallocate( lw_accessor )
-
 contains
 
-  subroutine set_up_optics( sw_optics, lw_optics )
+  subroutine set_up_optics( )
 
     use ai_wavelength_grid,            only : wavelength_grid_t,              &
                                               kWavenumber, kCentimeter
@@ -171,13 +175,9 @@ contains
                                               wavenumber1_longwave,           &
                                               wavenumber2_longwave
 
-    type(optics_t), intent(inout) :: sw_optics
-    type(optics_t), intent(inout) :: lw_optics
-
     character(len=*), parameter :: my_name = "CAM set up optics"
     type(wavelength_grid_t)        :: sw_grid, lw_grid
 
-    type(property_set_t), pointer :: sw_props, lw_props
     class(property_t),    pointer :: property
 
     sw_grid = wavelength_grid_t( wavenum_low, wavenum_high,                   &
@@ -186,36 +186,36 @@ contains
     lw_grid = wavelength_grid_t( wavenumber1_longwave, wavenumber2_longwave,  &
                                  bounds_in = kWavenumber,                     &
                                  base_unit = kCentimeter )
-    sw_props => property_set_t( )
     property => property_t( my_name,                                          &
                             name  = "layer extinction optical depth",         &
                             units = "unitless" )
-    call sw_props%add( property )
+    sw_extinction => aerosol%new_optics( property, sw_grid )
     deallocate( property )
     property => property_t( my_name,                                          &
                             name  = "layer single-scatter albedo depth",      &
                             units = "unitless" )
-    call sw_props%add( property )
+    sw_single_scatter_albedo => aerosol%new_optics( property, sw_grid )
     deallocate( property )
     property => property_t( my_name,                                          &
                             name  = "asymmetry factor",                       &
                             units = "unitless" )
-    call sw_props%add( property )
+    sw_asymmetry_factor => aerosol%new_optics( property, sw_grid )
     deallocate( property )
     property => property_t( my_name,                                          &
                             name  = "forward scattered fraction",             &
                             units = "unitless" )
-    call sw_props%add( property )
+    sw_forward_scattered_fraction => aerosol%new_optics( property, sw_grid )
     deallocate( property )
-
-    lw_props => property_set_t( )
     property => property_t( my_name,                                          &
                             name  = "layer absorption optical depth",         &
                             units = "unitless" )
-    call lw_props%add( property )
+    lw_absorption => aerosol%new_optics( property, lw_grid )
     deallocate( property )
-    sw_optics = optics_t( sw_props, sw_grid )
-    lw_optics = optics_t( lw_props, lw_grid )
+
+    sw_optics( kShortTau )%ptr_ => sw_extinction
+    sw_optics( kShortWa  )%ptr_ => sw_single_scatter_albedo
+    sw_optics( kShortGa  )%ptr_ => sw_asymmetry_factor
+    sw_optics( kShortFa  )%ptr_ => sw_forward_scattered_fraction
 
   end subroutine set_up_optics
 

@@ -30,7 +30,7 @@ program test_mock_host
 
   call mam_config%from_file( "mam_config.json" )
   aerosol => mam_core_t( mam_config )
-  aerosol_state => aerosol%get_new_state( )
+  aerosol_state => aerosol%new_state( )
   allocate( raw_aerosol_states( aerosol_state%raw_size( ),                    &
                                 kNumberOfLayersPerColumn,                     &
                                 kNumberOfColumnsPerNode ) )

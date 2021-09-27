@@ -21,12 +21,13 @@ module mam_core
     private
     type(mode_t), allocatable          :: modes_(:)
   contains
-    procedure :: get_new_state
-    procedure :: optics_accessor
-    procedure :: get_optics
+    procedure :: new_state
+    procedure :: new_optics
+    procedure, private :: shortwave_optics_scalar
+    procedure, private :: shortwave_optics_array
+    procedure, private :: longwave_optics_scalar
+    procedure, private :: longwave_optics_array
     procedure :: print_state
-    procedure, private :: calculate_shortwave_optics
-    procedure, private :: calculate_longwave_optics
   end type core_t
 
   interface core_t
@@ -82,7 +83,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Creates a new state object for the modal aerosol
-  function get_new_state( this ) result( new_state )
+  function new_state( this )
 
     class(aerosol_state_t), pointer    :: new_state
     class(core_t),          intent(in) :: this
@@ -95,7 +96,7 @@ contains
     type is( state_t )
       allocate( new_state%mode_states_( size( this%modes_ ) ) )
       do i_mode = 1, size( this%modes_ )
-        mode_state => this%modes_( i_mode )%get_new_state( )
+        mode_state => this%modes_( i_mode )%new_state( )
         select type( mode_state )
         class is( mode_state_t )
           new_state%mode_states_( i_mode ) = mode_state
@@ -104,80 +105,149 @@ contains
       end do
     end select
 
-  end function get_new_state
+  end function new_state
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Provides an accessor for the specified optics
-  function optics_accessor( this, optics )
+  !> Creates an optics_t object for a given property
+  function new_optics( this, property, output_grid, interpolation_strategy )
 
-    use ai_accessor,                   only : accessor_t
     use ai_optics,                     only : optics_t
-    use ai_wavelength_grid,            only : wavelength_grid_t, kWavenumber, &
-                                              kCentimeter
-    use mam_optics_accessor,           only : optics_accessor_t
-    use mam_optics_constants,          only : shortwave_lower, longwave_lower,&
-                                              shortwave_upper, longwave_upper
+    use ai_wavelength_grid,            only : wavelength_grid_t
+    use mam_optics_util,               only : create_optics
+    use musica_interpolator,           only : interpolation_strategy_i
+    use musica_property,               only : property_t
 
-    class(accessor_t), pointer    :: optics_accessor
-    class(core_t),     intent(in) :: this
-    class(optics_t),   intent(in) :: optics
+    class(optics_t),                   pointer    :: new_optics
+    class(core_t),                     intent(in) :: this
+    class(property_t),                 intent(in) :: property
+    type(wavelength_grid_t),           intent(in) :: output_grid
+    procedure(interpolation_strategy_i), optional :: interpolation_strategy
 
-    type(wavelength_grid_t) :: shortwave, longwave
+    new_optics =>                                                             &
+        create_optics( property, output_grid, interpolation_strategy )
 
-    shortwave = wavelength_grid_t( lower_bounds = shortwave_lower,           &
-                                   upper_bounds = shortwave_upper,           &
-                                   bounds_in    = kWavenumber,               &
-                                   base_unit    = kCentimeter )
-
-    longwave  = wavelength_grid_t( lower_bounds = longwave_lower,            &
-                                   upper_bounds = longwave_upper,            &
-                                   bounds_in    = kWavenumber,               &
-                                   base_unit    = kCentimeter )
-
-    optics_accessor => optics_accessor_t( shortwave, longwave, optics )
-
-  end function optics_accessor
+  end function new_optics
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Returns a set of optical properties for the aerosol on a specified grid
-  subroutine get_optics( this, optics_accessor, environmental_state,          &
+  !> Returns shortwave optical properties
+  subroutine shortwave_optics_scalar( this, environmental_state,              &
       aerosol_state, optics )
 
-    use ai_accessor,                   only : accessor_t
     use ai_environmental_state,        only : environmental_state_t
-    use ai_optics,                     only : optics_t
-    use mam_optics_accessor,           only : optics_accessor_t
+    use ai_optics,                     only : optics_t, optics_ptr
+
+    class(core_t),                intent(in)    :: this
+    class(environmental_state_t), intent(in)    :: environmental_state
+    class(aerosol_state_t),       intent(in)    :: aerosol_state
+    class(optics_t), target,      intent(inout) :: optics
+
+    type(optics_ptr) :: optics_set(1)
+
+    optics_set(1)%ptr_ => optics
+    call this%shortwave_optics( environmental_state, aerosol_state,           &
+                                optics_set )
+    nullify( optics_set(1)%ptr_ )
+
+  end subroutine shortwave_optics_scalar
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Returns shortwave optical properties
+  subroutine shortwave_optics_array( this, environmental_state,               &
+      aerosol_state, optics )
+
+    use ai_environmental_state,        only : environmental_state_t
+    use ai_optics,                     only : optics_ptr
     use musica_assert,                 only : die_msg
 
     class(core_t),                intent(in)    :: this
-    class(accessor_t),            intent(in)    :: optics_accessor
     class(environmental_state_t), intent(in)    :: environmental_state
     class(aerosol_state_t),       intent(in)    :: aerosol_state
-    class(optics_t),              intent(inout) :: optics
+    type(optics_ptr),             intent(inout) :: optics(:)
 
-    select type( optics_accessor )
-    class is( optics_accessor_t )
-      select type( aerosol_state )
-      class is( state_t )
-        if( optics_accessor%is_shortwave( ) ) then
-          call this%calculate_shortwave_optics( optics_accessor,             &
-                                                environmental_state,         &
-                                                aerosol_state, optics )
-        else if( optics_accessor%is_longwave( ) ) then
-          call this%calculate_longwave_optics(  optics_accessor,             &
-                                                environmental_state,         &
-                                                aerosol_state, optics )
-        end if
-      class default
-        call die_msg( 522911428, "Invalid aerosol state for MAM aerosol" )
-      end select
+    integer :: i_mode, i_prop
+
+    select type( aerosol_state )
+    class is( state_t )
+      do i_prop = 1, size( optics )
+        call optics( i_prop )%ptr_%reset_values( )
+      end do
+      do i_mode = 1, size( this%modes_ )
+      associate( mode_state => aerosol_state%mode_states_( i_mode ),          &
+                 mode       => this%modes_( i_mode ) )
+        call mode%add_shortwave_optics( environmental_state,                  &
+                                        mode_state,                           &
+                                        optics )
+      end associate
+      end do
     class default
-      call die_msg( 577391214, "Invalid accessor type for MAM optics" )
+      call die_msg( 822004975, "Invalid state passed to MAM shortwave "//     &
+                               "optics calculator" )
     end select
 
-  end subroutine get_optics
+  end subroutine shortwave_optics_array
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Returns longwave optical properties
+  subroutine longwave_optics_scalar( this, environmental_state,               &
+      aerosol_state, optics )
+
+    use ai_environmental_state,        only : environmental_state_t
+    use ai_optics,                     only : optics_t, optics_ptr
+
+    class(core_t),                intent(in)    :: this
+    class(environmental_state_t), intent(in)    :: environmental_state
+    class(aerosol_state_t),       intent(in)    :: aerosol_state
+    class(optics_t), target,      intent(inout) :: optics
+
+    type(optics_ptr) :: optics_set(1)
+
+    optics_set(1)%ptr_ => optics
+    call this%longwave_optics( environmental_state, aerosol_state,            &
+                               optics_set )
+    nullify( optics_set(1)%ptr_ )
+
+  end subroutine longwave_optics_scalar
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Returns longwave optical properties
+  subroutine longwave_optics_array( this, environmental_state,                &
+      aerosol_state, optics )
+
+    use ai_environmental_state,        only : environmental_state_t
+    use ai_optics,                     only : optics_ptr
+    use musica_assert,                 only : die_msg
+
+    class(core_t),                intent(in)    :: this
+    class(environmental_state_t), intent(in)    :: environmental_state
+    class(aerosol_state_t),       intent(in)    :: aerosol_state
+    type(optics_ptr),             intent(inout) :: optics(:)
+
+    integer :: i_mode, i_prop
+
+    select type( aerosol_state )
+    class is( state_t )
+      do i_prop = 1, size( optics )
+        call optics( i_prop )%ptr_%reset_values( )
+      end do
+      do i_mode = 1, size( this%modes_ )
+      associate( mode_state => aerosol_state%mode_states_( i_mode ),          &
+                 mode       => this%modes_( i_mode ) )
+        call mode%add_longwave_optics( environmental_state,                   &
+                                       mode_state,                            &
+                                       optics )
+      end associate
+      end do
+    class default
+      call die_msg( 466350541, "Invalid state passed to MAM longwave "//      &
+                               "optics calculator" )
+    end select
+
+  end subroutine longwave_optics_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -220,76 +290,6 @@ contains
     end select
 
   end subroutine print_state
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Calculates shortwave optical properties for a given state
-  subroutine calculate_shortwave_optics( this, optics_accessor,               &
-      environmental_state, aerosol_state, optics )
-
-    use ai_environmental_state,        only : environmental_state_t
-    use ai_optics,                     only : optics_t
-    use mam_optics_accessor,           only : optics_accessor_t
-    use musica_constants,              only : r8 => musica_dk
-
-    class(core_t),                intent(in)    :: this
-    class(optics_accessor_t),     intent(in)    :: optics_accessor
-    class(environmental_state_t), intent(in)    :: environmental_state
-    class(state_t),               intent(in)    :: aerosol_state
-    class(optics_t),              intent(inout) :: optics
-
-    type(optics_t)   :: mode_optics
-    integer          :: i_mode
-
-    optics%values_(:,:)  = 0.0_r8
-    mode_optics = optics
-    do i_mode = 1, size( this%modes_ )
-    associate( mode_state => aerosol_state%mode_states_( i_mode ),            &
-               mode       => this%modes_( i_mode ) )
-      call mode%calculate_shortwave_optics( optics_accessor,                  &
-                                            environmental_state,              &
-                                            mode_state,                       &
-                                            mode_optics )
-      optics%values_(:,:) = optics%values_(:,:) + mode_optics%values_(:,:)
-    end associate
-    end do
-
-  end subroutine calculate_shortwave_optics
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Calculates longwave optical properties for a given state
-  subroutine calculate_longwave_optics( this, optics_accessor,                &
-      environmental_state, aerosol_state, optics )
-
-    use ai_environmental_state,        only : environmental_state_t
-    use ai_optics,                     only : optics_t
-    use mam_optics_accessor,           only : optics_accessor_t
-    use musica_constants,              only : r8 => musica_dk
-
-    class(core_t),                intent(in)    :: this
-    class(optics_accessor_t),     intent(in)    :: optics_accessor
-    class(environmental_state_t), intent(in)    :: environmental_state
-    class(state_t),               intent(in)    :: aerosol_state
-    class(optics_t),              intent(inout) :: optics
-
-    type(optics_t)   :: mode_optics
-    integer          :: i_mode
-
-    optics%values_(:,:)  = 0.0_r8
-    mode_optics = optics
-    do i_mode = 1, size( this%modes_ )
-    associate( mode_state => aerosol_state%mode_states_( i_mode ),            &
-               mode       => this%modes_( i_mode ) )
-      call mode%calculate_longwave_optics( optics_accessor,                   &
-                                           environmental_state,               &
-                                           mode_state,                        &
-                                           mode_optics )
-      optics%values_(:,:) = optics%values_(:,:) + mode_optics%values_(:,:)
-    end associate
-    end do
-
-  end subroutine calculate_longwave_optics
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!

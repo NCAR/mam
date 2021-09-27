@@ -7,7 +7,6 @@
 !> Mock radiation model for tests passing optical properties of aerosols
 module test_mock_radiation
 
-  use ai_accessor,                     only : accessor_t
   use ai_optics,                       only : optics_t
   use ai_wavelength_grid,              only : wavelength_grid_t
   use musica_constants,                only : musica_dk
@@ -17,35 +16,35 @@ module test_mock_radiation
 
   public :: core_t
 
+  ! number of shorwave spectral intervals
+  integer, parameter :: nswbands = 14
+  integer, parameter :: nbndsw = 14
+
+  ! number of lw bands
+  integer, parameter :: nlwbands = 16
+  integer, parameter :: nbndlw = 16
+
   type :: core_t
     private
     integer                    :: number_of_columns_ = 0
     integer                    :: number_of_layers_  = 0
     type(wavelength_grid_t)    :: shortwave_grid_
     type(wavelength_grid_t)    :: longwave_grid_
-    class(accessor_t), pointer :: shortwave_optics_accessor_
-    class(accessor_t), pointer :: longwave_optics_accessor_
-    type(optics_t)             :: shortwave_optics_
-    type(optics_t)             :: longwave_optics_
-    !> @name Optical property values (wavelength, property, layer, column)
-    !! @{
-    real(kind=musica_dk), allocatable :: shortwave_optics_values_(:,:,:,:)
-    real(kind=musica_dk), allocatable :: longwave_optics_values_( :,:,:,:)
-    !! @}
+    class(optics_t), pointer   :: longwave_absorption_             => null ( )
+    class(optics_t), pointer   :: shortwave_extinction_            => null( )
+    class(optics_t), pointer   :: shortwave_single_scatter_albedo_ => null( )
+    class(optics_t), pointer   :: shortwave_asymmetry_factor_      => null( )
+    class(optics_t), pointer   :: shortwave_forward_scattered_fraction_       &
+                                                                   => null( )
   contains
     procedure :: run
+    procedure, private :: output_optics
     final :: finalize
   end type core_t
 
   interface core_t
     module procedure :: constructor
   end interface
-
-  integer, parameter :: kShortTau = 1
-  integer, parameter :: kShortWa  = 2
-  integer, parameter :: kShortGa  = 3
-  integer, parameter :: kShortFa  = 4
-  integer, parameter :: kLongAbs  = 1
 
 contains
 
@@ -59,7 +58,6 @@ contains
     use ai_wavelength_grid,            only : kWavenumber, kCentimeter
     use musica_constants,              only : r8 => musica_dk
     use musica_property,               only : property_t
-    use musica_property_set,           only : property_set_t
 
     !> New radiation core
     type(core_t) :: new_core
@@ -72,20 +70,12 @@ contains
 
     character(len=*), parameter :: my_name = "mock radiation consttructor"
 
-    ! number of shorwave spectral intervals
-    integer, parameter :: nswbands = 14
-    integer, parameter :: nbndsw = 14
-
     real(r8),parameter :: wavenum_low(nbndsw) = & ! in cm^-1
       (/2600._r8, 3250._r8, 4000._r8, 4650._r8, 5150._r8, 6150._r8, 7700._r8, &
         8050._r8,12850._r8,16000._r8,22650._r8,29000._r8,38000._r8,  820._r8/)
     real(r8),parameter :: wavenum_high(nbndsw) = & ! in cm^-1
       (/3250._r8, 4000._r8, 4650._r8, 5150._r8, 6150._r8, 7700._r8, 8050._r8, &
        12850._r8,16000._r8,22650._r8,29000._r8,38000._r8,50000._r8, 2600._r8/)
-
-    ! number of lw bands
-    integer, parameter :: nlwbands = 16
-    integer, parameter :: nbndlw = 16
 
     real(r8), parameter :: wavenumber1_longwave(nlwbands) = &! Longwave spectral band limits (cm-1)
       (/   10._r8,  350._r8, 500._r8,   630._r8,  700._r8,  820._r8,  980._r8, 1080._r8, &
@@ -94,7 +84,6 @@ contains
       (/  350._r8,  500._r8,  630._r8,  700._r8,  820._r8,  980._r8, 1080._r8, 1180._r8, &
          1390._r8, 1480._r8, 1800._r8, 2080._r8, 2250._r8, 2390._r8, 2600._r8, 3250._r8 /)
 
-    type(property_set_t), pointer :: shortwave_props, longwave_props
     class(property_t),    pointer :: property
 
     new_core%number_of_columns_ = number_of_columns
@@ -110,56 +99,36 @@ contains
                                                  bounds_in    = kWavenumber,  &
                                                  base_unit    = kCentimeter )
 
-    shortwave_props => property_set_t( )
     property => property_t( my_name,                                          &
                             name  = "layer extinction optical depth",         &
                             units = "unitless" )
-    call shortwave_props%add( property )
+    new_core%shortwave_extinction_ =>                                         &
+        aerosol%new_optics( property, new_core%shortwave_grid_ )
     deallocate( property )
     property => property_t( my_name,                                          &
                             name  = "layer single-scatter albedo depth",      &
                             units = "unitless" )
-    call shortwave_props%add( property )
+    new_core%shortwave_single_scatter_albedo_ =>                              &
+        aerosol%new_optics( property, new_core%shortwave_grid_ )
     deallocate( property )
     property => property_t( my_name,                                          &
                             name  = "asymmetry factor",                       &
                             units = "unitless" )
-    call shortwave_props%add( property )
+    new_core%shortwave_asymmetry_factor_ =>                                   &
+        aerosol%new_optics( property, new_core%shortwave_grid_ )
     deallocate( property )
     property => property_t( my_name,                                          &
                             name  = "forward scattered fraction",             &
                             units = "unitless" )
-    call shortwave_props%add( property )
+    new_core%shortwave_forward_scattered_fraction_ =>                         &
+        aerosol%new_optics( property, new_core%shortwave_grid_ )
     deallocate( property )
-
-    longwave_props => property_set_t( )
     property => property_t( my_name,                                          &
                             name  = "layer absorption optical depth",         &
                             units = "unitless" )
-    call longwave_props%add( property )
+    new_core%longwave_absorption_ =>                                          &
+        aerosol%new_optics( property, new_core%shortwave_grid_ )
     deallocate( property )
-
-    new_core%shortwave_optics_ = optics_t( shortwave_props,                   &
-                                           new_core%shortwave_grid_ )
-    new_core%longwave_optics_  = optics_t( longwave_props,                    &
-                                           new_core%longwave_grid_  )
-
-    new_core%shortwave_optics_accessor_ =>                                    &
-        aerosol%optics_accessor( new_core%shortwave_optics_ )
-    new_core%longwave_optics_accessor_  =>                                    &
-        aerosol%optics_accessor( new_core%longwave_optics_  )
-
-    allocate( new_core%shortwave_optics_values_( nbndsw,                      &
-                                                 shortwave_props%size( ),     &
-                                                 number_of_layers,            &
-                                                 number_of_columns ) )
-
-    allocate( new_core%longwave_optics_values_(  nlwbands,                    &
-                                                 longwave_props%size( ),      &
-                                                 number_of_layers,            &
-                                                 number_of_columns ) )
-    deallocate( shortwave_props )
-    deallocate( longwave_props )
 
   end function constructor
 
@@ -172,6 +141,7 @@ contains
     use ai_aerosol,                    only : aerosol_t
     use ai_aerosol_state,              only : aerosol_state_t
     use ai_environmental_state,        only : environmental_state_t
+    use ai_optics,                     only : optics_ptr
 
     !> Radiation model
     class(core_t), intent(inout) :: this
@@ -185,32 +155,57 @@ contains
     class(environmental_state_t), intent(in) :: environmental_states(:,:)
 
     integer :: i_column, i_layer, state_index
+    type(optics_ptr) :: shortwave_optics(4)
+
+    shortwave_optics(1)%ptr_ => this%shortwave_extinction_
+    shortwave_optics(2)%ptr_ => this%shortwave_single_scatter_albedo_
+    shortwave_optics(3)%ptr_ => this%shortwave_asymmetry_factor_
+    shortwave_optics(4)%ptr_ => this%shortwave_forward_scattered_fraction_
 
     do i_column = 1, this%number_of_columns_
       do i_layer = 1, this%number_of_layers_
       associate( raw_aero_state => raw_aerosol_states( :, i_layer, i_column ),&
                  env_state => environmental_states( i_layer, i_column ) )
         call aerosol_state%load_state( raw_aero_state )
-        call aerosol%get_optics( this%shortwave_optics_accessor_, env_state,  &
-                                 aerosol_state, this%shortwave_optics_ )
-        this%shortwave_optics_values_( :, :, i_layer, i_column ) =            &
-            this%shortwave_optics_%values_(:,:)
-        call aerosol%get_optics( this%longwave_optics_accessor_, env_state,   &
-                                 aerosol_state, this%longwave_optics_ )
-        this%longwave_optics_values_( :, :, i_layer, i_column ) =             &
-            this%longwave_optics_%values_(:,:)
+        call aerosol%shortwave_optics( env_state, aerosol_state,              &
+                                       shortwave_optics )
+        call aerosol%longwave_optics( env_state, aerosol_state,               &
+                                      this%longwave_absorption_ )
+        call this%output_optics( i_column, i_layer )
         call aerosol_state%dump_state( raw_aero_state )
       end associate
       end do
     end do
 
-    write(*,*) "shortwave wa at layer 1 of column 12"
-    write(*,*) this%shortwave_optics_values_(:, kShortWa, 1, 12 )
-
-    write(*,*) "longwave absorption at layer 5 of column 20"
-    write(*,*) this%longwave_optics_values_(:, kLongAbs, 5, 20 )
-
   end subroutine run
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Output optical properties for select cells
+  subroutine output_optics( this, i_column, i_layer )
+
+    use musica_constants,              only : musica_dk
+
+    class(core_t), intent(in) :: this
+    integer,       intent(in) :: i_column
+    integer,       intent(in) :: i_layer
+
+    real(kind=musica_dk) :: sw_values(nswbands)
+    real(kind=musica_dk) :: lw_values(nlwbands)
+
+    if( i_column .eq. 12 .and. i_layer .eq. 1 ) then
+      write(*,*) "shortwave wa at layer 1 of column 12"
+      call this%shortwave_single_scatter_albedo_%get_values( sw_values )
+      write(*,*) sw_values
+    end if
+
+    if( i_column .eq. 20 .and. i_layer .eq. 5 ) then
+      write(*,*) "longwave absorption at layer 5 of column 20"
+      call this%longwave_absorption_%get_values( lw_values )
+      write(*,*) lw_values
+    end if
+
+  end subroutine output_optics
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -219,14 +214,16 @@ contains
 
     type(core_t), intent(inout) :: this
 
-    if( associated( this%shortwave_optics_accessor_ ) )                       &
-      deallocate( this%shortwave_optics_accessor_ )
-    if( associated( this%longwave_optics_accessor_ ) )                        &
-      deallocate( this%longwave_optics_accessor_ )
-    if( allocated( this%shortwave_optics_values_ ) )                          &
-      deallocate( this%shortwave_optics_values_ )
-    if( allocated( this%longwave_optics_values_ ) )                           &
-      deallocate( this%longwave_optics_values_ )
+    if( associated( this%shortwave_extinction_ ) )                            &
+      deallocate( this%shortwave_extinction_ )
+    if( associated( this%shortwave_single_scatter_albedo_ ) )                 &
+      deallocate( this%shortwave_single_scatter_albedo_ )
+    if( associated( this%shortwave_asymmetry_factor_ ) )                      &
+      deallocate( this%shortwave_asymmetry_factor_ )
+    if( associated( this%shortwave_forward_scattered_fraction_ ) )            &
+      deallocate( this%shortwave_forward_scattered_fraction_ )
+    if( associated( this%longwave_absorption_ ) )                             &
+      deallocate( this%longwave_absorption_ )
 
   end subroutine finalize
 

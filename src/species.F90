@@ -7,7 +7,7 @@
 !> The species_t type and related functions
 module mam_species
 
-  use mam_optics_constants,            only : kNumberOfShortwaveBands,        &
+  use mam_optics_util,                 only : kNumberOfShortwaveBands,        &
                                               kNumberOfLongwaveBands
   use musica_constants,                only : musica_dk
   use musica_string,                   only : string_t
