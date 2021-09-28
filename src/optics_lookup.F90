@@ -69,13 +69,15 @@ contains
 
     use musica_assert,                 only : assert, assert_msg
     use musica_config,                 only : config_t
-    use musica_file_util,              only : get_file_data
     use musica_lookup_axis,            only : lookup_axis_t
+    use musica_io,                     only : io_t
+    use musica_io_netcdf,              only : io_netcdf_t
 
     type(optics_lookup_t)                :: new_lookup
     class(config_t),       intent(inout) :: config
 
     character(len=*), parameter :: my_name = "optics_lookup_t constructor"
+    class(io_t), pointer :: lookup_file
     type(string_t) :: file_path, variable_name, axis_1_name, axis_2_name
     type(lookup_axis_t) :: axis_1, axis_2
     real(kind=musica_dk), allocatable :: axis_1_values(:,:), axis_2_values(:,:)
@@ -83,10 +85,11 @@ contains
     logical :: found
 
     call config%get( "file path", file_path, my_name )
+    lookup_file => io_netcdf_t( file_path )
     call config%get( "axis 1", axis_1_name, my_name )
-    call get_file_data( file_path, axis_1_name, axis_1_values, my_name )
+    call lookup_file%read( axis_1_name, axis_1_values, my_name )
     call config%get( "axis 2", axis_2_name, my_name )
-    call get_file_data( file_path, axis_2_name, axis_2_values, my_name )
+    call lookup_file%read( axis_2_name, axis_2_values, my_name )
     call assert_msg( 756675500, size( axis_1_values, 2 ) .eq.                 &
                                 size( axis_2_values, 2 ),                     &
                      "Optics lookup axis dimension mismatch" )
@@ -98,19 +101,19 @@ contains
       new_lookup%axes_( i_band ) = lookup_2D_axis_t( axis_1, axis_2 )
     end do
     variable_name = "minimum_radius"
-    call get_file_data( file_path, variable_name,                             &
-                        new_lookup%minimum_ln_radius_, my_name )
+    call lookup_file%read( variable_name,                                     &
+                           new_lookup%minimum_ln_radius_, my_name )
     new_lookup%minimum_ln_radius_ = log( new_lookup%minimum_ln_radius_ )
     variable_name = "maximum_radius"
-    call get_file_data( file_path, variable_name,                             &
-                        new_lookup%maximum_ln_radius_, my_name )
+    call lookup_file%read( variable_name,                                     &
+                           new_lookup%maximum_ln_radius_, my_name )
     new_lookup%maximum_ln_radius_ = log( new_lookup%maximum_ln_radius_ )
     new_lookup%data_( kAbsorption      ) =                                    &
-        optics_data_t( "specific absorption lookup", file_path, config )
+        optics_data_t( "specific absorption lookup", lookup_file, config )
     new_lookup%data_( kExtinction      ) =                                    &
-        optics_data_t( "specific extinction lookup", file_path, config )
+        optics_data_t( "specific extinction lookup", lookup_file, config )
     new_lookup%data_( kAsymmetryFactor ) =                                    &
-        optics_data_t( "asymmetry factor lookup",    file_path, config )
+        optics_data_t( "asymmetry factor lookup",    lookup_file, config )
     do i_param = 1, kNumberOfParameters
       if( .not. new_lookup%data_( i_param )%is_loaded_ ) cycle
       call assert_msg( 284936197,                                             &
@@ -118,6 +121,7 @@ contains
                        .eq. new_lookup%number_of_wavelength_bands_,           &
                        "Dimension mismatch in optics_lookup_t data" )
     end do
+    deallocate( lookup_file )
 
   end function constructor
 
@@ -226,15 +230,15 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Constructor of optics lookup data objects
-  function optics_data_constructor( parameter_name, file_path, config )       &
+  function optics_data_constructor( parameter_name, lookup_file, config )     &
       result( new_data )
 
     use musica_config,                 only : config_t
-    use musica_file_util,              only : get_file_data
+    use musica_io,                     only : io_t
 
     type(optics_data_t)               :: new_data
     character(len=*),   intent(in)    :: parameter_name
-    type(string_t),     intent(in)    :: file_path
+    class(io_t),        intent(inout) :: lookup_file
     class(config_t),    intent(inout) :: config
 
     character(len=*), parameter :: my_name = "optics table loader"
@@ -249,7 +253,7 @@ contains
       return
     end if
     call table_config%get( "variable name", variable_name, my_name )
-    call get_file_data( file_path, variable_name, new_data%values_, my_name )
+    call lookup_file%read( variable_name, new_data%values_, my_name )
     new_data%is_loaded_ = .true.
 
   end function optics_data_constructor
