@@ -318,9 +318,9 @@ contains
 
     use musica_constants,              only : musica_dk
 
-    class(state_t),             intent(inout) :: this
-    real(kind=musica_dk), target, intent(inout) :: raw_state(:)
-    integer, optional,          intent(inout) :: index
+    class(state_t),       intent(inout) :: this
+    real(kind=musica_dk), intent(in)    :: raw_state(:)
+    integer, optional,    intent(inout) :: index
 
     integer :: i_mode, lindex
 
@@ -340,9 +340,9 @@ contains
 
     use musica_constants,              only : musica_dk
 
-    class(state_t),     intent(inout) :: this
+    class(state_t),       intent(inout) :: this
     real(kind=musica_dk), intent(inout) :: raw_state(:)
-    integer, optional,  intent(inout) :: index
+    integer, optional,    intent(inout) :: index
 
     integer :: i_mode, lindex
 

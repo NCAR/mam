@@ -64,14 +64,13 @@ module mam_mode
   !> Aerosol mode state
   type, extends(aerosol_state_t) :: mode_state_t
     private
-    integer                     :: number_of_species_
     !> Mode diameter of the wet aerosol number distribution [m]
-    real(kind=musica_dk), pointer :: wet_number_mode_diameter__m_ => null( )
+    real(kind=musica_dk)              :: wet_number_mode_diameter__m_
     !> Particle number mixing ratio per mol_air [# mol-1]
     !! \todo Is this dry air or wet air?
-    real(kind=musica_dk), pointer :: number_mixing_ratio__num_mol_ => null( )
+    real(kind=musica_dk)              :: number_mixing_ratio__num_mol_
     !> Mass mixing ratio of each mode species relative to dry air [kg kg-1]
-    real(kind=musica_dk), pointer :: mass_mixing_ratio__kg_kg_(:) => null( )
+    real(kind=musica_dk), allocatable :: mass_mixing_ratio__kg_kg_(:)
   contains
     procedure :: raw_size
     procedure :: load_state
@@ -132,7 +131,7 @@ contains
     allocate( mode_state_t :: new_state )
     select type( new_state )
     type is( mode_state_t )
-       new_state%number_of_species_ = size( this%species_ )
+       allocate( new_state%mass_mixing_ratio__kg_kg_( size( this%species_ ) ) )
     end select
 
   end function new_state
@@ -292,7 +291,7 @@ contains
         write(lunit,*) "** End MAM Mode State **"
         return
       end if
-      if( .not. associated( aerosol_state%mass_mixing_ratio__kg_kg_ ) ) then
+      if( .not. allocated( aerosol_state%mass_mixing_ratio__kg_kg_ ) ) then
         write(lunit,*) "--- Uninitialized MAM Mode State ---"
         write(lunit,*) "** End MAM Mode State **"
         return
@@ -730,7 +729,7 @@ contains
 
     class(mode_state_t), intent(in) :: this
 
-    raw_size = 2 + this%number_of_species_
+    raw_size = 2 + size( this%mass_mixing_ratio__kg_kg_ )
 
   end function raw_size
 
@@ -739,36 +738,42 @@ contains
   !> Loads raw mode state data to the mode_state_t object
   subroutine load_state( this, raw_state, index )
 
-    class(mode_state_t),          intent(inout) :: this
-    real(kind=musica_dk), target, intent(inout) :: raw_state(:)
-    integer, optional,            intent(inout) :: index
+    class(mode_state_t),  intent(inout) :: this
+    real(kind=musica_dk), intent(in)    :: raw_state(:)
+    integer, optional,    intent(inout) :: index
 
     integer :: id, last_id
 
     id = 1
     if( present( index ) ) id = index
-    this%wet_number_mode_diameter__m_ => raw_state( id )
-    this%number_mixing_ratio__num_mol_ => raw_state( id + 1 )
+    this%wet_number_mode_diameter__m_ = raw_state( id )
+    this%number_mixing_ratio__num_mol_ = raw_state( id + 1 )
     id = id + 2
-    last_id = id + this%number_of_species_ - 1
-    this%mass_mixing_ratio__kg_kg_ => raw_state( id : last_id )
+    last_id = id + size( this%mass_mixing_ratio__kg_kg_ ) - 1
+    this%mass_mixing_ratio__kg_kg_(:) = raw_state( id : last_id )
     if( present( index ) ) index = last_id + 1
 
   end subroutine load_state
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Nullifies the raw mode state pointers
+  !> Dumps the aerosol state into the raw state array
   subroutine dump_state( this, raw_state, index )
 
     class(mode_state_t),  intent(inout) :: this
     real(kind=musica_dk), intent(inout) :: raw_state(:)
     integer, optional,    intent(inout) :: index
 
-    this%wet_number_mode_diameter__m_ => null( )
-    this%number_mixing_ratio__num_mol_ => null( )
-    this%mass_mixing_ratio__kg_kg_ => null( )
-    if( present( index ) ) index = index + 2 + this%number_of_species_
+    integer :: id, last_id
+
+    id = 1
+    if( present( index ) ) id = index
+    raw_state( id )     = this%wet_number_mode_diameter__m_
+    raw_state( id + 1 ) = this%number_mixing_ratio__num_mol_
+    id = id + 2
+    last_id = id + size( this%mass_mixing_ratio__kg_kg_ ) - 1
+    raw_state( id : last_id ) = this%mass_mixing_ratio__kg_kg_(:)
+    if( present( index ) ) index = last_id + 1
 
   end subroutine dump_state
 
@@ -784,11 +789,6 @@ contains
     real(kind=musica_dk) :: rand_val
     integer              :: i_species
 
-    !> \todo Make sure random mode state is reasonable
-    call assert_msg( 175218277,                                               &
-                     associated( this%wet_number_mode_diameter__m_ ) .and.    &
-                     associated( this%mass_mixing_ratio__kg_kg_ ),            &
-                     "Trying to randomize an unassociated mode state" )
     call random_number( rand_val )
     this%wet_number_mode_diameter__m_ = 10.0**( rand_val * 3 - 5 )
     this%number_mixing_ratio__num_mol_ = 10.0**( rand_val * 6 )
