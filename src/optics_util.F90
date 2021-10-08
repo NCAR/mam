@@ -24,67 +24,13 @@ module mam_optics_util
 
   public :: create_optics, add_shortwave_property, add_longwave_property
 
-  integer, parameter, public :: kNumberOfChebyshevCoefficients = 5
-  integer, parameter, public :: kNumberOfShortwaveBands        = 14
-  integer, parameter, public :: kNumberOfLongwaveBands         = 16
-
-  ! Shortwave and longwave spectral bounds (cm-1)
-  integer, parameter :: r8 = musica_dk
-  real(musica_dk), parameter :: shortwave_lower( kNumberOfShortwaveBands ) =  &
-    (/2600._r8, 3250._r8, 4000._r8, 4650._r8, 5150._r8, 6150._r8, 7700._r8,   &
-      8050._r8,12850._r8,16000._r8,22650._r8,29000._r8,38000._r8,  820._r8/)
-  real(musica_dk), parameter :: shortwave_upper( kNumberOfShortwaveBands ) =  &
-    (/3250._r8, 4000._r8, 4650._r8, 5150._r8, 6150._r8, 7700._r8, 8050._r8,   &
-     12850._r8,16000._r8,22650._r8,29000._r8,38000._r8,50000._r8, 2600._r8/)
-  real(musica_dk), parameter :: longwave_lower( kNumberOfLongwaveBands ) =    &
-    (/   10._r8,  350._r8, 500._r8,   630._r8,  700._r8,  820._r8,  980._r8,  &
-       1080._r8, 1180._r8, 1390._r8, 1480._r8, 1800._r8, 2080._r8, 2250._r8,  &
-       2390._r8, 2600._r8 /)
-  real(musica_dk), parameter :: longwave_upper( kNumberOfLongwaveBands ) =    &
-    (/  350._r8,  500._r8,  630._r8,  700._r8,  820._r8,  980._r8, 1080._r8,  &
-       1180._r8, 1390._r8, 1480._r8, 1800._r8, 2080._r8, 2250._r8, 2390._r8,  &
-       2600._r8, 3250._r8 /)
-
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Returns the native shortwave MAM grid
-  function shortwave_grid( )
-
-    use ai_wavelength_grid,            only : wavelength_grid_t, kWavenumber, &
-                                              kCentimeter
-
-    type(wavelength_grid_t) :: shortwave_grid
-
-    shortwave_grid = wavelength_grid_t( lower_bounds = shortwave_lower,       &
-                                        upper_bounds = shortwave_upper,       &
-                                        bounds_in    = kWavenumber,           &
-                                        base_unit    = kCentimeter )
-
-  end function shortwave_grid
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Returns the native longwave MAM grid
-  function longwave_grid( )
-
-    use ai_wavelength_grid,            only : wavelength_grid_t, kWavenumber, &
-                                              kCentimeter
-
-    type(wavelength_grid_t) :: longwave_grid
-
-    longwave_grid = wavelength_grid_t( lower_bounds = longwave_lower,         &
-                                       upper_bounds = longwave_upper,         &
-                                       bounds_in    = kWavenumber,            &
-                                       base_unit    = kCentimeter )
-
-  end function longwave_grid
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   !> Returns an optics_t object for a given property
-  function create_optics( property, output_grid, interpolation_strategy )     &
+  function create_optics( property, native_shortwave_grid,                    &
+      native_longwave_grid, output_grid, interpolation_strategy )             &
       result( new_optics )
 
     use ai_wavelength_grid,            only : wavelength_grid_t, kWavenumber, &
@@ -96,6 +42,8 @@ contains
 
     class(optics_t),  pointer :: new_optics
     class(property_t), intent(in) :: property
+    type(wavelength_grid_t), intent(in) :: native_shortwave_grid
+    type(wavelength_grid_t), intent(in) :: native_longwave_grid
     type(wavelength_grid_t), intent(in) :: output_grid
     procedure(interpolation_strategy_i), optional :: interpolation_strategy
 
@@ -104,29 +52,25 @@ contains
 
     property_name = property%name( )
     if( property_name .eq. "layer extinction optical depth" ) then
-      native_grid = shortwave_grid( )
-      new_optics => optics_extinction_optical_depth_t(   native_grid,         &
-                                                         output_grid,         &
+      new_optics => optics_extinction_optical_depth_t( native_shortwave_grid, &
+                                                       output_grid,           &
                              interpolation_strategy = interpolation_strategy )
     else if( property_name .eq. "layer single-scatter albedo depth" ) then
-      native_grid = shortwave_grid( )
-      new_optics => optics_single_scatter_albedo_t(      native_grid,         &
-                                                         output_grid,         &
+      new_optics => optics_single_scatter_albedo_t(    native_shortwave_grid, &
+                                                       output_grid,           &
                              interpolation_strategy = interpolation_strategy )
     else if( property_name .eq. "asymmetry factor" ) then
-      native_grid = shortwave_grid( )
-      new_optics => optics_asymmetry_factor_t(           native_grid,         &
-                                                         output_grid,         &
+      new_optics => optics_asymmetry_factor_t(         native_shortwave_grid, &
+                                                       output_grid,           &
                              interpolation_strategy = interpolation_strategy )
     else if( property_name .eq. "forward scattered fraction" ) then
-      native_grid = shortwave_grid( )
-      new_optics => optics_forward_scattered_fraction_t( native_grid,         &
-                                                         output_grid,         &
+      new_optics => optics_forward_scattered_fraction_t(                      &
+                                                       native_shortwave_grid, &
+                                                       output_grid,           &
                              interpolation_strategy = interpolation_strategy )
     else if( property_name .eq. "layer absorption optical depth" ) then
-      native_grid = longwave_grid( )
-      new_optics => optics_absorption_optical_depth_t(   native_grid,         &
-                                                         output_grid,         &
+      new_optics => optics_absorption_optical_depth_t( native_longwave_grid,  &
+                                                       output_grid,           &
                              interpolation_strategy = interpolation_strategy )
     else
       call die_msg( 769442313, "Unsupported optical property: '"//            &

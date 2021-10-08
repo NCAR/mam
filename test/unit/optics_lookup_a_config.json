@@ -1,5 +1,9 @@
 {
   "file path" : "optics_lookup_a_data.nc",
-  "axis 1" : "real_refractive_index",
-  "axis 2" : "imaginary_refractive_index"
+  "real axis" : "real_refractive_index",
+  "imaginary axis" : "imaginary_refractive_index",
+  "grid" : {
+    "lower bounds" : "wavelength_lower_bound",
+    "upper bounds" : "wavelength_upper_bound"
+  }
 }

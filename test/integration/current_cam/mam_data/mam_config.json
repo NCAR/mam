@@ -77,8 +77,12 @@
       },
       "shortwave lookup tables": {
         "file path" : "mam_data/mode1.nc",
-        "axis 1" : "refindex_real_sw",
-        "axis 2" : "refindex_im_sw",
+        "real axis" : "refindex_real_sw",
+        "imaginary axis" : "refindex_im_sw",
+        "grid" : {
+          "lower bounds" : "wavelength_shortwave_lower",
+          "upper bounds" : "wavelength_shortwave_upper"
+        },
         "specific extinction lookup" : {
           "variable name" : "extpsw"
         },
@@ -91,8 +95,12 @@
       },
       "longwave lookup tables" : {
         "file path" : "mam_data/mode1.nc",
-        "axis 1" : "refindex_real_lw",
-        "axis 2" : "refindex_im_lw",
+        "real axis" : "refindex_real_lw",
+        "imaginary axis" : "refindex_im_lw",
+        "grid" : {
+          "lower bounds" : "wavelength_longwave_lower",
+          "upper bounds" : "wavelength_longwave_upper"
+        },
         "specific absorption lookup" : {
           "variable name" : "absplw"
         }
@@ -155,8 +163,12 @@
       },
       "shortwave lookup tables": {
         "file path" : "mam_data/mode2.nc",
-        "axis 1" : "refindex_real_sw",
-        "axis 2" : "refindex_im_sw",
+        "real axis" : "refindex_real_sw",
+        "imaginary axis" : "refindex_im_sw",
+        "grid" : {
+          "lower bounds" : "wavelength_shortwave_lower",
+          "upper bounds" : "wavelength_shortwave_upper"
+        },
         "specific extinction lookup" : {
           "variable name" : "extpsw"
         },
@@ -169,8 +181,12 @@
       },
       "longwave lookup tables" : {
         "file path" : "mam_data/mode2.nc",
-        "axis 1" : "refindex_real_lw",
-        "axis 2" : "refindex_im_lw",
+        "real axis" : "refindex_real_lw",
+        "imaginary axis" : "refindex_im_lw",
+        "grid" : {
+          "lower bounds" : "wavelength_longwave_lower",
+          "upper bounds" : "wavelength_longwave_upper"
+        },
         "specific absorption lookup" : {
           "variable name" : "absplw"
         }
@@ -223,8 +239,12 @@
       },
       "shortwave lookup tables": {
         "file path" : "mam_data/mode3.nc",
-        "axis 1" : "refindex_real_sw",
-        "axis 2" : "refindex_im_sw",
+        "real axis" : "refindex_real_sw",
+        "imaginary axis" : "refindex_im_sw",
+        "grid" : {
+          "lower bounds" : "wavelength_shortwave_lower",
+          "upper bounds" : "wavelength_shortwave_upper"
+        },
         "specific extinction lookup" : {
           "variable name" : "extpsw"
         },
@@ -237,8 +257,12 @@
       },
       "longwave lookup tables" : {
         "file path" : "mam_data/mode3.nc",
-        "axis 1" : "refindex_real_lw",
-        "axis 2" : "refindex_im_lw",
+        "real axis" : "refindex_real_lw",
+        "imaginary axis" : "refindex_im_lw",
+        "grid" : {
+          "lower bounds" : "wavelength_longwave_lower",
+          "upper bounds" : "wavelength_longwave_upper"
+        },
         "specific absorption lookup" : {
           "variable name" : "absplw"
         }
@@ -281,8 +305,12 @@
       },
       "shortwave lookup tables": {
         "file path" : "mam_data/mode4.nc",
-        "axis 1" : "refindex_real_sw",
-        "axis 2" : "refindex_im_sw",
+        "real axis" : "refindex_real_sw",
+        "imaginary axis" : "refindex_im_sw",
+        "grid" : {
+          "lower bounds" : "wavelength_shortwave_lower",
+          "upper bounds" : "wavelength_shortwave_upper"
+        },
         "specific extinction lookup" : {
           "variable name" : "extpsw"
         },
@@ -295,8 +323,12 @@
       },
       "longwave lookup tables" : {
         "file path" : "mam_data/mode4.nc",
-        "axis 1" : "refindex_real_lw",
-        "axis 2" : "refindex_im_lw",
+        "real axis" : "refindex_real_lw",
+        "imaginary axis" : "refindex_im_lw",
+        "grid" : {
+          "lower bounds" : "wavelength_longwave_lower",
+          "upper bounds" : "wavelength_longwave_upper"
+        },
         "specific absorption lookup" : {
           "variable name" : "absplw"
         }

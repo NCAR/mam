@@ -9,6 +9,7 @@ module mam_core
 
   use ai_aerosol,                      only : aerosol_t
   use ai_aerosol_state,                only : aerosol_state_t
+  use ai_wavelength_grid,              only : wavelength_grid_t
   use mam_mode,                        only : mode_t, mode_state_t
 
   implicit none
@@ -19,7 +20,9 @@ module mam_core
   !> The Modal Aerosol Model core
   type, extends(aerosol_t) :: core_t
     private
-    type(mode_t), allocatable          :: modes_(:)
+    type(wavelength_grid_t)   :: shortwave_grid_
+    type(wavelength_grid_t)   :: longwave_grid_
+    type(mode_t), allocatable :: modes_(:)
   contains
     procedure :: new_state
     procedure :: new_optics
@@ -50,14 +53,15 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Constructor of the MAM core
-  function constructor( config ) result( new_obj )
+  function constructor( config ) result( new_core )
 
     use mam_species,                   only : species_t
+    use musica_assert,                 only : assert_msg
     use musica_config,                 only : config_t
     use musica_iterator,               only : iterator_t
     use musica_string,                 only : string_t
 
-    type(core_t),    pointer       :: new_obj
+    type(core_t),    pointer       :: new_core
     class(config_t), intent(inout) :: config
 
     character(len=*), parameter :: my_name = "MAM core_t constructor"
@@ -65,15 +69,29 @@ contains
     type(string_t)              :: file_name
     class(iterator_t), pointer  :: iter
     integer                     :: i_mode
+    type(wavelength_grid_t)     :: mode_grid
 
-    allocate( new_obj )
+    allocate( new_core )
     call config%get( "modes", modes, my_name )
-    allocate( new_obj%modes_( modes%number_of_children( ) ) )
+    allocate( new_core%modes_( modes%number_of_children( ) ) )
     iter => modes%get_iterator( )
     i_mode = 1
     do while( iter%next( ) )
       call modes%get( iter, mode, my_name )
-      new_obj%modes_( i_mode ) = mode_t( mode )
+      new_core%modes_( i_mode ) = mode_t( mode )
+      if( i_mode .eq. 1 ) then
+        new_core%shortwave_grid_ = new_core%modes_( i_mode )%shortwave_grid( )
+        new_core%longwave_grid_  = new_core%modes_( i_mode )%longwave_grid( )
+      else
+        call assert_msg( 253107950, new_core%shortwave_grid_ .eq.            &
+                         new_core%modes_( i_mode )%shortwave_grid( ),        &
+                         "MAM is not currently set up to use different "//   &
+                         "shortwave wavelength grids for individual modes." )
+        call assert_msg( 525506880, new_core%longwave_grid_ .eq.             &
+                         new_core%modes_( i_mode )%longwave_grid( ),         &
+                         "MAM is not currently set up to use different "//   &
+                         "longwave wavelength grids for individual modes." )
+      end if
       i_mode = i_mode + 1
     end do
     deallocate( iter )
@@ -125,7 +143,8 @@ contains
     procedure(interpolation_strategy_i), optional :: interpolation_strategy
 
     new_optics =>                                                             &
-        create_optics( property, output_grid, interpolation_strategy )
+        create_optics( property, this%shortwave_grid_, this%longwave_grid_,   &
+                       output_grid, interpolation_strategy )
 
   end function new_optics
 

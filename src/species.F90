@@ -7,8 +7,6 @@
 !> The species_t type and related functions
 module mam_species
 
-  use mam_optics_util,                 only : kNumberOfShortwaveBands,        &
-                                              kNumberOfLongwaveBands
   use musica_constants,                only : musica_dk
   use musica_string,                   only : string_t
 
@@ -19,12 +17,10 @@ module mam_species
 
   type :: species_t
     private
-    type(string_t) :: name_
-    real(kind=musica_dk) :: density__kg_m3_
-    complex(kind=musica_dk), dimension( kNumberOfShortwaveBands ) ::          &
-        shortwave_refractive_index_
-    complex(kind=musica_dk), dimension( kNumberOfLongwaveBands  ) ::          &
-        longwave_refractive_index_
+    type(string_t)                       :: name_
+    real(kind=musica_dk)                 :: density__kg_m3_
+    complex(kind=musica_dk), allocatable :: shortwave_refractive_index_(:)
+    complex(kind=musica_dk), allocatable :: longwave_refractive_index_(:)
   contains
     procedure :: name
     procedure :: volume__m3
@@ -50,6 +46,7 @@ contains
   !!       imaginary part.
   function constructor( config ) result( new_obj )
 
+    use musica_assert,                 only : assert_msg
     use musica_config,                 only : config_t
     use musica_io,                     only : io_t
     use musica_io_netcdf,              only : io_netcdf_t
@@ -79,18 +76,24 @@ contains
                        my_name )
       call optics%get( "imaginary refractive index - longwave",  lw_imag_ri,  &
                        my_name )
-      allocate( real_values( kNumberOfShortwaveBands ) )
-      allocate( imag_values( kNumberOfShortwaveBands ) )
       call file_ptr%read( sw_real_ri, real_values, my_name )
       call file_ptr%read( sw_imag_ri, imag_values, my_name )
+      call assert_msg( 434735228,                                             &
+                       size( real_values ) .eq. size( imag_values ),          &
+                       "Length mismatch for shortwave refractive index "//    &
+                       "arrays for species '"//new_obj%name_//"'" )
+      allocate( new_obj%shortwave_refractive_index_( size( real_values ) ) )
       new_obj%shortwave_refractive_index_(:) =                                &
           cmplx( real_values(:), abs( imag_values(:) ) )
       deallocate( real_values )
       deallocate( imag_values )
-      allocate( real_values( kNumberOfLongwaveBands ) )
-      allocate( imag_values( kNumberOfLongwaveBands ) )
       call file_ptr%read( lw_real_ri, real_values, my_name )
       call file_ptr%read( lw_imag_ri, imag_values, my_name )
+      call assert_msg( 979080793,                                             &
+                       size( real_values ) .eq. size( imag_values ),          &
+                       "Length mismatch for longwave refractive index "//     &
+                       "arrays for species '"//new_obj%name_//"'" )
+      allocate( new_obj%longwave_refractive_index_( size( real_values ) ) )
       new_obj%longwave_refractive_index_(:) =                                 &
           cmplx( real_values(:), abs( imag_values(:) ) )
       deallocate( file_ptr )
