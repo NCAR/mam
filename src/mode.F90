@@ -41,6 +41,8 @@ module mam_mode
     procedure, private :: shortwave_optics_array
     procedure, private :: longwave_optics_scalar
     procedure, private :: longwave_optics_array
+    procedure :: shortwave_grid
+    procedure :: longwave_grid
     procedure :: print_state
     procedure :: add_shortwave_optics
     procedure :: add_longwave_optics
@@ -154,7 +156,9 @@ contains
     procedure(interpolation_strategy_i), optional :: interpolation_strategy
 
     new_optics =>                                                             &
-        create_optics( property, output_grid, interpolation_strategy )
+        create_optics( property, this%shortwave_lookup_%grid( ),              &
+                       this%longwave_lookup_%grid( ), output_grid,            &
+                       interpolation_strategy )
 
   end function new_optics
 
@@ -268,6 +272,34 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+  !> Returns the native shortwave optics wavelength grid
+  function shortwave_grid( this )
+
+    use ai_wavelength_grid,            only : wavelength_grid_t
+
+    type(wavelength_grid_t)   :: shortwave_grid
+    class(mode_t), intent(in) :: this
+
+    shortwave_grid = this%shortwave_lookup_%grid( )
+
+  end function shortwave_grid
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Returns the native longwave optics wavelength grid
+  function longwave_grid( this )
+
+    use ai_wavelength_grid,            only : wavelength_grid_t
+
+    type(wavelength_grid_t)   :: longwave_grid
+    class(mode_t), intent(in) :: this
+
+    longwave_grid = this%longwave_lookup_%grid( )
+
+  end function longwave_grid
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
   !> Outputs the current mode state
   subroutine print_state( this, aerosol_state, io_unit )
 
@@ -323,9 +355,7 @@ contains
     use ai_environmental_state,        only : environmental_state_t
     use ai_optics,                     only : optics_ptr
     use mam_constants,                 only : kAccellerationByGravity
-    use mam_optics_util,               only : add_shortwave_property,         &
-                                      kNCC => kNumberOfChebyshevCoefficients, &
-                                      kNSB => kNumberOfShortwaveBands
+    use mam_optics_util,               only : add_shortwave_property
     use musica_math,                   only : chebyshev_function
 
     class(mode_t),                intent(in)    :: this
@@ -333,22 +363,34 @@ contains
     class(mode_state_t),          intent(in)    :: mode_state
     class(optics_ptr),            intent(inout) :: optics(:)
 
-    integer                 :: i_species, i_band, i_prop
-    real(kind=musica_dk)    :: absorption_coefficients( kNCC, kNSB )
-    real(kind=musica_dk)    :: extinction_coefficients( kNCC, kNSB )
-    real(kind=musica_dk)    :: asymmetry_factor_coefficients( kNCC, kNSB )
-    real(kind=musica_dk)    :: size_function( kNCC )
-    complex(kind=musica_dk) :: net_refractive_index( kNSB )
-    complex(kind=musica_dk) :: species_refractive_index
-    real(kind=musica_dk)    :: species_volume_to_mass_mr ! [m3 kg-1]
-    real(kind=musica_dk)    :: total_volume_to_mass_mr   ! [m3 kg-1]
-    real(kind=musica_dk)    :: absorption( kNSB )
-    real(kind=musica_dk)    :: extinction( kNSB )
-    real(kind=musica_dk)    :: asymmetry_factor( kNSB )
-    real(kind=musica_dk)    :: normalized_radius
-    real(kind=musica_dk)    :: ssa( kNSB )       ! single scattering albedo
-    reaL(kind=musica_dk)    :: layer_aod( kNSB ) ! layer aerosol optical depth
+    integer                 :: i_species, i_band, i_prop, n_cheby, n_bands
+    real(kind=musica_dk),    allocatable :: absorption_coefficients(:,:)
+    real(kind=musica_dk),    allocatable :: extinction_coefficients(:,:)
+    real(kind=musica_dk),    allocatable :: asymmetry_factor_coefficients(:,:)
+    real(kind=musica_dk),    allocatable :: size_function(:)
+    complex(kind=musica_dk), allocatable :: net_refractive_index(:)
+    real(kind=musica_dk),    allocatable :: absorption(:)
+    real(kind=musica_dk),    allocatable :: extinction(:)
+    real(kind=musica_dk),    allocatable :: asymmetry_factor(:)
+    real(kind=musica_dk),    allocatable :: ssa(:)       ! single scattering albedo
+    reaL(kind=musica_dk),    allocatable :: layer_aod(:) ! layer aerosol optical depth
+    complex(kind=musica_dk)              :: species_refractive_index
+    real(kind=musica_dk)                 :: species_volume_to_mass_mr ! [m3 kg-1]
+    real(kind=musica_dk)                 :: total_volume_to_mass_mr   ! [m3 kg-1]
+    real(kind=musica_dk)                 :: normalized_radius
 
+    n_cheby = this%shortwave_lookup_%number_of_chebyshev_coefficients( )
+    n_bands = this%shortwave_lookup_%number_of_wavelength_bands( )
+    allocate( absorption_coefficients(       n_cheby, n_bands ) )
+    allocate( extinction_coefficients(       n_cheby, n_bands ) )
+    allocate( asymmetry_factor_coefficients( n_cheby, n_bands ) )
+    allocate( size_function(        n_cheby ) )
+    allocate( net_refractive_index( n_bands ) )
+    allocate( absorption(           n_bands ) )
+    allocate( extinction(           n_bands ) )
+    allocate( asymmetry_factor(     n_bands ) )
+    allocate( ssa(                  n_bands ) )
+    allocate( layer_aod(            n_bands ) )
     net_refractive_index    = ( 0.0_musica_dk, 0.0_musica_dk )
     total_volume_to_mass_mr = 0.0_musica_dk
     do i_species = 1, size( this%species_ )
@@ -356,7 +398,7 @@ contains
                species_mmr =>                                                 &
                    mode_state%mass_mixing_ratio__kg_kg_( i_species ) )
       species_volume_to_mass_mr = species%volume__m3( species_mmr )
-      do i_band = 1, kNSB
+      do i_band = 1, n_bands
         species_refractive_index = species%shortwave_refractive_index( i_band )
         net_refractive_index( i_band ) = net_refractive_index( i_band ) +     &
                                          species_refractive_index *           &
@@ -378,15 +420,17 @@ contains
                               this%wet_surface_mode_radius__m( mode_state ) )
     call chebyshev_function( normalized_radius, size_function )
     ! calculate optical properties
-    extinction = this%specific_extinction__m2_kg( mode_state, kNSB, kNCC,     &
+    extinction = this%specific_extinction__m2_kg( mode_state, n_bands,        &
+                                                  n_cheby,                    &
                                                   extinction_coefficients,    &
                                                   size_function )
-    absorption = this%specific_absorption__m2_kg( mode_state, kNSB, kNCC,     &
+    absorption = this%specific_absorption__m2_kg( mode_state, n_bands,        &
+                                                 n_cheby,                     &
                                                  absorption_coefficients,     &
                                                  size_function,               &
                                                  max_absorption = extinction )
     absorption(:) = min( absorption(:), extinction(:) )
-    asymmetry_factor = this%asymmetry_factor( mode_state, kNSB, kNCC,         &
+    asymmetry_factor = this%asymmetry_factor( mode_state, n_bands, n_cheby,   &
                                               asymmetry_factor_coefficients,  &
                                              size_function )
     ssa(:) = 1.0_musica_dk - absorption(:)                                    &
@@ -410,9 +454,7 @@ contains
     use ai_environmental_state,        only : environmental_state_t
     use ai_optics,                     only : optics_ptr
     use mam_constants,                 only : kAccellerationByGravity
-    use mam_optics_util,               only : add_longwave_property,          &
-                                      kNCC => kNumberOfChebyshevCoefficients, &
-                                      kNLB => kNumberOfLongwaveBands
+    use mam_optics_util,               only : add_longwave_property
     use musica_math,                   only : chebyshev_function
 
     class(mode_t),                intent(in)    :: this
@@ -420,18 +462,26 @@ contains
     class(mode_state_t),          intent(in)    :: mode_state
     class(optics_ptr),            intent(inout) :: optics(:)
 
-    integer                 :: i_species, i_band, i_prop
-    real(kind=musica_dk)    :: chebyshev_coefficients( kNCC )
-    real(kind=musica_dk)    :: size_function( kNCC )
-    complex(kind=musica_dk) :: net_refractive_index( kNLB )
+    integer                 :: i_species, i_band, i_prop, n_cheby, n_bands
+    real(kind=musica_dk),    allocatable :: absorption_coefficients(:,:)
+    real(kind=musica_dk),    allocatable :: chebyshev_coefficients(:)
+    real(kind=musica_dk),    allocatable :: size_function(:)
+    complex(kind=musica_dk), allocatable :: net_refractive_index(:)
+    real(kind=musica_dk),    allocatable :: absorption(:)
+    real(kind=musica_dk),    allocatable :: layer_aod(:)
     complex(kind=musica_dk) :: species_refractive_index
     real(kind=musica_dk)    :: normalized_radius
     real(kind=musica_dk)    :: species_volume_to_mass_mr ! ![m3 kg-1]
     real(kind=musica_dk)    :: total_volume_to_mass_mr   ! ![m3 kg-1]
-    real(kind=musica_dk)    :: absorption_coefficients( kNCC, kNLB )
-    real(kind=musica_dk)    :: absorption( kNLB )
-    real(kind=musica_dk)    :: layer_aod( kNLB )
 
+    n_cheby = this%longwave_lookup_%number_of_chebyshev_coefficients( )
+    n_bands = this%longwave_lookup_%number_of_wavelength_bands( )
+    allocate( absorption_coefficients( n_cheby, n_bands ) )
+    allocate( chebyshev_coefficients(  n_cheby ) )
+    allocate( size_function(           n_cheby ) )
+    allocate( net_refractive_index(    n_bands ) )
+    allocate( absorption(              n_bands ) )
+    allocate( layer_aod(               n_bands ) )
     net_refractive_index    = ( 0.0_musica_dk, 0.0_musica_dk )
     total_volume_to_mass_mr = 0.0_musica_dk
     do i_species = 1, size( this%species_ )
@@ -439,7 +489,7 @@ contains
                species_mmr =>                                                 &
                    mode_state%mass_mixing_ratio__kg_kg_( i_species ) )
       species_volume_to_mass_mr = species%volume__m3( species_mmr )
-      do i_band = 1, kNLB
+      do i_band = 1, n_bands
         species_refractive_index = species%longwave_refractive_index( i_band )
         net_refractive_index( i_band ) = net_refractive_index( i_band ) +     &
                                          species_refractive_index *           &
@@ -459,7 +509,8 @@ contains
                               this%wet_surface_mode_radius__m( mode_state ) )
     call chebyshev_function( normalized_radius, size_function )
     ! calculate optical properties
-    absorption = this%specific_absorption__m2_kg( mode_state, kNLB, kNCC,     &
+    absorption = this%specific_absorption__m2_kg( mode_state, n_bands,        &
+                                                  n_cheby,                    &
                                                   absorption_coefficients,    &
                                                   size_function )
     layer_aod(:) = absorption(:) * environmental_state%layer_thickness__Pa( ) &
