@@ -1,0 +1,11 @@
+{
+  "name" : "foo",
+  "density [kg m-3]" : 814.0,
+  "optics" : {
+    "file path" : "species_data.nc",
+    "real refractive index - shortwave" : "refindex_real_aer_sw",
+    "real refractive index - longwave" : "refindex_real_aer_lw",
+    "imaginary refractive index - shortwave" : "refindex_im_aer_sw",
+    "imaginary refractive index - longwave" : "refindex_im_aer_lw"
+  }
+}

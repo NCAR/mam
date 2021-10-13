@@ -359,7 +359,7 @@ contains
 
     use musica_constants,              only : musica_dk
 
-    class(state_t),       intent(inout) :: this
+    class(state_t),       intent(in)    :: this
     real(kind=musica_dk), intent(inout) :: raw_state(:)
     integer, optional,    intent(inout) :: index
 

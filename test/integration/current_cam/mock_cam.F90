@@ -192,7 +192,7 @@ contains
     sw_extinction => aerosol%new_optics( property, sw_grid )
     deallocate( property )
     property => property_t( my_name,                                          &
-                            name  = "layer single-scatter albedo depth",      &
+                            name  = "layer single-scatter albedo",            &
                             units = "unitless" )
     sw_single_scatter_albedo => aerosol%new_optics( property, sw_grid )
     deallocate( property )

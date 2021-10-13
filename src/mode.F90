@@ -18,9 +18,6 @@ module mam_mode
 
   public :: mode_t, mode_state_t
 
-  real(kind=musica_dk), parameter :: kMinRadiusM = 0.01e-6_musica_dk
-  real(kind=musica_dk), parameter :: kMaxRadiusM = 25.0e-6_musica_dk
-
   !> An aerosol mode
   type, extends(aerosol_t) :: mode_t
     private
@@ -54,9 +51,11 @@ module mam_mode
     procedure :: wet_surface_mode_radius__m
     procedure :: wet_surface_mode_diameter__m
     procedure :: number_mixing_ratio__num_mol
-    procedure, private :: specific_absorption__m2_kg
-    procedure, private :: specific_extinction__m2_kg
-    procedure, private :: asymmetry_factor
+    procedure :: net_shortwave_refractive_index
+    procedure :: net_longwave_refractive_index
+    procedure :: specific_absorption__m2_kg
+    procedure :: specific_extinction__m2_kg
+    procedure :: asymmetry_factor
   end type mode_t
 
   interface mode_t
@@ -363,7 +362,7 @@ contains
     class(mode_state_t),          intent(in)    :: mode_state
     class(optics_ptr),            intent(inout) :: optics(:)
 
-    integer                 :: i_species, i_band, i_prop, n_cheby, n_bands
+    integer                 :: i_prop, n_cheby, n_bands
     real(kind=musica_dk),    allocatable :: absorption_coefficients(:,:)
     real(kind=musica_dk),    allocatable :: extinction_coefficients(:,:)
     real(kind=musica_dk),    allocatable :: asymmetry_factor_coefficients(:,:)
@@ -374,9 +373,6 @@ contains
     real(kind=musica_dk),    allocatable :: asymmetry_factor(:)
     real(kind=musica_dk),    allocatable :: ssa(:)       ! single scattering albedo
     reaL(kind=musica_dk),    allocatable :: layer_aod(:) ! layer aerosol optical depth
-    complex(kind=musica_dk)              :: species_refractive_index
-    real(kind=musica_dk)                 :: species_volume_to_mass_mr ! [m3 kg-1]
-    real(kind=musica_dk)                 :: total_volume_to_mass_mr   ! [m3 kg-1]
     real(kind=musica_dk)                 :: normalized_radius
 
     n_cheby = this%shortwave_lookup_%number_of_chebyshev_coefficients( )
@@ -391,26 +387,9 @@ contains
     allocate( asymmetry_factor(     n_bands ) )
     allocate( ssa(                  n_bands ) )
     allocate( layer_aod(            n_bands ) )
-    net_refractive_index    = ( 0.0_musica_dk, 0.0_musica_dk )
-    total_volume_to_mass_mr = 0.0_musica_dk
-    do i_species = 1, size( this%species_ )
-    associate( species => this%species_( i_species ),                         &
-               species_mmr =>                                                 &
-                   mode_state%mass_mixing_ratio__kg_kg_( i_species ) )
-      species_volume_to_mass_mr = species%volume__m3( species_mmr )
-      do i_band = 1, n_bands
-        species_refractive_index = species%shortwave_refractive_index( i_band )
-        net_refractive_index( i_band ) = net_refractive_index( i_band ) +     &
-                                         species_refractive_index *           &
-                                         species_volume_to_mass_mr
-      end do
-      total_volume_to_mass_mr = total_volume_to_mass_mr                       &
-                                + species_volume_to_mass_mr
-    end associate
-    end do
-    net_refractive_index(:) = net_refractive_index(:)                         &
-                           / max( total_volume_to_mass_mr, 1.0e-60_musica_dk )
-    ! lookup Chebychen coefficients for optical properties
+    net_refractive_index =                                                    &
+        this%net_shortwave_refractive_index( mode_state, n_bands )
+    ! lookup Chebyshev coefficients for optical properties
     call this%shortwave_lookup_%get_optics( net_refractive_index,             &
                       absorption = absorption_coefficients,                   &
                       extinction = extinction_coefficients,                   &
@@ -423,7 +402,8 @@ contains
     extinction = this%specific_extinction__m2_kg( mode_state, n_bands,        &
                                                   n_cheby,                    &
                                                   extinction_coefficients,    &
-                                                  size_function )
+                                                  size_function,              &
+                                                  this%shortwave_lookup_ )
     absorption = this%specific_absorption__m2_kg( mode_state, n_bands,        &
                                                  n_cheby,                     &
                                                  absorption_coefficients,     &
@@ -462,17 +442,14 @@ contains
     class(mode_state_t),          intent(in)    :: mode_state
     class(optics_ptr),            intent(inout) :: optics(:)
 
-    integer                 :: i_species, i_band, i_prop, n_cheby, n_bands
+    integer                 :: i_prop, n_cheby, n_bands
     real(kind=musica_dk),    allocatable :: absorption_coefficients(:,:)
     real(kind=musica_dk),    allocatable :: chebyshev_coefficients(:)
     real(kind=musica_dk),    allocatable :: size_function(:)
     complex(kind=musica_dk), allocatable :: net_refractive_index(:)
     real(kind=musica_dk),    allocatable :: absorption(:)
     real(kind=musica_dk),    allocatable :: layer_aod(:)
-    complex(kind=musica_dk) :: species_refractive_index
     real(kind=musica_dk)    :: normalized_radius
-    real(kind=musica_dk)    :: species_volume_to_mass_mr ! ![m3 kg-1]
-    real(kind=musica_dk)    :: total_volume_to_mass_mr   ! ![m3 kg-1]
 
     n_cheby = this%longwave_lookup_%number_of_chebyshev_coefficients( )
     n_bands = this%longwave_lookup_%number_of_wavelength_bands( )
@@ -482,26 +459,9 @@ contains
     allocate( net_refractive_index(    n_bands ) )
     allocate( absorption(              n_bands ) )
     allocate( layer_aod(               n_bands ) )
-    net_refractive_index    = ( 0.0_musica_dk, 0.0_musica_dk )
-    total_volume_to_mass_mr = 0.0_musica_dk
-    do i_species = 1, size( this%species_ )
-    associate( species => this%species_( i_species ),                         &
-               species_mmr =>                                                 &
-                   mode_state%mass_mixing_ratio__kg_kg_( i_species ) )
-      species_volume_to_mass_mr = species%volume__m3( species_mmr )
-      do i_band = 1, n_bands
-        species_refractive_index = species%longwave_refractive_index( i_band )
-        net_refractive_index( i_band ) = net_refractive_index( i_band ) +     &
-                                         species_refractive_index *           &
-                                         species_volume_to_mass_mr
-      end do
-      total_volume_to_mass_mr = total_volume_to_mass_mr                       &
-                                + species_volume_to_mass_mr
-    end associate
-    end do
-    net_refractive_index(:) = net_refractive_index(:)                         &
-                           / max( total_volume_to_mass_mr, 1.0e-60_musica_dk )
-    ! lookup Chebychen coefficients for optical properties
+    net_refractive_index =                                                    &
+        this%net_longwave_refractive_index( mode_state, n_bands )
+    ! lookup Chebyshev coefficients for optical properties
     call this%longwave_lookup_%get_optics( net_refractive_index,              &
                                         absorption = absorption_coefficients )
     ! get Chebyshev function for normalized wet number mode diameter
@@ -648,6 +608,74 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+  !> Calculates the net refractive index for the mode based on weighted
+  !! contributions from constituent species in the shortwave region
+  pure function net_shortwave_refractive_index( this, mode_state,             &
+      number_of_bands ) result( refractive_index )
+
+    complex(kind=musica_dk)         :: refractive_index( number_of_bands )
+    class(mode_t),       intent(in) :: this
+    class(mode_state_t), intent(in) :: mode_state
+    integer,             intent(in) :: number_of_bands
+
+    integer              :: i_species, i_band
+    real(kind=musica_dk) :: total_vmmr, species_vmmr
+
+    refractive_index(:) = ( 0.0_musica_dk, 0.0_musica_dk )
+    total_vmmr = 0.0_musica_dk
+    do i_species = 1, size( this%species_ )
+    associate( species     => this%species_( i_species ),                     &
+               species_mmr =>                                                 &
+                   mode_state%mass_mixing_ratio__kg_kg_( i_species ) )
+      species_vmmr = species%volume__m3( species_mmr )
+      do i_band = 1, number_of_bands
+        refractive_index( i_band ) = refractive_index( i_band )               &
+                 + species%shortwave_refractive_index( i_band ) * species_vmmr
+      end do
+      total_vmmr = total_vmmr + species_vmmr
+    end associate
+    end do
+    refractive_index(:) = refractive_index(:)                                 &
+                          / max( total_vmmr, 1.0e-60_musica_dk )
+
+  end function net_shortwave_refractive_index
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Calculates the net refractive index for the mode based on weighted
+  !! contributions from constituent species in the longwave region
+  pure function net_longwave_refractive_index( this, mode_state,             &
+      number_of_bands ) result( refractive_index )
+
+    complex(kind=musica_dk)         :: refractive_index( number_of_bands )
+    class(mode_t),       intent(in) :: this
+    class(mode_state_t), intent(in) :: mode_state
+    integer,             intent(in) :: number_of_bands
+
+    integer              :: i_species, i_band
+    real(kind=musica_dk) :: total_vmmr, species_vmmr
+
+    refractive_index(:) = ( 0.0_musica_dk, 0.0_musica_dk )
+    total_vmmr = 0.0_musica_dk
+    do i_species = 1, size( this%species_ )
+    associate( species     => this%species_( i_species ),                     &
+               species_mmr =>                                                 &
+                   mode_state%mass_mixing_ratio__kg_kg_( i_species ) )
+      species_vmmr = species%volume__m3( species_mmr )
+      do i_band = 1, number_of_bands
+        refractive_index( i_band ) = refractive_index( i_band )               &
+                 + species%longwave_refractive_index( i_band ) * species_vmmr
+      end do
+      total_vmmr = total_vmmr + species_vmmr
+    end associate
+    end do
+    refractive_index(:) = refractive_index(:)                                 &
+                          / max( total_vmmr, 1.0e-60_musica_dk )
+
+  end function net_longwave_refractive_index
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
   !> Calculates the specific absorption [m2 kg-1] for a given Chebyshev
   !! function
   pure function specific_absorption__m2_kg( this, mode_state, number_of_bands,&
@@ -693,7 +721,7 @@ contains
   !> Calculates the specific extinction [m2 kg-1] for a given Chebyshev
   !! function
   pure function specific_extinction__m2_kg( this, mode_state, number_of_bands,&
-      number_of_coefficients, coefficients, size_function )
+      number_of_coefficients, coefficients, size_function, optics_lookup )
 
     use mam_constants,                 only : kWaterDensitySTP
     use musica_math,                   only : weighted_chebyshev
@@ -708,12 +736,14 @@ contains
                                                       number_of_bands )
     !> Chebyshev function for the current surface mode radius
     real(kind=musica_dk), intent(in) :: size_function( number_of_coefficients )
+    !> Optics lookup table
+    class(optics_lookup_t), intent(in) :: optics_lookup
 
     integer :: i_band
     real(kind=musica_dk) :: surf_rad
 
     surf_rad = this%wet_surface_mode_radius__m( mode_state )
-    if( surf_rad .le. this%shortwave_lookup_%maximum_radius__m( ) ) then
+    if( surf_rad .le. optics_lookup%maximum_radius__m( ) ) then
       do i_band = 1, number_of_bands
       associate( ext => specific_extinction__m2_kg( i_band ) )
         ext = weighted_chebyshev( number_of_coefficients,                     &
@@ -811,7 +841,7 @@ contains
   !> Dumps the aerosol state into the raw state array
   subroutine dump_state( this, raw_state, index )
 
-    class(mode_state_t),  intent(inout) :: this
+    class(mode_state_t),  intent(in)    :: this
     real(kind=musica_dk), intent(inout) :: raw_state(:)
     integer, optional,    intent(inout) :: index
 
@@ -832,8 +862,6 @@ contains
 
   !> Set the mode state to a random, but reasonable, state. For testing only.
   subroutine randomize( this )
-
-    use musica_assert,                 only : assert_msg
 
     class(mode_state_t), intent(inout) :: this
 

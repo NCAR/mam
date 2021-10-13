@@ -14,4 +14,10 @@ jobs:
     - name: build Docker image
       run: docker build -t mam-test .
     - name: run tests in container
-      run: docker run -t mam-test bash -c 'cd build; make test'
+      run: docker run --name test-container -t mam-test bash -c 'cd build; make coverage'
+    - name: copy coverage from container
+      run: docker cp test-container:home/test_user/build/coverage.xml .
+    - uses: codecov/codecov-action@v2
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: coverage.xml

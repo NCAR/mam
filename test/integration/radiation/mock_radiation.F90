@@ -106,7 +106,7 @@ contains
         aerosol%new_optics( property, new_core%shortwave_grid_ )
     deallocate( property )
     property => property_t( my_name,                                          &
-                            name  = "layer single-scatter albedo depth",      &
+                            name  = "layer single-scatter albedo",            &
                             units = "unitless" )
     new_core%shortwave_single_scatter_albedo_ =>                              &
         aerosol%new_optics( property, new_core%shortwave_grid_ )
