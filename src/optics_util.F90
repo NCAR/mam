@@ -55,7 +55,7 @@ contains
       new_optics => optics_extinction_optical_depth_t( native_shortwave_grid, &
                                                        output_grid,           &
                              interpolation_strategy = interpolation_strategy )
-    else if( property_name .eq. "layer single-scatter albedo depth" ) then
+    else if( property_name .eq. "layer single-scatter albedo" ) then
       new_optics => optics_single_scatter_albedo_t(    native_shortwave_grid, &
                                                        output_grid,           &
                              interpolation_strategy = interpolation_strategy )

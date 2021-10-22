@@ -84,7 +84,7 @@ contains
                        "arrays for species '"//new_obj%name_//"'" )
       allocate( new_obj%shortwave_refractive_index_( size( real_values ) ) )
       new_obj%shortwave_refractive_index_(:) =                                &
-          cmplx( real_values(:), abs( imag_values(:) ) )
+          cmplx( real_values(:), abs( imag_values(:) ), kind = musica_dk )
       deallocate( real_values )
       deallocate( imag_values )
       call file_ptr%read( lw_real_ri, real_values, my_name )
@@ -95,7 +95,7 @@ contains
                        "arrays for species '"//new_obj%name_//"'" )
       allocate( new_obj%longwave_refractive_index_( size( real_values ) ) )
       new_obj%longwave_refractive_index_(:) =                                 &
-          cmplx( real_values(:), abs( imag_values(:) ) )
+          cmplx( real_values(:), abs( imag_values(:) ), kind = musica_dk )
       deallocate( file_ptr )
     else
       new_obj%shortwave_refractive_index_(:) = cmplx( 0.0, 0.0 )

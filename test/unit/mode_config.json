@@ -1,0 +1,10 @@
+{
+  "geometric mean diameter of number distribution [m]" : 42.53,
+  "geometric standard deviation of number distribution" : 2.4,
+  "species" : {
+    "foo" : { "type" : 6 },
+    "bar" : { "type" : 3 }
+  },
+  "shortwave lookup tables" : { "type" : 1 },
+  "longwave lookup tables" : { "type" : 2 }
+}
