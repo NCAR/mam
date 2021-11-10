@@ -276,7 +276,9 @@ contains
     use musica_assert,                 only : die_msg
     use musica_string,                 only : to_char
 
+    !> MAM core
     class(core_t),          intent(in) :: this
+    !> MAM aerosol state
     class(aerosol_state_t), intent(in) :: aerosol_state
     !> Optional output unit (defaults to 6)
     integer, optional,      intent(in) :: io_unit

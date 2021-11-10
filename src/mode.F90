@@ -305,7 +305,9 @@ contains
     use musica_assert,                 only : die_msg
     use musica_string,                 only : to_char
 
+    !> MAM mode
     class(mode_t),          intent(in) :: this
+    !> MAM mode state
     class(aerosol_state_t), intent(in) :: aerosol_state
     !> Optional output unit (defaults to 6)
     integer, optional,      intent(in) :: io_unit
@@ -726,10 +728,15 @@ contains
     use mam_constants,                 only : kWaterDensitySTP
     use musica_math,                   only : weighted_chebyshev
 
+    !> Specific extinction by wavelength
     real(kind=musica_dk) :: specific_extinction__m2_kg( number_of_bands )
+    !> MAM mode
     class(mode_t),        intent(in) :: this
+    !> MAM mode state
     class(mode_state_t),  intent(in) :: mode_state
+    !> Number of wavelength bands
     integer,              intent(in) :: number_of_bands
+    !> Number of Chebyshev coefficients
     integer,              intent(in) :: number_of_coefficients
     !> Chebyshev coefficients for extinction calculation
     real(kind=musica_dk), intent(in) :: coefficients( number_of_coefficients, &
@@ -776,10 +783,15 @@ contains
     use mam_constants,                 only : kWaterDensitySTP
     use musica_math,                   only : weighted_chebyshev
 
+    !> Asymmetry factor by wavelength
     real(kind=musica_dk) :: asymmetry_factor( number_of_bands )
+    !> MAM mode
     class(mode_t),        intent(in) :: this
+    !> MAM mode state
     class(mode_state_t),  intent(in) :: mode_state
+    !> Number of wavelength bands
     integer,              intent(in) :: number_of_bands
+    !> Number of Chebyshev coefficients
     integer,              intent(in) :: number_of_coefficients
     !> Chebyshev coefficients for asymmetry parameter calculation
     real(kind=musica_dk), intent(in) :: coefficients( number_of_coefficients, &
