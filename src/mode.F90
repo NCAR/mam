@@ -415,6 +415,7 @@ contains
     asymmetry_factor = this%asymmetry_factor( mode_state, n_bands, n_cheby,   &
                                               asymmetry_factor_coefficients,  &
                                              size_function )
+    !> \todo Are single-scatter albedo and layer_aod the correct terms to use?
     ssa(:) = 1.0_musica_dk - absorption(:)                                    &
              / ( max( extinction(:), 1.0e-40_musica_dk ) )
     layer_aod = extinction(:) * environmental_state%layer_thickness__Pa( )    &
@@ -680,6 +681,9 @@ contains
 
   !> Calculates the specific absorption [m2 kg-1] for a given Chebyshev
   !! function
+  !!
+  !! \todo is "specific absorption" (m2 kg-1) the correct name/units for what
+  !!       is returned from this function?
   pure function specific_absorption__m2_kg( this, mode_state, number_of_bands,&
       number_of_coefficients, coefficients, size_function, max_absorption )
 
@@ -722,6 +726,9 @@ contains
 
   !> Calculates the specific extinction [m2 kg-1] for a given Chebyshev
   !! function
+  !!
+  !! \todo is "specific extinction" (m2 kg-1) the correct name/units for what
+  !!       is returned from this function?
   pure function specific_extinction__m2_kg( this, mode_state, number_of_bands,&
       number_of_coefficients, coefficients, size_function, optics_lookup )
 

@@ -107,6 +107,9 @@ contains
     real(kind=musica_dk), intent(in) :: asymmetry_factor(:)
     class(optics_single_scatter_albedo_t), intent(inout) :: optics
 
+    !> \todo the parameter calculated from the lookup-table is called
+    !!       single-scatter albedo, as is the value returned to radiation
+    !!       after multiplying by extinction. Which is correct?
     call optics%add_values( extinction_optical_depth(:)                       &
                             * single_scatter_albedo(:) )
 
@@ -124,6 +127,10 @@ contains
     real(kind=musica_dk), intent(in) :: asymmetry_factor(:)
     class(optics_asymmetry_factor_t), intent(inout) :: optics
 
+    !> \todo the parameter calculated from the lookup-table is called
+    !!       asymmetry factor, as is the value returned to radiation
+    !!       after multiplying by extinction and single-scatter albedo.
+    !!       Which is correct?
     call optics%add_values( extinction_optical_depth(:)                       &
                             * single_scatter_albedo(:)                        &
                             * asymmetry_factor(:) )

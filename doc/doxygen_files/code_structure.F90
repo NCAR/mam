@@ -143,7 +143,11 @@
 !!
 !! The over workflow for MAM interactions with radiaion are show below.
 !!
+!! #### Initialization ####
 !! \htmlinclude doc/doxygen_files/images/mam-radiation-workflow-initialization.html
+!!
+!! #### Run-Time ####
+!! \htmlinclude doc/doxygen_files/images/mam-radiation-workflow-runtime.html
 !!
 !! ### Testing ###
 !!
