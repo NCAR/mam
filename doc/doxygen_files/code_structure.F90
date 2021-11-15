@@ -111,8 +111,7 @@
 !! The MAM class diagram including classes from the \c aerosol-interface
 !! and \c musica-core libraries is shown below
 !!
-!! \htmlonly <style>div.image img[src="mam-class-diagram.png"]{width:100%;}</style> \endhtmlonly
-!! \image html mam-class-diagram.png
+!! \htmlinclude doc/doxygen_files/images/mam-class-diagram.html
 !!
 !! The boxes of various color indicate general functionality provided by
 !! sets of related classes.
@@ -139,6 +138,12 @@
 !!
 !! - Class, variable, and function names are meaningful and include
 !!   units where applicable
+!!
+!! ### Workflow ###
+!!
+!! The over workflow for MAM interactions with radiaion are show below.
+!!
+!! \htmlinclude doc/doxygen_files/images/mam-radiation-workflow-initialization.html
 !!
 !! ### Testing ###
 !!

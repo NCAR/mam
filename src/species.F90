@@ -15,6 +15,8 @@ module mam_species
 
   public :: species_t
 
+  !> \todo species should read in the wavelength grid for refractive
+  !!       indices instead of assuming it matches the MAM grid
   type :: species_t
     private
     type(string_t)                       :: name_
