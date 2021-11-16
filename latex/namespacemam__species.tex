@@ -1,0 +1,107 @@
+\hypertarget{namespacemam__species}{}\doxysection{mam\+\_\+species Module Reference}
+\label{namespacemam__species}\index{mam\_species@{mam\_species}}
+
+
+The \mbox{\hyperlink{structmam__species_1_1species__t}{species\+\_\+t}} type and related functions.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structmam__species_1_1species__t}{species\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(\mbox{\hyperlink{structmam__species_1_1species__t}{species\+\_\+t}}) function \mbox{\hyperlink{namespacemam__species_a1155acd61c6fe7c1c3192dd41b618b53}{constructor}} (config)
+\begin{DoxyCompactList}\small\item\em Constructs \mbox{\hyperlink{structmam__species_1_1species__t}{species\+\_\+t}} objects. \end{DoxyCompactList}\item 
+complex(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__species_ac3ce7a877d20e665c2524cdb59bbe1c4}{longwave\+\_\+refractive\+\_\+index}} (this, band)
+\begin{DoxyCompactList}\small\item\em Returns the longwave refractive index at a specified band index. \end{DoxyCompactList}\item 
+type(string\+\_\+t) function \mbox{\hyperlink{namespacemam__species_a6fe88ba6a13b643ab43dbb6dfa8f1dee}{name}} (this)
+\begin{DoxyCompactList}\small\item\em Returns the species name. \end{DoxyCompactList}\item 
+complex(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__species_ad2464e0aa1b4a5eba63d1c465cd73c57}{shortwave\+\_\+refractive\+\_\+index}} (this, band)
+\begin{DoxyCompactList}\small\item\em Returns the shortwave refractive index at a specified band index. \end{DoxyCompactList}\item 
+real(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__species_ab577a3ad741b8a7f13518d92439f19d4}{volume\+\_\+\+\_\+m3}} (this, species\+\_\+mass\+\_\+\+\_\+kg)
+\begin{DoxyCompactList}\small\item\em Returns the total volume occupied by the species for a given mass. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{structmam__species_1_1species__t}{species\+\_\+t}} type and related functions. 
+
+\doxysubsection{Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{namespacemam__species_a1155acd61c6fe7c1c3192dd41b618b53}\label{namespacemam__species_a1155acd61c6fe7c1c3192dd41b618b53}} 
+\index{mam\_species@{mam\_species}!constructor@{constructor}}
+\index{constructor@{constructor}!mam\_species@{mam\_species}}
+\doxysubsubsection{\texorpdfstring{constructor()}{constructor()}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structmam__species_1_1species__t}{species\+\_\+t}}) function mam\+\_\+species\+::constructor (\begin{DoxyParamCaption}\item[{class(config\+\_\+t), intent(inout)}]{config }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Constructs \mbox{\hyperlink{structmam__species_1_1species__t}{species\+\_\+t}} objects. 
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000015}{Todo}}]The complex refractive indices in the Net\+CDF files use a different convention for specifying the complex index of refraction that results in the need to take the absolute value of the imaginary part to get the complex index of refraction used in MAM. The Net\+CDF files should be updated to use positive values for the imaginary part. \end{DoxyRefDesc}
+
+
+Definition at line 49 of file species.\+F90.
+
+
+
+Referenced by mam\+\_\+species\+::species\+\_\+t\+::longwave\+\_\+refractive\+\_\+index().
+
+\mbox{\Hypertarget{namespacemam__species_ac3ce7a877d20e665c2524cdb59bbe1c4}\label{namespacemam__species_ac3ce7a877d20e665c2524cdb59bbe1c4}} 
+\index{mam\_species@{mam\_species}!longwave\_refractive\_index@{longwave\_refractive\_index}}
+\index{longwave\_refractive\_index@{longwave\_refractive\_index}!mam\_species@{mam\_species}}
+\doxysubsubsection{\texorpdfstring{longwave\_refractive\_index()}{longwave\_refractive\_index()}}
+{\footnotesize\ttfamily complex(kind=musica\+\_\+dk) elemental function mam\+\_\+species\+::longwave\+\_\+refractive\+\_\+index (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__species_1_1species__t}{species\+\_\+t}}), intent(in)}]{this,  }\item[{integer, intent(in)}]{band }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Returns the longwave refractive index at a specified band index. 
+
+
+
+Definition at line 148 of file species.\+F90.
+
+\mbox{\Hypertarget{namespacemam__species_a6fe88ba6a13b643ab43dbb6dfa8f1dee}\label{namespacemam__species_a6fe88ba6a13b643ab43dbb6dfa8f1dee}} 
+\index{mam\_species@{mam\_species}!name@{name}}
+\index{name@{name}!mam\_species@{mam\_species}}
+\doxysubsubsection{\texorpdfstring{name()}{name()}}
+{\footnotesize\ttfamily type(string\+\_\+t) function mam\+\_\+species\+::name (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__species_1_1species__t}{species\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})}
+
+
+
+Returns the species name. 
+
+
+
+Definition at line 112 of file species.\+F90.
+
+\mbox{\Hypertarget{namespacemam__species_ad2464e0aa1b4a5eba63d1c465cd73c57}\label{namespacemam__species_ad2464e0aa1b4a5eba63d1c465cd73c57}} 
+\index{mam\_species@{mam\_species}!shortwave\_refractive\_index@{shortwave\_refractive\_index}}
+\index{shortwave\_refractive\_index@{shortwave\_refractive\_index}!mam\_species@{mam\_species}}
+\doxysubsubsection{\texorpdfstring{shortwave\_refractive\_index()}{shortwave\_refractive\_index()}}
+{\footnotesize\ttfamily complex(kind=musica\+\_\+dk) elemental function mam\+\_\+species\+::shortwave\+\_\+refractive\+\_\+index (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__species_1_1species__t}{species\+\_\+t}}), intent(in)}]{this,  }\item[{integer, intent(in)}]{band }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Returns the shortwave refractive index at a specified band index. 
+
+
+
+Definition at line 135 of file species.\+F90.
+
+\mbox{\Hypertarget{namespacemam__species_ab577a3ad741b8a7f13518d92439f19d4}\label{namespacemam__species_ab577a3ad741b8a7f13518d92439f19d4}} 
+\index{mam\_species@{mam\_species}!volume\_\_m3@{volume\_\_m3}}
+\index{volume\_\_m3@{volume\_\_m3}!mam\_species@{mam\_species}}
+\doxysubsubsection{\texorpdfstring{volume\_\_m3()}{volume\_\_m3()}}
+{\footnotesize\ttfamily real(kind=musica\+\_\+dk) elemental function mam\+\_\+species\+::volume\+\_\+\+\_\+m3 (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__species_1_1species__t}{species\+\_\+t}}), intent(in)}]{this,  }\item[{real(kind=musica\+\_\+dk), intent(in)}]{species\+\_\+mass\+\_\+\+\_\+kg }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Returns the total volume occupied by the species for a given mass. 
+
+
+
+Definition at line 123 of file species.\+F90.
+

@@ -1,0 +1,178 @@
+\hypertarget{src_2optics__lookup_8F90}{}\doxysection{/github/workspace/src/optics\+\_\+lookup.F90 File Reference}
+\label{src_2optics__lookup_8F90}\index{/github/workspace/src/optics\_lookup.F90@{/github/workspace/src/optics\_lookup.F90}}
+
+
+The \mbox{\hyperlink{namespacemam__optics__lookup}{mam\+\_\+optics\+\_\+lookup}} module.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t}{mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+data\+\_\+t}}
+\item 
+interface \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+lookup\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacemam__optics__lookup}{mam\+\_\+optics\+\_\+lookup}}
+\begin{DoxyCompactList}\small\item\em The \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\+\_\+lookup\+\_\+t}} type and related functions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(optics\+\_\+lookup\+\_\+t) function \mbox{\hyperlink{namespacemam__optics__lookup_a29d1c55a5ebabea6a9f59b1483b9af48}{mam\+\_\+optics\+\_\+lookup\+::constructor}} (config)
+\begin{DoxyCompactList}\small\item\em Constructor of optics lookup objects. \end{DoxyCompactList}\item 
+type(optics\+\_\+data\+\_\+t) function \mbox{\hyperlink{namespacemam__optics__lookup_a692a456c1da640740b6ebe16797746cf}{mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+data\+\_\+constructor}} (parameter\+\_\+name, lookup\+\_\+file, config)
+\begin{DoxyCompactList}\small\item\em Constructor of optics lookup data objects. \end{DoxyCompactList}\item 
+pure subroutine \mbox{\hyperlink{namespacemam__optics__lookup_a3775b34fd6bb7508e765faaf4cf089dc}{mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+data\+\_\+lookup}} (this, band\+\_\+index, \mbox{\hyperlink{src_2optics__lookup_8F90_a7d62753c7be0c5a0df77a902d79d3997}{indices}}, \mbox{\hyperlink{src_2optics__lookup_8F90_a9aa907f76b5f51fb8755b09fabbf2691}{residuals}}, axis, chebyshev\+\_\+values)
+\begin{DoxyCompactList}\small\item\em Looks up optical property data at a given wavelength band. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+integer, parameter \mbox{\hyperlink{namespacemam__optics__lookup_a25b4140efe403c2b093d49121a140ecb}{mam\+\_\+optics\+\_\+lookup\+::knumberofparameters}} = 3
+\begin{DoxyCompactList}\small\item\em Number of possible optics parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{Indent}\textbf{ Local indices for optics parameters}\par
+{\em \begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000010}{Todo}}]are \char`\"{}specific extinction\char`\"{}, \char`\"{}specific absorption\char`\"{}, and \char`\"{}asymmetry factor\char`\"{} the correct names for the optical properties returned from the lookup tables?\end{DoxyRefDesc}
+}\begin{DoxyCompactItemize}
+\item 
+integer, parameter \mbox{\hyperlink{namespacemam__optics__lookup_af793630c001ae1aa5a1625ea94cbe2b2}{mam\+\_\+optics\+\_\+lookup\+::kabsorption}} = 1
+\item 
+integer, parameter \mbox{\hyperlink{namespacemam__optics__lookup_abb8a7bf5f5865cd3a440c862d6d49e95}{mam\+\_\+optics\+\_\+lookup\+::kasymmetryfactor}} = 3
+\item 
+integer, parameter \mbox{\hyperlink{namespacemam__optics__lookup_ab5ccce6b29a1ca2362df9f9d7a769a98}{mam\+\_\+optics\+\_\+lookup\+::kextinction}} = 2
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ optical properties (Chebychev coefficient, wavelength band)}\par
+{\em Lookup optics properties for a given wavelength-\/dependent refractive index
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000011}{Todo}}]there is no check to make sure the requested data is actually present, as this would require making this not a pure function. Check to see if this being a pure function has any benefit \end{DoxyRefDesc}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em refractive\+\_\+indices} & Complex indices of refraction (wavelength band) \\
+\hline
+\end{DoxyParams}
+}\begin{DoxyCompactItemize}
+\item 
+real(kind=musica\+\_\+dk), dimension(\+:,\+:), intent(out), optional \mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{absorption}}
+\item 
+real(kind=musica\+\_\+dk), dimension(\+:,\+:), intent(out), optional \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\+\_\+factor}}
+\item 
+real(kind=musica\+\_\+dk), dimension(\+:,\+:), intent(out), optional \mbox{\hyperlink{src_2optics__lookup_8F90_adf05b821a31ec1048d1c124d5ceab938}{extinction}}
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{DoxyCompactItemize}
+\item 
+type(wavelength\+\_\+grid\+\_\+t) function \mbox{\hyperlink{namespacemam__optics__lookup_ac76503e0606565cf77239b75bee750c9}{mam\+\_\+optics\+\_\+lookup\+::grid}} (this)
+\begin{DoxyCompactList}\small\item\em Returns the wavelength grid that the properties are returned on. \end{DoxyCompactList}\item 
+integer \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\+\_\+band}}
+\item 
+integer, dimension(2) \mbox{\hyperlink{src_2optics__lookup_8F90_a7d62753c7be0c5a0df77a902d79d3997}{indices}}
+\item 
+real(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__optics__lookup_ac64637637d7c4166c672bf46ed5926e6}{mam\+\_\+optics\+\_\+lookup\+::maximum\+\_\+radius\+\_\+\+\_\+m}} (this)
+\begin{DoxyCompactList}\small\item\em Returns the maximum radius of the range used to calculate the Chebychev coefficients. \end{DoxyCompactList}\item 
+real(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__optics__lookup_aadd628bc57707b0967e3a3f297dbb2d3}{mam\+\_\+optics\+\_\+lookup\+::minimum\+\_\+radius\+\_\+\+\_\+m}} (this)
+\begin{DoxyCompactList}\small\item\em Returns the minimum radius of the range used to calculate the Chebychev coefficients. \end{DoxyCompactList}\item 
+real(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__optics__lookup_aab3c18493c8a1663fe05663ad01aac7f}{mam\+\_\+optics\+\_\+lookup\+::normalize\+\_\+radius}} (this, radius\+\_\+\+\_\+m)
+\begin{DoxyCompactList}\small\item\em Normalizes a radius to the range used to calculate the Chebychev coefficients. \end{DoxyCompactList}\item 
+integer elemental function \mbox{\hyperlink{namespacemam__optics__lookup_a009d2e0ad6ef5c9ec5ca4a1df99269a8}{mam\+\_\+optics\+\_\+lookup\+::number\+\_\+of\+\_\+chebyshev\+\_\+coefficients}} (this)
+\begin{DoxyCompactList}\small\item\em Returns the number of Chebyshev coefficients per band and property. \end{DoxyCompactList}\item 
+integer elemental function \mbox{\hyperlink{namespacemam__optics__lookup_a332aa347ee13edfa7207ae4d0206f630}{mam\+\_\+optics\+\_\+lookup\+::number\+\_\+of\+\_\+wavelength\+\_\+bands}} (this)
+\begin{DoxyCompactList}\small\item\em Returns the number of wavelength bands for each property. \end{DoxyCompactList}\item 
+real(kind=musica\+\_\+dk), dimension(2) \mbox{\hyperlink{src_2optics__lookup_8F90_a9aa907f76b5f51fb8755b09fabbf2691}{residuals}}
+\item 
+subroutine \mbox{\hyperlink{namespacemam__optics__lookup_a0e33f680a9c60c70b36792e5967ff642}{mam\+\_\+optics\+\_\+lookup\+::set\+\_\+grid}} (this, config, lookup\+\_\+file)
+\begin{DoxyCompactList}\small\item\em Sets the wavelength grid for an \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\+\_\+lookup\+\_\+t}} object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{namespacemam__optics__lookup}{mam\+\_\+optics\+\_\+lookup}} module. 
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}\label{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}} 
+\index{optics\_lookup.F90@{optics\_lookup.F90}!absorption@{absorption}}
+\index{absorption@{absorption}!optics\_lookup.F90@{optics\_lookup.F90}}
+\doxysubsubsection{\texorpdfstring{absorption}{absorption}}
+{\footnotesize\ttfamily real(kind=musica\+\_\+dk), dimension(\+:,\+:), intent(out), optional absorption\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 171 of file optics\+\_\+lookup.\+F90.
+
+
+
+Referenced by mam\+\_\+mode\+::add\+\_\+longwave\+\_\+optics(), mam\+\_\+mode\+::add\+\_\+shortwave\+\_\+optics(), specific\+\_\+absorption(), and test\+\_\+optics\+\_\+lookup\+\_\+t().
+
+\mbox{\Hypertarget{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}\label{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}} 
+\index{optics\_lookup.F90@{optics\_lookup.F90}!asymmetry\_factor@{asymmetry\_factor}}
+\index{asymmetry\_factor@{asymmetry\_factor}!optics\_lookup.F90@{optics\_lookup.F90}}
+\doxysubsubsection{\texorpdfstring{asymmetry\_factor}{asymmetry\_factor}}
+{\footnotesize\ttfamily real(kind=musica\+\_\+dk), dimension(\+:,\+:), intent(out), optional asymmetry\+\_\+factor\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 173 of file optics\+\_\+lookup.\+F90.
+
+
+
+Referenced by mam\+\_\+optics\+\_\+util\+::add\+\_\+shortwave\+\_\+asymmetry\+\_\+factor(), mam\+\_\+optics\+\_\+util\+::add\+\_\+shortwave\+\_\+extinction\+\_\+optical\+\_\+depth(), mam\+\_\+optics\+\_\+util\+::add\+\_\+shortwave\+\_\+forward\+\_\+scattered\+\_\+fraction(), mam\+\_\+mode\+::add\+\_\+shortwave\+\_\+optics(), mam\+\_\+optics\+\_\+util\+::add\+\_\+shortwave\+\_\+property(), mam\+\_\+optics\+\_\+util\+::add\+\_\+shortwave\+\_\+single\+\_\+scatter\+\_\+albedo(), asymmetry\+\_\+factor(), mam\+\_\+mode\+::asymmetry\+\_\+factor(), test\+\_\+mode\+\_\+t(), and test\+\_\+optics\+\_\+lookup\+\_\+t().
+
+\mbox{\Hypertarget{src_2optics__lookup_8F90_adf05b821a31ec1048d1c124d5ceab938}\label{src_2optics__lookup_8F90_adf05b821a31ec1048d1c124d5ceab938}} 
+\index{optics\_lookup.F90@{optics\_lookup.F90}!extinction@{extinction}}
+\index{extinction@{extinction}!optics\_lookup.F90@{optics\_lookup.F90}}
+\doxysubsubsection{\texorpdfstring{extinction}{extinction}}
+{\footnotesize\ttfamily real(kind=musica\+\_\+dk), dimension(\+:,\+:), intent(out), optional extinction\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 172 of file optics\+\_\+lookup.\+F90.
+
+
+
+Referenced by mam\+\_\+mode\+::add\+\_\+shortwave\+\_\+optics(), specific\+\_\+extinction(), and test\+\_\+optics\+\_\+lookup\+\_\+t().
+
+\mbox{\Hypertarget{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}\label{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}} 
+\index{optics\_lookup.F90@{optics\_lookup.F90}!i\_band@{i\_band}}
+\index{i\_band@{i\_band}!optics\_lookup.F90@{optics\_lookup.F90}}
+\doxysubsubsection{\texorpdfstring{i\_band}{i\_band}}
+{\footnotesize\ttfamily integer i\+\_\+band\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 176 of file optics\+\_\+lookup.\+F90.
+
+
+
+Referenced by mam\+\_\+mode\+::asymmetry\+\_\+factor(), mam\+\_\+optics\+\_\+lookup\+::constructor(), mam\+\_\+mode\+::net\+\_\+longwave\+\_\+refractive\+\_\+index(), mam\+\_\+mode\+::net\+\_\+shortwave\+\_\+refractive\+\_\+index(), mam\+\_\+mode\+::specific\+\_\+absorption\+\_\+\+\_\+m2\+\_\+kg(), and mam\+\_\+mode\+::specific\+\_\+extinction\+\_\+\+\_\+m2\+\_\+kg().
+
+\mbox{\Hypertarget{src_2optics__lookup_8F90_a7d62753c7be0c5a0df77a902d79d3997}\label{src_2optics__lookup_8F90_a7d62753c7be0c5a0df77a902d79d3997}} 
+\index{optics\_lookup.F90@{optics\_lookup.F90}!indices@{indices}}
+\index{indices@{indices}!optics\_lookup.F90@{optics\_lookup.F90}}
+\doxysubsubsection{\texorpdfstring{indices}{indices}}
+{\footnotesize\ttfamily integer, dimension(2) indices\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 176 of file optics\+\_\+lookup.\+F90.
+
+
+
+Referenced by mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+data\+\_\+lookup().
+
+\mbox{\Hypertarget{src_2optics__lookup_8F90_a9aa907f76b5f51fb8755b09fabbf2691}\label{src_2optics__lookup_8F90_a9aa907f76b5f51fb8755b09fabbf2691}} 
+\index{optics\_lookup.F90@{optics\_lookup.F90}!residuals@{residuals}}
+\index{residuals@{residuals}!optics\_lookup.F90@{optics\_lookup.F90}}
+\doxysubsubsection{\texorpdfstring{residuals}{residuals}}
+{\footnotesize\ttfamily real(kind=musica\+\_\+dk), dimension(2) residuals\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 177 of file optics\+\_\+lookup.\+F90.
+
+
+
+Referenced by mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+data\+\_\+lookup().
+

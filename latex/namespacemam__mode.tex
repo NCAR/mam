@@ -1,0 +1,561 @@
+\hypertarget{namespacemam__mode}{}\doxysection{mam\+\_\+mode Module Reference}
+\label{namespacemam__mode}\index{mam\_mode@{mam\_mode}}
+
+
+The \mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}} type and related functions.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+type \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Aerosol mode state. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em An aerosol mode. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_ad80be0f94556c1bc6865b44f6b270b2f}{add\+\_\+longwave\+\_\+optics}} (this, environmental\+\_\+state, mode\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Calculates longwave optical properties for a given state and adds them to the set of optical properties. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_ab9b38f854035795ee9ca700c989e93a4}{add\+\_\+shortwave\+\_\+optics}} (this, environmental\+\_\+state, mode\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Calculates shortwave optical properties for a given state and adds them to the set of optical properties. \end{DoxyCompactList}\item 
+pure real(kind=musica\+\_\+dk) function, dimension(number\+\_\+of\+\_\+bands) \mbox{\hyperlink{namespacemam__mode_aebeab65928c8fae0907184087d218ab0}{asymmetry\+\_\+factor}} (this, mode\+\_\+state, number\+\_\+of\+\_\+bands, number\+\_\+of\+\_\+coefficients, coefficients, size\+\_\+function)
+\begin{DoxyCompactList}\small\item\em Calculates the asymmetry parameter \mbox{[}unitless ratio\mbox{]} for a given Chebyshev function. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}) function \mbox{\hyperlink{namespacemam__mode_a25e6d955f04e0983deec4f997108f59f}{constructor}} (config)
+\begin{DoxyCompactList}\small\item\em Constructor of \mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}} objects. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_a8c57172dd59c4b8a4c2d0c04ad5c8b27}{dump\+\_\+state}} (this, raw\+\_\+state, index)
+\begin{DoxyCompactList}\small\item\em Dumps the aerosol state into the raw state array. \end{DoxyCompactList}\item 
+elemental real(kind=musica\+\_\+dk) function \mbox{\hyperlink{namespacemam__mode_aed6eb31242c633871218ff4fc5904b53}{geometric\+\_\+mean\+\_\+diameter\+\_\+of\+\_\+number\+\_\+distribution\+\_\+\+\_\+m}} (this, mode\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Returns the geometric mean diameter \mbox{[}m\mbox{]} of the number distribution of the mode. \end{DoxyCompactList}\item 
+elemental real(kind=musica\+\_\+dk) function \mbox{\hyperlink{namespacemam__mode_a77b300b9928311cdd3669c11f21245bf}{geometric\+\_\+standard\+\_\+deviation\+\_\+of\+\_\+number\+\_\+distribution}} (this, mode\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Returns the geometric standard deviation of the number distribution of the mode. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_adfe9e0c2cc0a6193ea352caf19bb8a34}{load\+\_\+state}} (this, raw\+\_\+state, index)
+\begin{DoxyCompactList}\small\item\em Loads raw mode state data to the \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}} object. \end{DoxyCompactList}\item 
+type(wavelength\+\_\+grid\+\_\+t) function \mbox{\hyperlink{namespacemam__mode_a02fd404f5a872221c7920dbb052f76af}{longwave\+\_\+grid}} (this)
+\begin{DoxyCompactList}\small\item\em Returns the native longwave optics wavelength grid. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_af667ca39124593aab8a18a61f69c4a9e}{longwave\+\_\+optics\+\_\+array}} (this, environmental\+\_\+state, aerosol\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Returns longwave optical properties. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_acb0411bbb3664ac15add2b5824cf1af4}{longwave\+\_\+optics\+\_\+scalar}} (this, environmental\+\_\+state, aerosol\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Returns longwave optical properties. \end{DoxyCompactList}\item 
+pure complex(kind=musica\+\_\+dk) function, dimension(number\+\_\+of\+\_\+bands) \mbox{\hyperlink{namespacemam__mode_a05904f6e54a33e46e4c31c71b46f2462}{net\+\_\+longwave\+\_\+refractive\+\_\+index}} (this, mode\+\_\+state, number\+\_\+of\+\_\+bands)
+\begin{DoxyCompactList}\small\item\em Calculates the net refractive index for the mode based on weighted contributions from constituent species in the longwave region. \end{DoxyCompactList}\item 
+pure complex(kind=musica\+\_\+dk) function, dimension(number\+\_\+of\+\_\+bands) \mbox{\hyperlink{namespacemam__mode_ab00a5ac6633ebf5f0026dfaa8f791a3f}{net\+\_\+shortwave\+\_\+refractive\+\_\+index}} (this, mode\+\_\+state, number\+\_\+of\+\_\+bands)
+\begin{DoxyCompactList}\small\item\em Calculates the net refractive index for the mode based on weighted contributions from constituent species in the shortwave region. \end{DoxyCompactList}\item 
+class(optics\+\_\+t) function, pointer \mbox{\hyperlink{namespacemam__mode_acb7f4a162be7dda870afc7639c4f1218}{new\+\_\+optics}} (this, property, output\+\_\+grid, interpolation\+\_\+strategy)
+\begin{DoxyCompactList}\small\item\em Creates an optics\+\_\+t object for a given property. \end{DoxyCompactList}\item 
+class(aerosol\+\_\+state\+\_\+t) function, pointer \mbox{\hyperlink{namespacemam__mode_aad541f5c30d4560200107db5909a70fa}{new\+\_\+state}} (this)
+\begin{DoxyCompactList}\small\item\em Creates a new state object for the mode. \end{DoxyCompactList}\item 
+real(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__mode_a9b672a9f0c3a4eff42da6c9187117c2f}{number\+\_\+mixing\+\_\+ratio\+\_\+\+\_\+num\+\_\+mol}} (this, mode\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Returns the particle number mixing ratio per mole air \mbox{[}\# mol-\/1\mbox{]}. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_a1eb9dcd1cdfb6aec2bfb56cbe31c2edb}{print\+\_\+state}} (this, aerosol\+\_\+state, io\+\_\+unit)
+\begin{DoxyCompactList}\small\item\em Outputs the current mode state. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_a7aee73762887a8cfc3474f9e4fde4e55}{randomize}} (this)
+\begin{DoxyCompactList}\small\item\em Set the mode state to a random, but reasonable, state. For testing only. \end{DoxyCompactList}\item 
+integer function \mbox{\hyperlink{namespacemam__mode_a252a03f38bce74ca1b65a075e6b513c2}{raw\+\_\+size}} (this)
+\begin{DoxyCompactList}\small\item\em Returns the number of doubles needed to hold the raw mode state. \end{DoxyCompactList}\item 
+type(wavelength\+\_\+grid\+\_\+t) function \mbox{\hyperlink{namespacemam__mode_ac7cb7571d3de8688665535b9c0162b15}{shortwave\+\_\+grid}} (this)
+\begin{DoxyCompactList}\small\item\em Returns the native shortwave optics wavelength grid. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_aa19b39cac6ed07aad10838a69c62ba2c}{shortwave\+\_\+optics\+\_\+array}} (this, environmental\+\_\+state, aerosol\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Returns shortwave optical properties. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_ab39cdcb71e4dc0e8c3609351e9183f92}{shortwave\+\_\+optics\+\_\+scalar}} (this, environmental\+\_\+state, aerosol\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Returns shortwave optical properties. \end{DoxyCompactList}\item 
+pure real(kind=musica\+\_\+dk) function, dimension(number\+\_\+of\+\_\+bands) \mbox{\hyperlink{namespacemam__mode_a7a7ccd5c378b5181b4bcbe5f2c5a2e6c}{specific\+\_\+absorption\+\_\+\+\_\+m2\+\_\+kg}} (this, mode\+\_\+state, number\+\_\+of\+\_\+bands, number\+\_\+of\+\_\+coefficients, coefficients, size\+\_\+function, max\+\_\+absorption)
+\begin{DoxyCompactList}\small\item\em Calculates the specific absorption \mbox{[}m2 kg-\/1\mbox{]} for a given Chebyshev function. \end{DoxyCompactList}\item 
+pure real(kind=musica\+\_\+dk) function, dimension(number\+\_\+of\+\_\+bands) \mbox{\hyperlink{namespacemam__mode_aa0ed60cc0da1e1bf74ee66e8d83106ef}{specific\+\_\+extinction\+\_\+\+\_\+m2\+\_\+kg}} (this, mode\+\_\+state, number\+\_\+of\+\_\+bands, number\+\_\+of\+\_\+coefficients, coefficients, size\+\_\+function, optics\+\_\+lookup)
+\begin{DoxyCompactList}\small\item\em Calculates the specific extinction \mbox{[}m2 kg-\/1\mbox{]} for a given Chebyshev function. \end{DoxyCompactList}\item 
+real(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__mode_a3b93e8dc29daa19366b17207b7d49bde}{wet\+\_\+number\+\_\+mode\+\_\+diameter\+\_\+\+\_\+m}} (this, mode\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Returns the mode diameter \mbox{[}m\mbox{]} of the number distribution for the mode. \end{DoxyCompactList}\item 
+real(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__mode_a11beb1b0cb5b233244b0d06e7744d8f1}{wet\+\_\+number\+\_\+mode\+\_\+radius\+\_\+\+\_\+m}} (this, mode\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Returns the mode radius \mbox{[}m\mbox{]} of the number distribution for the mode. \end{DoxyCompactList}\item 
+real(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__mode_a22b6f4aa85f086b94b4d88db92496f99}{wet\+\_\+surface\+\_\+mode\+\_\+diameter\+\_\+\+\_\+m}} (this, mode\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Returns the mode diameter \mbox{[}m\mbox{]} of the surface area distribution for the mode. \end{DoxyCompactList}\item 
+real(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__mode_a8ae3b73811bb7429517002f5211f5187}{wet\+\_\+surface\+\_\+mode\+\_\+radius\+\_\+\+\_\+m}} (this, mode\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Returns the mode radius \mbox{[}m\mbox{]} of the surface area distribution for the mode. \end{DoxyCompactList}\item 
+elemental real(kind=musica\+\_\+dk) function \mbox{\hyperlink{namespacemam__mode_af0de7d153f672d75afe61a5e0d5ed173}{wet\+\_\+volume\+\_\+to\+\_\+mass\+\_\+mixing\+\_\+ratio\+\_\+\+\_\+m3\+\_\+kg}} (this, mode\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Returns the wet volume to mass mixing ratio for the mode \mbox{[}m3 kg\+\_\+dryair-\/1\mbox{]}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}} type and related functions. 
+
+\doxysubsection{Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{namespacemam__mode_ad80be0f94556c1bc6865b44f6b270b2f}\label{namespacemam__mode_ad80be0f94556c1bc6865b44f6b270b2f}} 
+\index{mam\_mode@{mam\_mode}!add\_longwave\_optics@{add\_longwave\_optics}}
+\index{add\_longwave\_optics@{add\_longwave\_optics}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{add\_longwave\_optics()}{add\_longwave\_optics()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+mode\+::add\+\_\+longwave\+\_\+optics (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(environmental\+\_\+state\+\_\+t), intent(in)}]{environmental\+\_\+state,  }\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(in)}]{mode\+\_\+state,  }\item[{class(optics\+\_\+ptr), dimension(\+:), intent(inout)}]{optics }\end{DoxyParamCaption})}
+
+
+
+Calculates longwave optical properties for a given state and adds them to the set of optical properties. 
+
+
+
+Definition at line 434 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_ab9b38f854035795ee9ca700c989e93a4}\label{namespacemam__mode_ab9b38f854035795ee9ca700c989e93a4}} 
+\index{mam\_mode@{mam\_mode}!add\_shortwave\_optics@{add\_shortwave\_optics}}
+\index{add\_shortwave\_optics@{add\_shortwave\_optics}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{add\_shortwave\_optics()}{add\_shortwave\_optics()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+mode\+::add\+\_\+shortwave\+\_\+optics (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(environmental\+\_\+state\+\_\+t), intent(in)}]{environmental\+\_\+state,  }\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(in)}]{mode\+\_\+state,  }\item[{class(optics\+\_\+ptr), dimension(\+:), intent(inout)}]{optics }\end{DoxyParamCaption})}
+
+
+
+Calculates shortwave optical properties for a given state and adds them to the set of optical properties. 
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000004}{Todo}}]Are single-\/scatter albedo and layer\+\_\+aod the correct terms to use? \end{DoxyRefDesc}
+
+
+Definition at line 353 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_aebeab65928c8fae0907184087d218ab0}\label{namespacemam__mode_aebeab65928c8fae0907184087d218ab0}} 
+\index{mam\_mode@{mam\_mode}!asymmetry\_factor@{asymmetry\_factor}}
+\index{asymmetry\_factor@{asymmetry\_factor}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{asymmetry\_factor()}{asymmetry\_factor()}}
+{\footnotesize\ttfamily pure real(kind=musica\+\_\+dk) function, dimension( number\+\_\+of\+\_\+bands ) mam\+\_\+mode\+::asymmetry\+\_\+factor (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(in)}]{mode\+\_\+state,  }\item[{integer, intent(in)}]{number\+\_\+of\+\_\+bands,  }\item[{integer, intent(in)}]{number\+\_\+of\+\_\+coefficients,  }\item[{real(kind=musica\+\_\+dk), dimension( number\+\_\+of\+\_\+coefficients,                                                       number\+\_\+of\+\_\+bands ), intent(in)}]{coefficients,  }\item[{real(kind=musica\+\_\+dk), dimension( number\+\_\+of\+\_\+coefficients ), intent(in)}]{size\+\_\+function }\end{DoxyParamCaption})}
+
+
+
+Calculates the asymmetry parameter \mbox{[}unitless ratio\mbox{]} for a given Chebyshev function. 
+
+\begin{DoxyReturn}{Returns}
+Asymmetry factor by wavelength 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & MAM mode \\
+\hline
+\mbox{\texttt{ in}}  & {\em mode\+\_\+state} & MAM mode state \\
+\hline
+\mbox{\texttt{ in}}  & {\em number\+\_\+of\+\_\+bands} & Number of wavelength bands \\
+\hline
+\mbox{\texttt{ in}}  & {\em number\+\_\+of\+\_\+coefficients} & Number of Chebyshev coefficients \\
+\hline
+\mbox{\texttt{ in}}  & {\em coefficients} & Chebyshev coefficients for asymmetry parameter calculation \\
+\hline
+\mbox{\texttt{ in}}  & {\em size\+\_\+function} & Chebyshev function for the current surface mode radius \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 787 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_a25e6d955f04e0983deec4f997108f59f}\label{namespacemam__mode_a25e6d955f04e0983deec4f997108f59f}} 
+\index{mam\_mode@{mam\_mode}!constructor@{constructor}}
+\index{constructor@{constructor}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{constructor()}{constructor()}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}) function mam\+\_\+mode\+::constructor (\begin{DoxyParamCaption}\item[{class(config\+\_\+t), intent(inout)}]{config }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Constructor of \mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}} objects. 
+
+
+
+Definition at line 87 of file mode.\+F90.
+
+
+
+Referenced by mam\+\_\+mode\+::mode\+\_\+t\+::asymmetry\+\_\+factor().
+
+\mbox{\Hypertarget{namespacemam__mode_a8c57172dd59c4b8a4c2d0c04ad5c8b27}\label{namespacemam__mode_a8c57172dd59c4b8a4c2d0c04ad5c8b27}} 
+\index{mam\_mode@{mam\_mode}!dump\_state@{dump\_state}}
+\index{dump\_state@{dump\_state}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{dump\_state()}{dump\_state()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+mode\+::dump\+\_\+state (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(in)}]{this,  }\item[{real(kind=musica\+\_\+dk), dimension(\+:), intent(inout)}]{raw\+\_\+state,  }\item[{integer, intent(inout), optional}]{index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Dumps the aerosol state into the raw state array. 
+
+
+
+Definition at line 861 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_aed6eb31242c633871218ff4fc5904b53}\label{namespacemam__mode_aed6eb31242c633871218ff4fc5904b53}} 
+\index{mam\_mode@{mam\_mode}!geometric\_mean\_diameter\_of\_number\_distribution\_\_m@{geometric\_mean\_diameter\_of\_number\_distribution\_\_m}}
+\index{geometric\_mean\_diameter\_of\_number\_distribution\_\_m@{geometric\_mean\_diameter\_of\_number\_distribution\_\_m}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{geometric\_mean\_diameter\_of\_number\_distribution\_\_m()}{geometric\_mean\_diameter\_of\_number\_distribution\_\_m()}}
+{\footnotesize\ttfamily elemental real(kind=musica\+\_\+dk) function mam\+\_\+mode\+::geometric\+\_\+mean\+\_\+diameter\+\_\+of\+\_\+number\+\_\+distribution\+\_\+\+\_\+m (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(in)}]{mode\+\_\+state }\end{DoxyParamCaption})}
+
+
+
+Returns the geometric mean diameter \mbox{[}m\mbox{]} of the number distribution of the mode. 
+
+
+
+Definition at line 491 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_a77b300b9928311cdd3669c11f21245bf}\label{namespacemam__mode_a77b300b9928311cdd3669c11f21245bf}} 
+\index{mam\_mode@{mam\_mode}!geometric\_standard\_deviation\_of\_number\_distribution@{geometric\_standard\_deviation\_of\_number\_distribution}}
+\index{geometric\_standard\_deviation\_of\_number\_distribution@{geometric\_standard\_deviation\_of\_number\_distribution}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{geometric\_standard\_deviation\_of\_number\_distribution()}{geometric\_standard\_deviation\_of\_number\_distribution()}}
+{\footnotesize\ttfamily elemental real(kind=musica\+\_\+dk) function mam\+\_\+mode\+::geometric\+\_\+standard\+\_\+deviation\+\_\+of\+\_\+number\+\_\+distribution (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(in)}]{mode\+\_\+state }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Returns the geometric standard deviation of the number distribution of the mode. 
+
+
+
+Definition at line 506 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_adfe9e0c2cc0a6193ea352caf19bb8a34}\label{namespacemam__mode_adfe9e0c2cc0a6193ea352caf19bb8a34}} 
+\index{mam\_mode@{mam\_mode}!load\_state@{load\_state}}
+\index{load\_state@{load\_state}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{load\_state()}{load\_state()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+mode\+::load\+\_\+state (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(inout)}]{this,  }\item[{real(kind=musica\+\_\+dk), dimension(\+:), intent(in)}]{raw\+\_\+state,  }\item[{integer, intent(inout), optional}]{index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Loads raw mode state data to the \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}} object. 
+
+
+
+Definition at line 839 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_a02fd404f5a872221c7920dbb052f76af}\label{namespacemam__mode_a02fd404f5a872221c7920dbb052f76af}} 
+\index{mam\_mode@{mam\_mode}!longwave\_grid@{longwave\_grid}}
+\index{longwave\_grid@{longwave\_grid}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{longwave\_grid()}{longwave\_grid()}}
+{\footnotesize\ttfamily type(wavelength\+\_\+grid\+\_\+t) function mam\+\_\+mode\+::longwave\+\_\+grid (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})}
+
+
+
+Returns the native longwave optics wavelength grid. 
+
+
+
+Definition at line 289 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_af667ca39124593aab8a18a61f69c4a9e}\label{namespacemam__mode_af667ca39124593aab8a18a61f69c4a9e}} 
+\index{mam\_mode@{mam\_mode}!longwave\_optics\_array@{longwave\_optics\_array}}
+\index{longwave\_optics\_array@{longwave\_optics\_array}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{longwave\_optics\_array()}{longwave\_optics\_array()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+mode\+::longwave\+\_\+optics\+\_\+array (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(environmental\+\_\+state\+\_\+t), intent(in)}]{environmental\+\_\+state,  }\item[{class(aerosol\+\_\+state\+\_\+t), intent(in)}]{aerosol\+\_\+state,  }\item[{type(optics\+\_\+ptr), dimension(\+:), intent(inout)}]{optics }\end{DoxyParamCaption})}
+
+
+
+Returns longwave optical properties. 
+
+
+
+Definition at line 244 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_acb0411bbb3664ac15add2b5824cf1af4}\label{namespacemam__mode_acb0411bbb3664ac15add2b5824cf1af4}} 
+\index{mam\_mode@{mam\_mode}!longwave\_optics\_scalar@{longwave\_optics\_scalar}}
+\index{longwave\_optics\_scalar@{longwave\_optics\_scalar}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{longwave\_optics\_scalar()}{longwave\_optics\_scalar()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+mode\+::longwave\+\_\+optics\+\_\+scalar (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(environmental\+\_\+state\+\_\+t), intent(in)}]{environmental\+\_\+state,  }\item[{class(aerosol\+\_\+state\+\_\+t), intent(in)}]{aerosol\+\_\+state,  }\item[{class(optics\+\_\+t), intent(inout), target}]{optics }\end{DoxyParamCaption})}
+
+
+
+Returns longwave optical properties. 
+
+
+
+Definition at line 221 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_a05904f6e54a33e46e4c31c71b46f2462}\label{namespacemam__mode_a05904f6e54a33e46e4c31c71b46f2462}} 
+\index{mam\_mode@{mam\_mode}!net\_longwave\_refractive\_index@{net\_longwave\_refractive\_index}}
+\index{net\_longwave\_refractive\_index@{net\_longwave\_refractive\_index}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{net\_longwave\_refractive\_index()}{net\_longwave\_refractive\_index()}}
+{\footnotesize\ttfamily pure complex(kind=musica\+\_\+dk) function, dimension( number\+\_\+of\+\_\+bands ) mam\+\_\+mode\+::net\+\_\+longwave\+\_\+refractive\+\_\+index (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(in)}]{mode\+\_\+state,  }\item[{integer, intent(in)}]{number\+\_\+of\+\_\+bands }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Calculates the net refractive index for the mode based on weighted contributions from constituent species in the longwave region. 
+
+
+
+Definition at line 650 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_ab00a5ac6633ebf5f0026dfaa8f791a3f}\label{namespacemam__mode_ab00a5ac6633ebf5f0026dfaa8f791a3f}} 
+\index{mam\_mode@{mam\_mode}!net\_shortwave\_refractive\_index@{net\_shortwave\_refractive\_index}}
+\index{net\_shortwave\_refractive\_index@{net\_shortwave\_refractive\_index}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{net\_shortwave\_refractive\_index()}{net\_shortwave\_refractive\_index()}}
+{\footnotesize\ttfamily pure complex(kind=musica\+\_\+dk) function, dimension( number\+\_\+of\+\_\+bands ) mam\+\_\+mode\+::net\+\_\+shortwave\+\_\+refractive\+\_\+index (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(in)}]{mode\+\_\+state,  }\item[{integer, intent(in)}]{number\+\_\+of\+\_\+bands }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Calculates the net refractive index for the mode based on weighted contributions from constituent species in the shortwave region. 
+
+
+
+Definition at line 616 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_acb7f4a162be7dda870afc7639c4f1218}\label{namespacemam__mode_acb7f4a162be7dda870afc7639c4f1218}} 
+\index{mam\_mode@{mam\_mode}!new\_optics@{new\_optics}}
+\index{new\_optics@{new\_optics}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{new\_optics()}{new\_optics()}}
+{\footnotesize\ttfamily class(optics\+\_\+t) function, pointer mam\+\_\+mode\+::new\+\_\+optics (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(property\+\_\+t), intent(in)}]{property,  }\item[{type(wavelength\+\_\+grid\+\_\+t), intent(in)}]{output\+\_\+grid,  }\item[{procedure(interpolation\+\_\+strategy\+\_\+i), optional}]{interpolation\+\_\+strategy }\end{DoxyParamCaption})}
+
+
+
+Creates an optics\+\_\+t object for a given property. 
+
+
+
+Definition at line 143 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_aad541f5c30d4560200107db5909a70fa}\label{namespacemam__mode_aad541f5c30d4560200107db5909a70fa}} 
+\index{mam\_mode@{mam\_mode}!new\_state@{new\_state}}
+\index{new\_state@{new\_state}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{new\_state()}{new\_state()}}
+{\footnotesize\ttfamily class(aerosol\+\_\+state\+\_\+t) function, pointer mam\+\_\+mode\+::new\+\_\+state (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})}
+
+
+
+Creates a new state object for the mode. 
+
+
+
+Definition at line 125 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_a9b672a9f0c3a4eff42da6c9187117c2f}\label{namespacemam__mode_a9b672a9f0c3a4eff42da6c9187117c2f}} 
+\index{mam\_mode@{mam\_mode}!number\_mixing\_ratio\_\_num\_mol@{number\_mixing\_ratio\_\_num\_mol}}
+\index{number\_mixing\_ratio\_\_num\_mol@{number\_mixing\_ratio\_\_num\_mol}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{number\_mixing\_ratio\_\_num\_mol()}{number\_mixing\_ratio\_\_num\_mol()}}
+{\footnotesize\ttfamily real(kind=musica\+\_\+dk) elemental function mam\+\_\+mode\+::number\+\_\+mixing\+\_\+ratio\+\_\+\+\_\+num\+\_\+mol (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(in)}]{mode\+\_\+state }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Returns the particle number mixing ratio per mole air \mbox{[}\# mol-\/1\mbox{]}. 
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000005}{Todo}}]is this per mole dry or wet air? \end{DoxyRefDesc}
+
+
+Definition at line 602 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_a1eb9dcd1cdfb6aec2bfb56cbe31c2edb}\label{namespacemam__mode_a1eb9dcd1cdfb6aec2bfb56cbe31c2edb}} 
+\index{mam\_mode@{mam\_mode}!print\_state@{print\_state}}
+\index{print\_state@{print\_state}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{print\_state()}{print\_state()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+mode\+::print\+\_\+state (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(aerosol\+\_\+state\+\_\+t), intent(in)}]{aerosol\+\_\+state,  }\item[{integer, intent(in), optional}]{io\+\_\+unit }\end{DoxyParamCaption})}
+
+
+
+Outputs the current mode state. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & MAM mode \\
+\hline
+\mbox{\texttt{ in}}  & {\em aerosol\+\_\+state} & MAM mode state \\
+\hline
+\mbox{\texttt{ in}}  & {\em io\+\_\+unit} & Optional output unit (defaults to 6) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 303 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_a7aee73762887a8cfc3474f9e4fde4e55}\label{namespacemam__mode_a7aee73762887a8cfc3474f9e4fde4e55}} 
+\index{mam\_mode@{mam\_mode}!randomize@{randomize}}
+\index{randomize@{randomize}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{randomize()}{randomize()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+mode\+::randomize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Set the mode state to a random, but reasonable, state. For testing only. 
+
+
+
+Definition at line 883 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_a252a03f38bce74ca1b65a075e6b513c2}\label{namespacemam__mode_a252a03f38bce74ca1b65a075e6b513c2}} 
+\index{mam\_mode@{mam\_mode}!raw\_size@{raw\_size}}
+\index{raw\_size@{raw\_size}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{raw\_size()}{raw\_size()}}
+{\footnotesize\ttfamily integer function mam\+\_\+mode\+::raw\+\_\+size (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})}
+
+
+
+Returns the number of doubles needed to hold the raw mode state. 
+
+
+
+Definition at line 828 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_ac7cb7571d3de8688665535b9c0162b15}\label{namespacemam__mode_ac7cb7571d3de8688665535b9c0162b15}} 
+\index{mam\_mode@{mam\_mode}!shortwave\_grid@{shortwave\_grid}}
+\index{shortwave\_grid@{shortwave\_grid}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{shortwave\_grid()}{shortwave\_grid()}}
+{\footnotesize\ttfamily type(wavelength\+\_\+grid\+\_\+t) function mam\+\_\+mode\+::shortwave\+\_\+grid (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})}
+
+
+
+Returns the native shortwave optics wavelength grid. 
+
+
+
+Definition at line 275 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_aa19b39cac6ed07aad10838a69c62ba2c}\label{namespacemam__mode_aa19b39cac6ed07aad10838a69c62ba2c}} 
+\index{mam\_mode@{mam\_mode}!shortwave\_optics\_array@{shortwave\_optics\_array}}
+\index{shortwave\_optics\_array@{shortwave\_optics\_array}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{shortwave\_optics\_array()}{shortwave\_optics\_array()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+mode\+::shortwave\+\_\+optics\+\_\+array (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(environmental\+\_\+state\+\_\+t), intent(in)}]{environmental\+\_\+state,  }\item[{class(aerosol\+\_\+state\+\_\+t), intent(in)}]{aerosol\+\_\+state,  }\item[{type(optics\+\_\+ptr), dimension(\+:), intent(inout)}]{optics }\end{DoxyParamCaption})}
+
+
+
+Returns shortwave optical properties. 
+
+
+
+Definition at line 190 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_ab39cdcb71e4dc0e8c3609351e9183f92}\label{namespacemam__mode_ab39cdcb71e4dc0e8c3609351e9183f92}} 
+\index{mam\_mode@{mam\_mode}!shortwave\_optics\_scalar@{shortwave\_optics\_scalar}}
+\index{shortwave\_optics\_scalar@{shortwave\_optics\_scalar}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{shortwave\_optics\_scalar()}{shortwave\_optics\_scalar()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+mode\+::shortwave\+\_\+optics\+\_\+scalar (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(environmental\+\_\+state\+\_\+t), intent(in)}]{environmental\+\_\+state,  }\item[{class(aerosol\+\_\+state\+\_\+t), intent(in)}]{aerosol\+\_\+state,  }\item[{class(optics\+\_\+t), intent(inout), target}]{optics }\end{DoxyParamCaption})}
+
+
+
+Returns shortwave optical properties. 
+
+
+
+Definition at line 167 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_a7a7ccd5c378b5181b4bcbe5f2c5a2e6c}\label{namespacemam__mode_a7a7ccd5c378b5181b4bcbe5f2c5a2e6c}} 
+\index{mam\_mode@{mam\_mode}!specific\_absorption\_\_m2\_kg@{specific\_absorption\_\_m2\_kg}}
+\index{specific\_absorption\_\_m2\_kg@{specific\_absorption\_\_m2\_kg}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{specific\_absorption\_\_m2\_kg()}{specific\_absorption\_\_m2\_kg()}}
+{\footnotesize\ttfamily pure real(kind=musica\+\_\+dk) function, dimension( number\+\_\+of\+\_\+bands ) mam\+\_\+mode\+::specific\+\_\+absorption\+\_\+\+\_\+m2\+\_\+kg (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(in)}]{mode\+\_\+state,  }\item[{integer, intent(in)}]{number\+\_\+of\+\_\+bands,  }\item[{integer, intent(in)}]{number\+\_\+of\+\_\+coefficients,  }\item[{real(kind=musica\+\_\+dk), dimension( number\+\_\+of\+\_\+coefficients,                                                       number\+\_\+of\+\_\+bands ), intent(in)}]{coefficients,  }\item[{real(kind=musica\+\_\+dk), dimension( number\+\_\+of\+\_\+coefficients ), intent(in)}]{size\+\_\+function,  }\item[{real(kind=musica\+\_\+dk), dimension(                                                                          number\+\_\+of\+\_\+bands ), intent(in), optional}]{max\+\_\+absorption }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Calculates the specific absorption \mbox{[}m2 kg-\/1\mbox{]} for a given Chebyshev function. 
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000006}{Todo}}]is \char`\"{}specific absorption\char`\"{} (m2 kg-\/1) the correct name/units for what is returned from this function? \end{DoxyRefDesc}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em coefficients} & Chebyshev coefficients for absorption calculation \\
+\hline
+\mbox{\texttt{ in}}  & {\em size\+\_\+function} & Chebyshev function for the current surface mode radius \\
+\hline
+\mbox{\texttt{ in}}  & {\em max\+\_\+absorption} & Maximum values for specific absorption for each band \mbox{[}m2 kg-\/1\mbox{]} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 687 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_aa0ed60cc0da1e1bf74ee66e8d83106ef}\label{namespacemam__mode_aa0ed60cc0da1e1bf74ee66e8d83106ef}} 
+\index{mam\_mode@{mam\_mode}!specific\_extinction\_\_m2\_kg@{specific\_extinction\_\_m2\_kg}}
+\index{specific\_extinction\_\_m2\_kg@{specific\_extinction\_\_m2\_kg}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{specific\_extinction\_\_m2\_kg()}{specific\_extinction\_\_m2\_kg()}}
+{\footnotesize\ttfamily pure real(kind=musica\+\_\+dk) function, dimension( number\+\_\+of\+\_\+bands ) mam\+\_\+mode\+::specific\+\_\+extinction\+\_\+\+\_\+m2\+\_\+kg (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(in)}]{mode\+\_\+state,  }\item[{integer, intent(in)}]{number\+\_\+of\+\_\+bands,  }\item[{integer, intent(in)}]{number\+\_\+of\+\_\+coefficients,  }\item[{real(kind=musica\+\_\+dk), dimension( number\+\_\+of\+\_\+coefficients,                                                       number\+\_\+of\+\_\+bands ), intent(in)}]{coefficients,  }\item[{real(kind=musica\+\_\+dk), dimension( number\+\_\+of\+\_\+coefficients ), intent(in)}]{size\+\_\+function,  }\item[{class(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\+\_\+lookup\+\_\+t}}), intent(in)}]{optics\+\_\+lookup }\end{DoxyParamCaption})}
+
+
+
+Calculates the specific extinction \mbox{[}m2 kg-\/1\mbox{]} for a given Chebyshev function. 
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000007}{Todo}}]is \char`\"{}specific extinction\char`\"{} (m2 kg-\/1) the correct name/units for what is returned from this function? \end{DoxyRefDesc}
+\begin{DoxyReturn}{Returns}
+Specific extinction by wavelength 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & MAM mode \\
+\hline
+\mbox{\texttt{ in}}  & {\em mode\+\_\+state} & MAM mode state \\
+\hline
+\mbox{\texttt{ in}}  & {\em number\+\_\+of\+\_\+bands} & Number of wavelength bands \\
+\hline
+\mbox{\texttt{ in}}  & {\em number\+\_\+of\+\_\+coefficients} & Number of Chebyshev coefficients \\
+\hline
+\mbox{\texttt{ in}}  & {\em coefficients} & Chebyshev coefficients for extinction calculation \\
+\hline
+\mbox{\texttt{ in}}  & {\em size\+\_\+function} & Chebyshev function for the current surface mode radius \\
+\hline
+\mbox{\texttt{ in}}  & {\em optics\+\_\+lookup} & Optics lookup table \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000008}{Todo}}]is the data returned from the lookup table in ln( m2/kg )? \end{DoxyRefDesc}
+
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000009}{Todo}}]in the original code, this is labelled as converting \char`\"{}m2/kg  water to m2/kg aerosol\char`\"{}, but it appears to convert instead to m2/kg dry air -\/ is this right??? \end{DoxyRefDesc}
+
+
+Definition at line 732 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_a3b93e8dc29daa19366b17207b7d49bde}\label{namespacemam__mode_a3b93e8dc29daa19366b17207b7d49bde}} 
+\index{mam\_mode@{mam\_mode}!wet\_number\_mode\_diameter\_\_m@{wet\_number\_mode\_diameter\_\_m}}
+\index{wet\_number\_mode\_diameter\_\_m@{wet\_number\_mode\_diameter\_\_m}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{wet\_number\_mode\_diameter\_\_m()}{wet\_number\_mode\_diameter\_\_m()}}
+{\footnotesize\ttfamily real(kind=musica\+\_\+dk) elemental function mam\+\_\+mode\+::wet\+\_\+number\+\_\+mode\+\_\+diameter\+\_\+\+\_\+m (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(in)}]{mode\+\_\+state }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Returns the mode diameter \mbox{[}m\mbox{]} of the number distribution for the mode. 
+
+
+
+Definition at line 556 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_a11beb1b0cb5b233244b0d06e7744d8f1}\label{namespacemam__mode_a11beb1b0cb5b233244b0d06e7744d8f1}} 
+\index{mam\_mode@{mam\_mode}!wet\_number\_mode\_radius\_\_m@{wet\_number\_mode\_radius\_\_m}}
+\index{wet\_number\_mode\_radius\_\_m@{wet\_number\_mode\_radius\_\_m}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{wet\_number\_mode\_radius\_\_m()}{wet\_number\_mode\_radius\_\_m()}}
+{\footnotesize\ttfamily real(kind=musica\+\_\+dk) elemental function mam\+\_\+mode\+::wet\+\_\+number\+\_\+mode\+\_\+radius\+\_\+\+\_\+m (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(in)}]{mode\+\_\+state }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Returns the mode radius \mbox{[}m\mbox{]} of the number distribution for the mode. 
+
+
+
+Definition at line 543 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_a22b6f4aa85f086b94b4d88db92496f99}\label{namespacemam__mode_a22b6f4aa85f086b94b4d88db92496f99}} 
+\index{mam\_mode@{mam\_mode}!wet\_surface\_mode\_diameter\_\_m@{wet\_surface\_mode\_diameter\_\_m}}
+\index{wet\_surface\_mode\_diameter\_\_m@{wet\_surface\_mode\_diameter\_\_m}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{wet\_surface\_mode\_diameter\_\_m()}{wet\_surface\_mode\_diameter\_\_m()}}
+{\footnotesize\ttfamily real(kind=musica\+\_\+dk) elemental function mam\+\_\+mode\+::wet\+\_\+surface\+\_\+mode\+\_\+diameter\+\_\+\+\_\+m (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(in)}]{mode\+\_\+state }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Returns the mode diameter \mbox{[}m\mbox{]} of the surface area distribution for the mode. 
+
+
+
+Definition at line 570 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_a8ae3b73811bb7429517002f5211f5187}\label{namespacemam__mode_a8ae3b73811bb7429517002f5211f5187}} 
+\index{mam\_mode@{mam\_mode}!wet\_surface\_mode\_radius\_\_m@{wet\_surface\_mode\_radius\_\_m}}
+\index{wet\_surface\_mode\_radius\_\_m@{wet\_surface\_mode\_radius\_\_m}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{wet\_surface\_mode\_radius\_\_m()}{wet\_surface\_mode\_radius\_\_m()}}
+{\footnotesize\ttfamily real(kind=musica\+\_\+dk) elemental function mam\+\_\+mode\+::wet\+\_\+surface\+\_\+mode\+\_\+radius\+\_\+\+\_\+m (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(in)}]{mode\+\_\+state }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Returns the mode radius \mbox{[}m\mbox{]} of the surface area distribution for the mode. 
+
+
+
+Definition at line 583 of file mode.\+F90.
+
+\mbox{\Hypertarget{namespacemam__mode_af0de7d153f672d75afe61a5e0d5ed173}\label{namespacemam__mode_af0de7d153f672d75afe61a5e0d5ed173}} 
+\index{mam\_mode@{mam\_mode}!wet\_volume\_to\_mass\_mixing\_ratio\_\_m3\_kg@{wet\_volume\_to\_mass\_mixing\_ratio\_\_m3\_kg}}
+\index{wet\_volume\_to\_mass\_mixing\_ratio\_\_m3\_kg@{wet\_volume\_to\_mass\_mixing\_ratio\_\_m3\_kg}!mam\_mode@{mam\_mode}}
+\doxysubsubsection{\texorpdfstring{wet\_volume\_to\_mass\_mixing\_ratio\_\_m3\_kg()}{wet\_volume\_to\_mass\_mixing\_ratio\_\_m3\_kg()}}
+{\footnotesize\ttfamily elemental real(kind=musica\+\_\+dk) function mam\+\_\+mode\+::wet\+\_\+volume\+\_\+to\+\_\+mass\+\_\+mixing\+\_\+ratio\+\_\+\+\_\+m3\+\_\+kg (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}}), intent(in)}]{mode\+\_\+state }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Returns the wet volume to mass mixing ratio for the mode \mbox{[}m3 kg\+\_\+dryair-\/1\mbox{]}. 
+
+
+
+Definition at line 520 of file mode.\+F90.
+

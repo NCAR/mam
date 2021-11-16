@@ -1,0 +1,135 @@
+\hypertarget{structmam__mode_1_1mode__state__t}{}\doxysection{mam\+\_\+mode\+::mode\+\_\+state\+\_\+t Type Reference}
+\label{structmam__mode_1_1mode__state__t}\index{mam\_mode::mode\_state\_t@{mam\_mode::mode\_state\_t}}
+
+
+Aerosol mode state.  
+
+
+Inheritance diagram for mam\+\_\+mode\+::mode\+\_\+state\+\_\+t\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{structmam__mode_1_1mode__state__t}
+\end{center}
+\end{figure}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structmam__mode_1_1mode__state__t_af2414d8fe3e5cb0643b9057f08a054d2}{dump\+\_\+state}}
+\item 
+procedure \mbox{\hyperlink{structmam__mode_1_1mode__state__t_a71879cac5a01d9a25afab076b24baa3f}{load\+\_\+state}}
+\item 
+procedure \mbox{\hyperlink{structmam__mode_1_1mode__state__t_a6c5492071aac45b61b354a45ac32c8a9}{randomize}}
+\item 
+procedure \mbox{\hyperlink{structmam__mode_1_1mode__state__t_af1db04e3b89e8d32f61db5df5b727f38}{raw\+\_\+size}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+real(kind=musica\+\_\+dk), dimension(\+:), allocatable \mbox{\hyperlink{structmam__mode_1_1mode__state__t_a12f625be845d59a6201035d572c8c59b}{mass\+\_\+mixing\+\_\+ratio\+\_\+\+\_\+kg\+\_\+kg\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Mass mixing ratio of each mode species relative to dry air \mbox{[}kg kg-\/1\mbox{]}. \end{DoxyCompactList}\item 
+real(kind=musica\+\_\+dk) \mbox{\hyperlink{structmam__mode_1_1mode__state__t_a7ac10b68c2ff25b49d2cda9825adc915}{number\+\_\+mixing\+\_\+ratio\+\_\+\+\_\+num\+\_\+mol\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Particle number mixing ratio per mol\+\_\+air \mbox{[}\# mol-\/1\mbox{]}. \end{DoxyCompactList}\item 
+real(kind=musica\+\_\+dk) \mbox{\hyperlink{structmam__mode_1_1mode__state__t_aec6419758a23c0afcce19a0082692dbb}{wet\+\_\+number\+\_\+mode\+\_\+diameter\+\_\+\+\_\+m\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Mode diameter of the wet aerosol number distribution \mbox{[}m\mbox{]}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Aerosol mode state. 
+
+Definition at line 66 of file mode.\+F90.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structmam__mode_1_1mode__state__t_af2414d8fe3e5cb0643b9057f08a054d2}\label{structmam__mode_1_1mode__state__t_af2414d8fe3e5cb0643b9057f08a054d2}} 
+\index{mam\_mode::mode\_state\_t@{mam\_mode::mode\_state\_t}!dump\_state@{dump\_state}}
+\index{dump\_state@{dump\_state}!mam\_mode::mode\_state\_t@{mam\_mode::mode\_state\_t}}
+\doxysubsubsection{\texorpdfstring{dump\_state()}{dump\_state()}}
+{\footnotesize\ttfamily procedure mam\+\_\+mode\+::mode\+\_\+state\+\_\+t\+::dump\+\_\+state\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 78 of file mode.\+F90.
+
+\mbox{\Hypertarget{structmam__mode_1_1mode__state__t_a71879cac5a01d9a25afab076b24baa3f}\label{structmam__mode_1_1mode__state__t_a71879cac5a01d9a25afab076b24baa3f}} 
+\index{mam\_mode::mode\_state\_t@{mam\_mode::mode\_state\_t}!load\_state@{load\_state}}
+\index{load\_state@{load\_state}!mam\_mode::mode\_state\_t@{mam\_mode::mode\_state\_t}}
+\doxysubsubsection{\texorpdfstring{load\_state()}{load\_state()}}
+{\footnotesize\ttfamily procedure mam\+\_\+mode\+::mode\+\_\+state\+\_\+t\+::load\+\_\+state\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 77 of file mode.\+F90.
+
+\mbox{\Hypertarget{structmam__mode_1_1mode__state__t_a6c5492071aac45b61b354a45ac32c8a9}\label{structmam__mode_1_1mode__state__t_a6c5492071aac45b61b354a45ac32c8a9}} 
+\index{mam\_mode::mode\_state\_t@{mam\_mode::mode\_state\_t}!randomize@{randomize}}
+\index{randomize@{randomize}!mam\_mode::mode\_state\_t@{mam\_mode::mode\_state\_t}}
+\doxysubsubsection{\texorpdfstring{randomize()}{randomize()}}
+{\footnotesize\ttfamily procedure mam\+\_\+mode\+::mode\+\_\+state\+\_\+t\+::randomize\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 79 of file mode.\+F90.
+
+\mbox{\Hypertarget{structmam__mode_1_1mode__state__t_af1db04e3b89e8d32f61db5df5b727f38}\label{structmam__mode_1_1mode__state__t_af1db04e3b89e8d32f61db5df5b727f38}} 
+\index{mam\_mode::mode\_state\_t@{mam\_mode::mode\_state\_t}!raw\_size@{raw\_size}}
+\index{raw\_size@{raw\_size}!mam\_mode::mode\_state\_t@{mam\_mode::mode\_state\_t}}
+\doxysubsubsection{\texorpdfstring{raw\_size()}{raw\_size()}}
+{\footnotesize\ttfamily procedure mam\+\_\+mode\+::mode\+\_\+state\+\_\+t\+::raw\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 76 of file mode.\+F90.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structmam__mode_1_1mode__state__t_a12f625be845d59a6201035d572c8c59b}\label{structmam__mode_1_1mode__state__t_a12f625be845d59a6201035d572c8c59b}} 
+\index{mam\_mode::mode\_state\_t@{mam\_mode::mode\_state\_t}!mass\_mixing\_ratio\_\_kg\_kg\_@{mass\_mixing\_ratio\_\_kg\_kg\_}}
+\index{mass\_mixing\_ratio\_\_kg\_kg\_@{mass\_mixing\_ratio\_\_kg\_kg\_}!mam\_mode::mode\_state\_t@{mam\_mode::mode\_state\_t}}
+\doxysubsubsection{\texorpdfstring{mass\_mixing\_ratio\_\_kg\_kg\_}{mass\_mixing\_ratio\_\_kg\_kg\_}}
+{\footnotesize\ttfamily real(kind=musica\+\_\+dk), dimension(\+:), allocatable mam\+\_\+mode\+::mode\+\_\+state\+\_\+t\+::mass\+\_\+mixing\+\_\+ratio\+\_\+\+\_\+kg\+\_\+kg\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Mass mixing ratio of each mode species relative to dry air \mbox{[}kg kg-\/1\mbox{]}. 
+
+
+
+Definition at line 74 of file mode.\+F90.
+
+\mbox{\Hypertarget{structmam__mode_1_1mode__state__t_a7ac10b68c2ff25b49d2cda9825adc915}\label{structmam__mode_1_1mode__state__t_a7ac10b68c2ff25b49d2cda9825adc915}} 
+\index{mam\_mode::mode\_state\_t@{mam\_mode::mode\_state\_t}!number\_mixing\_ratio\_\_num\_mol\_@{number\_mixing\_ratio\_\_num\_mol\_}}
+\index{number\_mixing\_ratio\_\_num\_mol\_@{number\_mixing\_ratio\_\_num\_mol\_}!mam\_mode::mode\_state\_t@{mam\_mode::mode\_state\_t}}
+\doxysubsubsection{\texorpdfstring{number\_mixing\_ratio\_\_num\_mol\_}{number\_mixing\_ratio\_\_num\_mol\_}}
+{\footnotesize\ttfamily real(kind=musica\+\_\+dk) mam\+\_\+mode\+::mode\+\_\+state\+\_\+t\+::number\+\_\+mixing\+\_\+ratio\+\_\+\+\_\+num\+\_\+mol\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Particle number mixing ratio per mol\+\_\+air \mbox{[}\# mol-\/1\mbox{]}. 
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000003}{Todo}}]Is this dry air or wet air? \end{DoxyRefDesc}
+
+
+Definition at line 72 of file mode.\+F90.
+
+\mbox{\Hypertarget{structmam__mode_1_1mode__state__t_aec6419758a23c0afcce19a0082692dbb}\label{structmam__mode_1_1mode__state__t_aec6419758a23c0afcce19a0082692dbb}} 
+\index{mam\_mode::mode\_state\_t@{mam\_mode::mode\_state\_t}!wet\_number\_mode\_diameter\_\_m\_@{wet\_number\_mode\_diameter\_\_m\_}}
+\index{wet\_number\_mode\_diameter\_\_m\_@{wet\_number\_mode\_diameter\_\_m\_}!mam\_mode::mode\_state\_t@{mam\_mode::mode\_state\_t}}
+\doxysubsubsection{\texorpdfstring{wet\_number\_mode\_diameter\_\_m\_}{wet\_number\_mode\_diameter\_\_m\_}}
+{\footnotesize\ttfamily real(kind=musica\+\_\+dk) mam\+\_\+mode\+::mode\+\_\+state\+\_\+t\+::wet\+\_\+number\+\_\+mode\+\_\+diameter\+\_\+\+\_\+m\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Mode diameter of the wet aerosol number distribution \mbox{[}m\mbox{]}. 
+
+
+
+Definition at line 69 of file mode.\+F90.
+
+
+
+The documentation for this type was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/github/workspace/src/\mbox{\hyperlink{src_2mode_8F90}{mode.\+F90}}\end{DoxyCompactItemize}

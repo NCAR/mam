@@ -1,0 +1,228 @@
+\hypertarget{namespacemam__core}{}\doxysection{mam\+\_\+core Module Reference}
+\label{namespacemam__core}\index{mam\_core@{mam\_core}}
+
+
+The \mbox{\hyperlink{structmam__core_1_1core__t}{core\+\_\+t}} type and related functions.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structmam__core_1_1core__t}{core\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em The Modal Aerosol Model core. \end{DoxyCompactList}\item 
+type \mbox{\hyperlink{structmam__core_1_1state__t}{state\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Modal aerosol state. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(\mbox{\hyperlink{structmam__core_1_1core__t}{core\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacemam__core_a5ec6bd0eba56e1a4be69c98362ea0277}{constructor}} (config)
+\begin{DoxyCompactList}\small\item\em Constructor of the MAM core. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__core_af2cf8240e9e66c3089115c9fc633c100}{dump\+\_\+state}} (this, raw\+\_\+state, index)
+\begin{DoxyCompactList}\small\item\em Dumps the raw MAM state data to an array. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__core_a1d53ee74f0d674f9e9da19d36947685b}{load\+\_\+state}} (this, raw\+\_\+state, index)
+\begin{DoxyCompactList}\small\item\em Loads raw MAM state data to the \mbox{\hyperlink{structmam__core_1_1state__t}{state\+\_\+t}} object. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__core_ab46ae1cd09b4d03f56700254f22d02d1}{longwave\+\_\+optics\+\_\+array}} (this, environmental\+\_\+state, aerosol\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Returns longwave optical properties. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__core_a8fb18d5e4cca878d9b2ebdc78a63ab09}{longwave\+\_\+optics\+\_\+scalar}} (this, environmental\+\_\+state, aerosol\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Returns longwave optical properties. \end{DoxyCompactList}\item 
+class(optics\+\_\+t) function, pointer \mbox{\hyperlink{namespacemam__core_a8469bb451ef0bfcd96906a2fa19adfbd}{new\+\_\+optics}} (this, property, output\+\_\+grid, interpolation\+\_\+strategy)
+\begin{DoxyCompactList}\small\item\em Creates an optics\+\_\+t object for a given property. \end{DoxyCompactList}\item 
+class(aerosol\+\_\+state\+\_\+t) function, pointer \mbox{\hyperlink{namespacemam__core_ab7d7ff8982a32d27ba44773903fcf66b}{new\+\_\+state}} (this)
+\begin{DoxyCompactList}\small\item\em Creates a new state object for the modal aerosol. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__core_a015983f7a94157fec64b4c2fda9a88de}{print\+\_\+state}} (this, aerosol\+\_\+state, io\+\_\+unit)
+\begin{DoxyCompactList}\small\item\em Ouptuts the current aerosol state. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__core_a10c027e271425cd2975f83fdacebdda5}{randomize}} (this)
+\begin{DoxyCompactList}\small\item\em Sets the MAM state to a random, but reasonable, state. For testing only. \end{DoxyCompactList}\item 
+integer function \mbox{\hyperlink{namespacemam__core_a97c1bf5912aba1bf45b0ac3aca6ff854}{raw\+\_\+size}} (this)
+\begin{DoxyCompactList}\small\item\em Returns the number of doubles needed to hold the raw MAM aerosol state. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__core_ae6cd279203db7eb49db508e11f74b3e3}{shortwave\+\_\+optics\+\_\+array}} (this, environmental\+\_\+state, aerosol\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Returns shortwave optical properties. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__core_a3e0c7ee6e84786ce37891d4165c189bd}{shortwave\+\_\+optics\+\_\+scalar}} (this, environmental\+\_\+state, aerosol\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Returns shortwave optical properties. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{structmam__core_1_1core__t}{core\+\_\+t}} type and related functions. 
+
+\doxysubsection{Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{namespacemam__core_a5ec6bd0eba56e1a4be69c98362ea0277}\label{namespacemam__core_a5ec6bd0eba56e1a4be69c98362ea0277}} 
+\index{mam\_core@{mam\_core}!constructor@{constructor}}
+\index{constructor@{constructor}!mam\_core@{mam\_core}}
+\doxysubsubsection{\texorpdfstring{constructor()}{constructor()}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structmam__core_1_1core__t}{core\+\_\+t}}) function, pointer mam\+\_\+core\+::constructor (\begin{DoxyParamCaption}\item[{class(config\+\_\+t), intent(inout)}]{config }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Constructor of the MAM core. 
+
+
+
+Definition at line 56 of file core.\+F90.
+
+
+
+Referenced by mam\+\_\+core\+::core\+\_\+t\+::print\+\_\+state().
+
+\mbox{\Hypertarget{namespacemam__core_af2cf8240e9e66c3089115c9fc633c100}\label{namespacemam__core_af2cf8240e9e66c3089115c9fc633c100}} 
+\index{mam\_core@{mam\_core}!dump\_state@{dump\_state}}
+\index{dump\_state@{dump\_state}!mam\_core@{mam\_core}}
+\doxysubsubsection{\texorpdfstring{dump\_state()}{dump\_state()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+core\+::dump\+\_\+state (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__core_1_1state__t}{state\+\_\+t}}), intent(in)}]{this,  }\item[{real(kind=musica\+\_\+dk), dimension(\+:), intent(inout)}]{raw\+\_\+state,  }\item[{integer, intent(inout), optional}]{index }\end{DoxyParamCaption})}
+
+
+
+Dumps the raw MAM state data to an array. 
+
+
+
+Definition at line 360 of file core.\+F90.
+
+\mbox{\Hypertarget{namespacemam__core_a1d53ee74f0d674f9e9da19d36947685b}\label{namespacemam__core_a1d53ee74f0d674f9e9da19d36947685b}} 
+\index{mam\_core@{mam\_core}!load\_state@{load\_state}}
+\index{load\_state@{load\_state}!mam\_core@{mam\_core}}
+\doxysubsubsection{\texorpdfstring{load\_state()}{load\_state()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+core\+::load\+\_\+state (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__core_1_1state__t}{state\+\_\+t}}), intent(inout)}]{this,  }\item[{real(kind=musica\+\_\+dk), dimension(\+:), intent(in)}]{raw\+\_\+state,  }\item[{integer, intent(inout), optional}]{index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Loads raw MAM state data to the \mbox{\hyperlink{structmam__core_1_1state__t}{state\+\_\+t}} object. 
+
+
+
+Definition at line 338 of file core.\+F90.
+
+\mbox{\Hypertarget{namespacemam__core_ab46ae1cd09b4d03f56700254f22d02d1}\label{namespacemam__core_ab46ae1cd09b4d03f56700254f22d02d1}} 
+\index{mam\_core@{mam\_core}!longwave\_optics\_array@{longwave\_optics\_array}}
+\index{longwave\_optics\_array@{longwave\_optics\_array}!mam\_core@{mam\_core}}
+\doxysubsubsection{\texorpdfstring{longwave\_optics\_array()}{longwave\_optics\_array()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+core\+::longwave\+\_\+optics\+\_\+array (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__core_1_1core__t}{core\+\_\+t}}), intent(in)}]{this,  }\item[{class(environmental\+\_\+state\+\_\+t), intent(in)}]{environmental\+\_\+state,  }\item[{class(aerosol\+\_\+state\+\_\+t), intent(in)}]{aerosol\+\_\+state,  }\item[{type(optics\+\_\+ptr), dimension(\+:), intent(inout)}]{optics }\end{DoxyParamCaption})}
+
+
+
+Returns longwave optical properties. 
+
+
+
+Definition at line 237 of file core.\+F90.
+
+\mbox{\Hypertarget{namespacemam__core_a8fb18d5e4cca878d9b2ebdc78a63ab09}\label{namespacemam__core_a8fb18d5e4cca878d9b2ebdc78a63ab09}} 
+\index{mam\_core@{mam\_core}!longwave\_optics\_scalar@{longwave\_optics\_scalar}}
+\index{longwave\_optics\_scalar@{longwave\_optics\_scalar}!mam\_core@{mam\_core}}
+\doxysubsubsection{\texorpdfstring{longwave\_optics\_scalar()}{longwave\_optics\_scalar()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+core\+::longwave\+\_\+optics\+\_\+scalar (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__core_1_1core__t}{core\+\_\+t}}), intent(in)}]{this,  }\item[{class(environmental\+\_\+state\+\_\+t), intent(in)}]{environmental\+\_\+state,  }\item[{class(aerosol\+\_\+state\+\_\+t), intent(in)}]{aerosol\+\_\+state,  }\item[{class(optics\+\_\+t), intent(inout), target}]{optics }\end{DoxyParamCaption})}
+
+
+
+Returns longwave optical properties. 
+
+
+
+Definition at line 214 of file core.\+F90.
+
+\mbox{\Hypertarget{namespacemam__core_a8469bb451ef0bfcd96906a2fa19adfbd}\label{namespacemam__core_a8469bb451ef0bfcd96906a2fa19adfbd}} 
+\index{mam\_core@{mam\_core}!new\_optics@{new\_optics}}
+\index{new\_optics@{new\_optics}!mam\_core@{mam\_core}}
+\doxysubsubsection{\texorpdfstring{new\_optics()}{new\_optics()}}
+{\footnotesize\ttfamily class(optics\+\_\+t) function, pointer mam\+\_\+core\+::new\+\_\+optics (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__core_1_1core__t}{core\+\_\+t}}), intent(in)}]{this,  }\item[{class(property\+\_\+t), intent(in)}]{property,  }\item[{type(wavelength\+\_\+grid\+\_\+t), intent(in)}]{output\+\_\+grid,  }\item[{procedure(interpolation\+\_\+strategy\+\_\+i), optional}]{interpolation\+\_\+strategy }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Creates an optics\+\_\+t object for a given property. 
+
+
+
+Definition at line 131 of file core.\+F90.
+
+\mbox{\Hypertarget{namespacemam__core_ab7d7ff8982a32d27ba44773903fcf66b}\label{namespacemam__core_ab7d7ff8982a32d27ba44773903fcf66b}} 
+\index{mam\_core@{mam\_core}!new\_state@{new\_state}}
+\index{new\_state@{new\_state}!mam\_core@{mam\_core}}
+\doxysubsubsection{\texorpdfstring{new\_state()}{new\_state()}}
+{\footnotesize\ttfamily class(aerosol\+\_\+state\+\_\+t) function, pointer mam\+\_\+core\+::new\+\_\+state (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__core_1_1core__t}{core\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})}
+
+
+
+Creates a new state object for the modal aerosol. 
+
+
+
+Definition at line 104 of file core.\+F90.
+
+\mbox{\Hypertarget{namespacemam__core_a015983f7a94157fec64b4c2fda9a88de}\label{namespacemam__core_a015983f7a94157fec64b4c2fda9a88de}} 
+\index{mam\_core@{mam\_core}!print\_state@{print\_state}}
+\index{print\_state@{print\_state}!mam\_core@{mam\_core}}
+\doxysubsubsection{\texorpdfstring{print\_state()}{print\_state()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+core\+::print\+\_\+state (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__core_1_1core__t}{core\+\_\+t}}), intent(in)}]{this,  }\item[{class(aerosol\+\_\+state\+\_\+t), intent(in)}]{aerosol\+\_\+state,  }\item[{integer, intent(in), optional}]{io\+\_\+unit }\end{DoxyParamCaption})}
+
+
+
+Ouptuts the current aerosol state. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & MAM core \\
+\hline
+\mbox{\texttt{ in}}  & {\em aerosol\+\_\+state} & MAM aerosol state \\
+\hline
+\mbox{\texttt{ in}}  & {\em io\+\_\+unit} & Optional output unit (defaults to 6) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 274 of file core.\+F90.
+
+\mbox{\Hypertarget{namespacemam__core_a10c027e271425cd2975f83fdacebdda5}\label{namespacemam__core_a10c027e271425cd2975f83fdacebdda5}} 
+\index{mam\_core@{mam\_core}!randomize@{randomize}}
+\index{randomize@{randomize}!mam\_core@{mam\_core}}
+\doxysubsubsection{\texorpdfstring{randomize()}{randomize()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+core\+::randomize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__core_1_1state__t}{state\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})}
+
+
+
+Sets the MAM state to a random, but reasonable, state. For testing only. 
+
+
+
+Definition at line 382 of file core.\+F90.
+
+\mbox{\Hypertarget{namespacemam__core_a97c1bf5912aba1bf45b0ac3aca6ff854}\label{namespacemam__core_a97c1bf5912aba1bf45b0ac3aca6ff854}} 
+\index{mam\_core@{mam\_core}!raw\_size@{raw\_size}}
+\index{raw\_size@{raw\_size}!mam\_core@{mam\_core}}
+\doxysubsubsection{\texorpdfstring{raw\_size()}{raw\_size()}}
+{\footnotesize\ttfamily integer function mam\+\_\+core\+::raw\+\_\+size (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__core_1_1state__t}{state\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})}
+
+
+
+Returns the number of doubles needed to hold the raw MAM aerosol state. 
+
+
+
+Definition at line 322 of file core.\+F90.
+
+\mbox{\Hypertarget{namespacemam__core_ae6cd279203db7eb49db508e11f74b3e3}\label{namespacemam__core_ae6cd279203db7eb49db508e11f74b3e3}} 
+\index{mam\_core@{mam\_core}!shortwave\_optics\_array@{shortwave\_optics\_array}}
+\index{shortwave\_optics\_array@{shortwave\_optics\_array}!mam\_core@{mam\_core}}
+\doxysubsubsection{\texorpdfstring{shortwave\_optics\_array()}{shortwave\_optics\_array()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+core\+::shortwave\+\_\+optics\+\_\+array (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__core_1_1core__t}{core\+\_\+t}}), intent(in)}]{this,  }\item[{class(environmental\+\_\+state\+\_\+t), intent(in)}]{environmental\+\_\+state,  }\item[{class(aerosol\+\_\+state\+\_\+t), intent(in)}]{aerosol\+\_\+state,  }\item[{type(optics\+\_\+ptr), dimension(\+:), intent(inout)}]{optics }\end{DoxyParamCaption})}
+
+
+
+Returns shortwave optical properties. 
+
+
+
+Definition at line 177 of file core.\+F90.
+
+\mbox{\Hypertarget{namespacemam__core_a3e0c7ee6e84786ce37891d4165c189bd}\label{namespacemam__core_a3e0c7ee6e84786ce37891d4165c189bd}} 
+\index{mam\_core@{mam\_core}!shortwave\_optics\_scalar@{shortwave\_optics\_scalar}}
+\index{shortwave\_optics\_scalar@{shortwave\_optics\_scalar}!mam\_core@{mam\_core}}
+\doxysubsubsection{\texorpdfstring{shortwave\_optics\_scalar()}{shortwave\_optics\_scalar()}}
+{\footnotesize\ttfamily subroutine mam\+\_\+core\+::shortwave\+\_\+optics\+\_\+scalar (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structmam__core_1_1core__t}{core\+\_\+t}}), intent(in)}]{this,  }\item[{class(environmental\+\_\+state\+\_\+t), intent(in)}]{environmental\+\_\+state,  }\item[{class(aerosol\+\_\+state\+\_\+t), intent(in)}]{aerosol\+\_\+state,  }\item[{class(optics\+\_\+t), intent(inout), target}]{optics }\end{DoxyParamCaption})}
+
+
+
+Returns shortwave optical properties. 
+
+
+
+Definition at line 154 of file core.\+F90.
+

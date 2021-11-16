@@ -1,0 +1,51 @@
+\hypertarget{src_2core_8F90}{}\doxysection{/github/workspace/src/core.F90 File Reference}
+\label{src_2core_8F90}\index{/github/workspace/src/core.F90@{/github/workspace/src/core.F90}}
+
+
+The \mbox{\hyperlink{namespacemam__core}{mam\+\_\+core}} module.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structmam__core_1_1core__t}{mam\+\_\+core\+::core\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em The Modal Aerosol Model core. \end{DoxyCompactList}\item 
+type \mbox{\hyperlink{structmam__core_1_1state__t}{mam\+\_\+core\+::state\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Modal aerosol state. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacemam__core}{mam\+\_\+core}}
+\begin{DoxyCompactList}\small\item\em The \mbox{\hyperlink{structmam__core_1_1core__t}{core\+\_\+t}} type and related functions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(core\+\_\+t) function, pointer \mbox{\hyperlink{namespacemam__core_a5ec6bd0eba56e1a4be69c98362ea0277}{mam\+\_\+core\+::constructor}} (config)
+\begin{DoxyCompactList}\small\item\em Constructor of the MAM core. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__core_af2cf8240e9e66c3089115c9fc633c100}{mam\+\_\+core\+::dump\+\_\+state}} (this, raw\+\_\+state, index)
+\begin{DoxyCompactList}\small\item\em Dumps the raw MAM state data to an array. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__core_a1d53ee74f0d674f9e9da19d36947685b}{mam\+\_\+core\+::load\+\_\+state}} (this, raw\+\_\+state, index)
+\begin{DoxyCompactList}\small\item\em Loads raw MAM state data to the \mbox{\hyperlink{structmam__core_1_1state__t}{state\+\_\+t}} object. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__core_ab46ae1cd09b4d03f56700254f22d02d1}{mam\+\_\+core\+::longwave\+\_\+optics\+\_\+array}} (this, environmental\+\_\+state, aerosol\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Returns longwave optical properties. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__core_a8fb18d5e4cca878d9b2ebdc78a63ab09}{mam\+\_\+core\+::longwave\+\_\+optics\+\_\+scalar}} (this, environmental\+\_\+state, aerosol\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Returns longwave optical properties. \end{DoxyCompactList}\item 
+class(optics\+\_\+t) function, pointer \mbox{\hyperlink{namespacemam__core_a8469bb451ef0bfcd96906a2fa19adfbd}{mam\+\_\+core\+::new\+\_\+optics}} (this, property, output\+\_\+grid, interpolation\+\_\+strategy)
+\begin{DoxyCompactList}\small\item\em Creates an optics\+\_\+t object for a given property. \end{DoxyCompactList}\item 
+class(aerosol\+\_\+state\+\_\+t) function, pointer \mbox{\hyperlink{namespacemam__core_ab7d7ff8982a32d27ba44773903fcf66b}{mam\+\_\+core\+::new\+\_\+state}} (this)
+\begin{DoxyCompactList}\small\item\em Creates a new state object for the modal aerosol. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__core_a015983f7a94157fec64b4c2fda9a88de}{mam\+\_\+core\+::print\+\_\+state}} (this, aerosol\+\_\+state, io\+\_\+unit)
+\begin{DoxyCompactList}\small\item\em Ouptuts the current aerosol state. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__core_a10c027e271425cd2975f83fdacebdda5}{mam\+\_\+core\+::randomize}} (this)
+\begin{DoxyCompactList}\small\item\em Sets the MAM state to a random, but reasonable, state. For testing only. \end{DoxyCompactList}\item 
+integer function \mbox{\hyperlink{namespacemam__core_a97c1bf5912aba1bf45b0ac3aca6ff854}{mam\+\_\+core\+::raw\+\_\+size}} (this)
+\begin{DoxyCompactList}\small\item\em Returns the number of doubles needed to hold the raw MAM aerosol state. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__core_ae6cd279203db7eb49db508e11f74b3e3}{mam\+\_\+core\+::shortwave\+\_\+optics\+\_\+array}} (this, environmental\+\_\+state, aerosol\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Returns shortwave optical properties. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__core_a3e0c7ee6e84786ce37891d4165c189bd}{mam\+\_\+core\+::shortwave\+\_\+optics\+\_\+scalar}} (this, environmental\+\_\+state, aerosol\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Returns shortwave optical properties. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{namespacemam__core}{mam\+\_\+core}} module. 
+

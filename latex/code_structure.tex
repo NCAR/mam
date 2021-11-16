@@ -1,0 +1,69 @@
+MAM code is being developed to demonstrate the possibility of applying a common interface for aerosol packages that host models can use to maintan the state of an aerosol system, retrieve aerosol properties required by other model components, and advance the aerosol state during a simulation.
+
+It is also being developed to apply contemporary best practice for design and testing. This document lays out the science requirements and design principles for MAM, provides an overview of the refactored codebase, and describes in more detail specific parts of the code where object-\/oriented design patterns have been applied to components of the MAM codebase.\hypertarget{code_structure_autotoc_md0}{}\doxysubsection{Software Requirements}\label{code_structure_autotoc_md0}
+\hypertarget{code_structure_autotoc_md1}{}\doxysubsubsection{Aerosol–\+Radiation Interface}\label{code_structure_autotoc_md1}
+
+\begin{DoxyItemize}
+\item Permit radiation schemes to use whatever wavelength grid they want and not have to be aware of the native wavelength grid of the aerosol package
+\item Perform expensive setup for optical property calculations during initialization (reading files, setting up interpolations, etc.)
+\item Remove assumptions of the way aerosols are represented from the radiation code (mode number, size, shape, sectional schemes, etc.)
+\item Allow radiation schemes interested in optical properties to maintain their own wavelength grids (i.\+e., not have aerosol packages maintain grids for every scheme that needs aerosol optical properties)
+\end{DoxyItemize}\hypertarget{code_structure_autotoc_md2}{}\doxysubsection{Design Principles}\label{code_structure_autotoc_md2}
+MAM is being developed according to the \href{https://ncar.github.io/musica-core/html/contributors.html}{\texttt{ recommendations for MUSICA contributors}} and following the \href{https://ncar.github.io/musica-core/html/coding_style.html}{\texttt{ MUSICA style guide}}. Here we outline some specific design principles from these guides that are particularly relevant to the MAM code structure, and briefly describe how they are acheived.
+
+
+\begin{DoxyItemize}
+\item An aerosol package shoud compile as a library with a clearly defined application programming interface (API).
+\begin{DoxyItemize}
+\item The \href{https://github.com/NCAR/mam}{\texttt{ MAM Git\+Hub repository}} includes CMake configurations that allow a user to build the MAM library. Interactions with MAM primarily occur through instances of the {\ttfamily \mbox{\hyperlink{structmam__core_1_1core__t}{mam\+\_\+core\+::core\+\_\+t}}} class. Documentation for the {\ttfamily \mbox{\hyperlink{structmam__core_1_1core__t}{mam\+\_\+core\+::core\+\_\+t}}} class acts as the MAM API. Integration tests included in the repository can be used as examples of how to use the MAM API.
+\end{DoxyItemize}
+\item An aerosol package should be comprised of functions that are of limited, clearly defined scope and purpose for readability and testability.
+\begin{DoxyItemize}
+\item Functions are almost all less than 40 lines long. Functions are designed to do one specific task, with clear documentation. Function arguments are clearly defined with units.
+\end{DoxyItemize}
+\item An aerosol package should employ automated testing with a combination of integration and unit tests, with a goal of 100\% code coverage by unit tests.
+\begin{DoxyItemize}
+\item The MAM library, along with the {\ttfamily aerosol} and {\ttfamily musica-\/core} libraries it links to, use CMake with CTest to maintain the suite of tests. Git\+Hub Actions automates testing, document generation, and code coverage assessment using {\ttfamily gcov}. \href{https://about.codecov.io/}{\texttt{ Code\+Cov.\+io}} is used to visualize the coverage reports.
+\end{DoxyItemize}
+\item An aerosol package should employ data and implementation hiding to the extent possible to facilitate the interoperability of aerosol packages with distinct parameterizations and ways of representing aerosol systems.
+\begin{DoxyItemize}
+\item The MAM code base is object-\/oriented with almost entirely private class data members. Aerosol information and functionality are exposed through type-\/bound procedures of each class.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{code_structure_autotoc_md3}{}\doxysubsection{Codebase Overview}\label{code_structure_autotoc_md3}
+\hypertarget{code_structure_autotoc_md4}{}\doxysubsubsection{Library Structure}\label{code_structure_autotoc_md4}
+The MAM software packages comprises three libraries, each of which provides specific functionality required to simulate the modal aerosol system.
+
+
+\begin{DoxyItemize}
+\item {\bfseries{musica-\/core}}\+: The \href{https://github.com/NCAR/musica-core}{\texttt{ musica-\/core}} library includes a set of classes that perform general, reusable tasks and are applicable to a variety of MUSICA software components, including MAM. Some {\ttfamily musica-\/core} classes used by MAM are {\ttfamily string\+\_\+t}, {\ttfamily config\+\_\+t}, {\ttfamily io\+\_\+t}, {\ttfamily grid\+\_\+t}, and {\ttfamily interpolator\+\_\+t}. These are described in more detail below and in the \href{https://ncar.github.io/musica-core/index.html}{\texttt{ musica-\/core documentation}}
+\item {\bfseries{aerosol-\/interface}}\+: The \href{https://github.com/NCAR/aerosol-interface}{\texttt{ aerosol-\/interface}} library defines the common aerosol API used for MUSICA aerosol packages including MAM. The {\ttfamily aerosol-\/interface} library also includes some classes for general use by aerosol packages that expose the API. These include the {\ttfamily wavelength\+\_\+grid\+\_\+t}, optics\+\_\+t, and {\ttfamily environmental\+\_\+state\+\_\+t} classes.
+\item {\bfseries{mam\+:}} The \href{https://github.com/NCAR/mam}{\texttt{ mam}} library provides the core functionality needed to simulate the modal aerosol system exposed through the common aerosol API. The primary interactions through instances of the {\ttfamily \mbox{\hyperlink{structmam__core_1_1core__t}{mam\+\_\+core\+::core\+\_\+t}}} class, which manages MAM aerosol configuration, and instances of the {\ttfamily \mbox{\hyperlink{structmam__core_1_1state__t}{mam\+\_\+core\+::state\+\_\+t}}} class, which maintains the state of a MAM aerosol.
+\end{DoxyItemize}\hypertarget{code_structure_autotoc_md5}{}\doxysubsubsection{Object Structure}\label{code_structure_autotoc_md5}
+The MAM class diagram including classes from the {\ttfamily aerosol-\/interface} and {\ttfamily musica-\/core} libraries is shown below
+
+
+
+The boxes of various color indicate general functionality provided by sets of related classes.
+
+Things to note in the class structure\+:
+
+
+\begin{DoxyItemize}
+\item both the whole MAM aerosol and individual modes extend the aerosol API. This would allow a radiation or other package work with the full set of modes or a single mode interchangeably, similar to the effect of applying the Composite Pattern.
+\item Interpolators apply the Strategy Pattern, whereby you can specify how you want an interpolation to be calculated when you create an {\bfseries{interpolator\+\_\+t}} object. See \href{https://ncar.github.io/musica-core/html/structmusica__interpolator_1_1interpolator__t.html\#details}{\texttt{ here}} for an example of how to use {\ttfamily interpolator\+\_\+t} objects.
+\item Reusable components, like {\ttfamily interpolator\+\_\+t}, {\ttfamily lookup\+\_\+axis\+\_\+t}, {\ttfamily lookup\+\_\+2\+D\+\_\+axis\+\_\+t}, and {\ttfamily grid\+\_\+t}, are included in the {\ttfamily musica-\/core} library and can be extended if needed for specific applications, as in the case of {\ttfamily wavelength\+\_\+grid\+\_\+t}.
+\item Class data members are private.
+\item Class, variable, and function names are meaningful and include units where applicable
+\end{DoxyItemize}\hypertarget{code_structure_autotoc_md6}{}\doxysubsubsection{Workflow}\label{code_structure_autotoc_md6}
+The over workflow for MAM interactions with radiaion are show below.\hypertarget{code_structure_autotoc_md7}{}\doxyparagraph{Initialization}\label{code_structure_autotoc_md7}
+\hypertarget{code_structure_autotoc_md8}{}\doxyparagraph{Run-\/\+Time}\label{code_structure_autotoc_md8}
+\hypertarget{code_structure_autotoc_md9}{}\doxysubsubsection{Testing}\label{code_structure_autotoc_md9}
+Tests are stored in the {\ttfamily test/} folder with integration tests in {\ttfamily test/integration/} and unit tests in {\ttfamily test/unit/}. There are currently two integration tests\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{current\+\_\+cam\+:}} This test was extracted from the CAM code base and used to test against during development of the refactored MAM--RRTMG interactions.
+\item {\bfseries{radiation\+:}} This test serves as an example of how an arbitrary radiation package can interact with MAM. The results of the optical property calculations are not evaluated.
+\end{DoxyItemize}
+
+The unit tests are organized into files of the same name as those in {\bfseries{src/}} with additional mock classes and configuration files. 

@@ -1,0 +1,142 @@
+\hypertarget{structmam__species_1_1species__t}{}\doxysection{mam\+\_\+species\+::species\+\_\+t Interface Reference}
+\label{structmam__species_1_1species__t}\index{mam\_species::species\_t@{mam\_species::species\_t}}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+type(\mbox{\hyperlink{structmam__species_1_1species__t}{species\+\_\+t}}) function \mbox{\hyperlink{structmam__species_1_1species__t_a6811f6fc1be9874d6e409c59093ca5b3}{constructor}} (config)
+\begin{DoxyCompactList}\small\item\em Constructs \mbox{\hyperlink{structmam__species_1_1species__t}{species\+\_\+t}} objects. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structmam__species_1_1species__t_a20e434732bca51c73d46f8731b1f74fc}{longwave\+\_\+refractive\+\_\+index}}
+\item 
+procedure \mbox{\hyperlink{structmam__species_1_1species__t_a6f60811e75be6bf1ed57969e6e6357fc}{name}}
+\item 
+procedure \mbox{\hyperlink{structmam__species_1_1species__t_a6c3c3d03dd21d1d2015d5421b62e4e25}{shortwave\+\_\+refractive\+\_\+index}}
+\item 
+procedure \mbox{\hyperlink{structmam__species_1_1species__t_a6fb6e06b987731e15a28e8100d71b5ec}{volume\+\_\+\+\_\+m3}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+real(kind=musica\+\_\+dk) \mbox{\hyperlink{structmam__species_1_1species__t_a09934876b26b40ba84b24b6bef16ffa2}{density\+\_\+\+\_\+kg\+\_\+m3\+\_\+}}
+\item 
+complex(kind=musica\+\_\+dk), dimension(\+:), allocatable \mbox{\hyperlink{structmam__species_1_1species__t_a06cdf6a4620d61fa38b531dbf65eb244}{longwave\+\_\+refractive\+\_\+index\+\_\+}}
+\item 
+type(string\+\_\+t) \mbox{\hyperlink{structmam__species_1_1species__t_a6d720395731b2b9f11cf9b6c836619d0}{name\+\_\+}}
+\item 
+complex(kind=musica\+\_\+dk), dimension(\+:), allocatable \mbox{\hyperlink{structmam__species_1_1species__t_a8f975769e60f79b283f184ccb9194784}{shortwave\+\_\+refractive\+\_\+index\+\_\+}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000014}{Todo}}]species should read in the wavelength grid for refractive indices instead of assuming it matches the MAM grid \end{DoxyRefDesc}
+
+
+Definition at line 20 of file species.\+F90.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structmam__species_1_1species__t_a6811f6fc1be9874d6e409c59093ca5b3}\label{structmam__species_1_1species__t_a6811f6fc1be9874d6e409c59093ca5b3}} 
+\index{mam\_species::species\_t@{mam\_species::species\_t}!constructor@{constructor}}
+\index{constructor@{constructor}!mam\_species::species\_t@{mam\_species::species\_t}}
+\doxysubsubsection{\texorpdfstring{constructor()}{constructor()}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structmam__species_1_1species__t}{species\+\_\+t}}) function mam\+\_\+species\+::species\+\_\+t\+::constructor (\begin{DoxyParamCaption}\item[{class(config\+\_\+t), intent(inout)}]{config }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Constructs \mbox{\hyperlink{structmam__species_1_1species__t}{species\+\_\+t}} objects. 
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000015}{Todo}}]The complex refractive indices in the Net\+CDF files use a different convention for specifying the complex index of refraction that results in the need to take the absolute value of the imaginary part to get the complex index of refraction used in MAM. The Net\+CDF files should be updated to use positive values for the imaginary part. \end{DoxyRefDesc}
+
+
+Definition at line 49 of file species.\+F90.
+
+\mbox{\Hypertarget{structmam__species_1_1species__t_a20e434732bca51c73d46f8731b1f74fc}\label{structmam__species_1_1species__t_a20e434732bca51c73d46f8731b1f74fc}} 
+\index{mam\_species::species\_t@{mam\_species::species\_t}!longwave\_refractive\_index@{longwave\_refractive\_index}}
+\index{longwave\_refractive\_index@{longwave\_refractive\_index}!mam\_species::species\_t@{mam\_species::species\_t}}
+\doxysubsubsection{\texorpdfstring{longwave\_refractive\_index()}{longwave\_refractive\_index()}}
+{\footnotesize\ttfamily procedure mam\+\_\+species\+::species\+\_\+t\+::longwave\+\_\+refractive\+\_\+index\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 30 of file species.\+F90.
+
+\mbox{\Hypertarget{structmam__species_1_1species__t_a6f60811e75be6bf1ed57969e6e6357fc}\label{structmam__species_1_1species__t_a6f60811e75be6bf1ed57969e6e6357fc}} 
+\index{mam\_species::species\_t@{mam\_species::species\_t}!name@{name}}
+\index{name@{name}!mam\_species::species\_t@{mam\_species::species\_t}}
+\doxysubsubsection{\texorpdfstring{name()}{name()}}
+{\footnotesize\ttfamily procedure mam\+\_\+species\+::species\+\_\+t\+::name\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 27 of file species.\+F90.
+
+\mbox{\Hypertarget{structmam__species_1_1species__t_a6c3c3d03dd21d1d2015d5421b62e4e25}\label{structmam__species_1_1species__t_a6c3c3d03dd21d1d2015d5421b62e4e25}} 
+\index{mam\_species::species\_t@{mam\_species::species\_t}!shortwave\_refractive\_index@{shortwave\_refractive\_index}}
+\index{shortwave\_refractive\_index@{shortwave\_refractive\_index}!mam\_species::species\_t@{mam\_species::species\_t}}
+\doxysubsubsection{\texorpdfstring{shortwave\_refractive\_index()}{shortwave\_refractive\_index()}}
+{\footnotesize\ttfamily procedure mam\+\_\+species\+::species\+\_\+t\+::shortwave\+\_\+refractive\+\_\+index\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 29 of file species.\+F90.
+
+\mbox{\Hypertarget{structmam__species_1_1species__t_a6fb6e06b987731e15a28e8100d71b5ec}\label{structmam__species_1_1species__t_a6fb6e06b987731e15a28e8100d71b5ec}} 
+\index{mam\_species::species\_t@{mam\_species::species\_t}!volume\_\_m3@{volume\_\_m3}}
+\index{volume\_\_m3@{volume\_\_m3}!mam\_species::species\_t@{mam\_species::species\_t}}
+\doxysubsubsection{\texorpdfstring{volume\_\_m3()}{volume\_\_m3()}}
+{\footnotesize\ttfamily procedure mam\+\_\+species\+::species\+\_\+t\+::volume\+\_\+\+\_\+m3\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 28 of file species.\+F90.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structmam__species_1_1species__t_a09934876b26b40ba84b24b6bef16ffa2}\label{structmam__species_1_1species__t_a09934876b26b40ba84b24b6bef16ffa2}} 
+\index{mam\_species::species\_t@{mam\_species::species\_t}!density\_\_kg\_m3\_@{density\_\_kg\_m3\_}}
+\index{density\_\_kg\_m3\_@{density\_\_kg\_m3\_}!mam\_species::species\_t@{mam\_species::species\_t}}
+\doxysubsubsection{\texorpdfstring{density\_\_kg\_m3\_}{density\_\_kg\_m3\_}}
+{\footnotesize\ttfamily real(kind=musica\+\_\+dk) mam\+\_\+species\+::species\+\_\+t\+::density\+\_\+\+\_\+kg\+\_\+m3\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 23 of file species.\+F90.
+
+\mbox{\Hypertarget{structmam__species_1_1species__t_a06cdf6a4620d61fa38b531dbf65eb244}\label{structmam__species_1_1species__t_a06cdf6a4620d61fa38b531dbf65eb244}} 
+\index{mam\_species::species\_t@{mam\_species::species\_t}!longwave\_refractive\_index\_@{longwave\_refractive\_index\_}}
+\index{longwave\_refractive\_index\_@{longwave\_refractive\_index\_}!mam\_species::species\_t@{mam\_species::species\_t}}
+\doxysubsubsection{\texorpdfstring{longwave\_refractive\_index\_}{longwave\_refractive\_index\_}}
+{\footnotesize\ttfamily complex(kind=musica\+\_\+dk), dimension(\+:), allocatable mam\+\_\+species\+::species\+\_\+t\+::longwave\+\_\+refractive\+\_\+index\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 25 of file species.\+F90.
+
+\mbox{\Hypertarget{structmam__species_1_1species__t_a6d720395731b2b9f11cf9b6c836619d0}\label{structmam__species_1_1species__t_a6d720395731b2b9f11cf9b6c836619d0}} 
+\index{mam\_species::species\_t@{mam\_species::species\_t}!name\_@{name\_}}
+\index{name\_@{name\_}!mam\_species::species\_t@{mam\_species::species\_t}}
+\doxysubsubsection{\texorpdfstring{name\_}{name\_}}
+{\footnotesize\ttfamily type(string\+\_\+t) mam\+\_\+species\+::species\+\_\+t\+::name\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 22 of file species.\+F90.
+
+\mbox{\Hypertarget{structmam__species_1_1species__t_a8f975769e60f79b283f184ccb9194784}\label{structmam__species_1_1species__t_a8f975769e60f79b283f184ccb9194784}} 
+\index{mam\_species::species\_t@{mam\_species::species\_t}!shortwave\_refractive\_index\_@{shortwave\_refractive\_index\_}}
+\index{shortwave\_refractive\_index\_@{shortwave\_refractive\_index\_}!mam\_species::species\_t@{mam\_species::species\_t}}
+\doxysubsubsection{\texorpdfstring{shortwave\_refractive\_index\_}{shortwave\_refractive\_index\_}}
+{\footnotesize\ttfamily complex(kind=musica\+\_\+dk), dimension(\+:), allocatable mam\+\_\+species\+::species\+\_\+t\+::shortwave\+\_\+refractive\+\_\+index\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 24 of file species.\+F90.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/github/workspace/src/\mbox{\hyperlink{src_2species_8F90}{species.\+F90}}\end{DoxyCompactItemize}

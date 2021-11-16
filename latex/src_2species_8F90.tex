@@ -1,0 +1,35 @@
+\hypertarget{src_2species_8F90}{}\doxysection{/github/workspace/src/species.F90 File Reference}
+\label{src_2species_8F90}\index{/github/workspace/src/species.F90@{/github/workspace/src/species.F90}}
+
+
+The \mbox{\hyperlink{namespacemam__species}{mam\+\_\+species}} module.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+interface \mbox{\hyperlink{structmam__species_1_1species__t}{mam\+\_\+species\+::species\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacemam__species}{mam\+\_\+species}}
+\begin{DoxyCompactList}\small\item\em The \mbox{\hyperlink{structmam__species_1_1species__t}{species\+\_\+t}} type and related functions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+type(species\+\_\+t) function \mbox{\hyperlink{namespacemam__species_a1155acd61c6fe7c1c3192dd41b618b53}{mam\+\_\+species\+::constructor}} (config)
+\begin{DoxyCompactList}\small\item\em Constructs \mbox{\hyperlink{structmam__species_1_1species__t}{species\+\_\+t}} objects. \end{DoxyCompactList}\item 
+complex(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__species_ac3ce7a877d20e665c2524cdb59bbe1c4}{mam\+\_\+species\+::longwave\+\_\+refractive\+\_\+index}} (this, band)
+\begin{DoxyCompactList}\small\item\em Returns the longwave refractive index at a specified band index. \end{DoxyCompactList}\item 
+type(string\+\_\+t) function \mbox{\hyperlink{namespacemam__species_a6fe88ba6a13b643ab43dbb6dfa8f1dee}{mam\+\_\+species\+::name}} (this)
+\begin{DoxyCompactList}\small\item\em Returns the species name. \end{DoxyCompactList}\item 
+complex(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__species_ad2464e0aa1b4a5eba63d1c465cd73c57}{mam\+\_\+species\+::shortwave\+\_\+refractive\+\_\+index}} (this, band)
+\begin{DoxyCompactList}\small\item\em Returns the shortwave refractive index at a specified band index. \end{DoxyCompactList}\item 
+real(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__species_ab577a3ad741b8a7f13518d92439f19d4}{mam\+\_\+species\+::volume\+\_\+\+\_\+m3}} (this, species\+\_\+mass\+\_\+\+\_\+kg)
+\begin{DoxyCompactList}\small\item\em Returns the total volume occupied by the species for a given mass. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{namespacemam__species}{mam\+\_\+species}} module. 
+

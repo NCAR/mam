@@ -1,0 +1,36 @@
+\hypertarget{src_2optics__util_8F90}{}\doxysection{/github/workspace/src/optics\+\_\+util.F90 File Reference}
+\label{src_2optics__util_8F90}\index{/github/workspace/src/optics\_util.F90@{/github/workspace/src/optics\_util.F90}}
+
+
+The mam\+\_\+optics\+\_\+constants module.  
+
+
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacemam__optics__util}{mam\+\_\+optics\+\_\+util}}
+\begin{DoxyCompactList}\small\item\em Constants used to calculate MAM optical properties. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \mbox{\hyperlink{namespacemam__optics__util_a15ae1872e068eb3df567f06cee561248}{mam\+\_\+optics\+\_\+util\+::add\+\_\+longwave\+\_\+absorption\+\_\+optical\+\_\+depth}} (extinction\+\_\+optical\+\_\+depth, optics)
+\begin{DoxyCompactList}\small\item\em Adds absorption optical depth to optical property values. \end{DoxyCompactList}\item 
+subroutine, public \mbox{\hyperlink{namespacemam__optics__util_ab252336adf9500f549d921fd1a461840}{mam\+\_\+optics\+\_\+util\+::add\+\_\+longwave\+\_\+property}} (extinction\+\_\+optical\+\_\+depth, optics)
+\begin{DoxyCompactList}\small\item\em Adds to longwave property values. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__optics__util_a0149038eae747d9b5e3809633415bab6}{mam\+\_\+optics\+\_\+util\+::add\+\_\+shortwave\+\_\+asymmetry\+\_\+factor}} (extinction\+\_\+optical\+\_\+depth, single\+\_\+scatter\+\_\+albedo, \mbox{\hyperlink{test_2unit_2mode_8F90_a6269266e079f8970802163c9c5faac0f}{asymmetry\+\_\+factor}}, optics)
+\begin{DoxyCompactList}\small\item\em Adds asymmetry factor to optical property values. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__optics__util_a127e93924d0e692f1e40673ebef91892}{mam\+\_\+optics\+\_\+util\+::add\+\_\+shortwave\+\_\+extinction\+\_\+optical\+\_\+depth}} (extinction\+\_\+optical\+\_\+depth, single\+\_\+scatter\+\_\+albedo, \mbox{\hyperlink{test_2unit_2mode_8F90_a6269266e079f8970802163c9c5faac0f}{asymmetry\+\_\+factor}}, optics)
+\begin{DoxyCompactList}\small\item\em Adds extinction optical depths to optical property values. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__optics__util_a3871f1fe202a74af5921147ff9cbeaeb}{mam\+\_\+optics\+\_\+util\+::add\+\_\+shortwave\+\_\+forward\+\_\+scattered\+\_\+fraction}} (extinction\+\_\+optical\+\_\+depth, single\+\_\+scatter\+\_\+albedo, \mbox{\hyperlink{test_2unit_2mode_8F90_a6269266e079f8970802163c9c5faac0f}{asymmetry\+\_\+factor}}, optics)
+\begin{DoxyCompactList}\small\item\em Adds forward scattered fraction to optical property values. \end{DoxyCompactList}\item 
+subroutine, public \mbox{\hyperlink{namespacemam__optics__util_ab1d8fd653e3523e1e8d23ce7ba21f5d7}{mam\+\_\+optics\+\_\+util\+::add\+\_\+shortwave\+\_\+property}} (extinction\+\_\+optical\+\_\+depth, single\+\_\+scatter\+\_\+albedo, \mbox{\hyperlink{test_2unit_2mode_8F90_a6269266e079f8970802163c9c5faac0f}{asymmetry\+\_\+factor}}, optics)
+\begin{DoxyCompactList}\small\item\em Adds to shortwave property values. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__optics__util_a8b91778ceede0fba8cfe3ee54c8e2a6c}{mam\+\_\+optics\+\_\+util\+::add\+\_\+shortwave\+\_\+single\+\_\+scatter\+\_\+albedo}} (extinction\+\_\+optical\+\_\+depth, single\+\_\+scatter\+\_\+albedo, \mbox{\hyperlink{test_2unit_2mode_8F90_a6269266e079f8970802163c9c5faac0f}{asymmetry\+\_\+factor}}, optics)
+\begin{DoxyCompactList}\small\item\em Adds single-\/scatter albedo to optical property values. \end{DoxyCompactList}\item 
+class(optics\+\_\+t) function, pointer, public \mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{mam\+\_\+optics\+\_\+util\+::create\+\_\+optics}} (property, native\+\_\+shortwave\+\_\+grid, native\+\_\+longwave\+\_\+grid, output\+\_\+grid, interpolation\+\_\+strategy)
+\begin{DoxyCompactList}\small\item\em Returns an optics\+\_\+t object for a given property. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The mam\+\_\+optics\+\_\+constants module. 
+

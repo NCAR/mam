@@ -1,0 +1,85 @@
+\hypertarget{src_2mode_8F90}{}\doxysection{/github/workspace/src/mode.F90 File Reference}
+\label{src_2mode_8F90}\index{/github/workspace/src/mode.F90@{/github/workspace/src/mode.F90}}
+
+
+The \mbox{\hyperlink{namespacemam__mode}{mam\+\_\+mode}} module.  
+
+
+\doxysubsection*{Data Types}
+\begin{DoxyCompactItemize}
+\item 
+type \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mam\+\_\+mode\+::mode\+\_\+state\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Aerosol mode state. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{structmam__mode_1_1mode__t}{mam\+\_\+mode\+::mode\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em An aerosol mode. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \mbox{\hyperlink{namespacemam__mode}{mam\+\_\+mode}}
+\begin{DoxyCompactList}\small\item\em The \mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}} type and related functions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_ad80be0f94556c1bc6865b44f6b270b2f}{mam\+\_\+mode\+::add\+\_\+longwave\+\_\+optics}} (this, environmental\+\_\+state, mode\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Calculates longwave optical properties for a given state and adds them to the set of optical properties. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_ab9b38f854035795ee9ca700c989e93a4}{mam\+\_\+mode\+::add\+\_\+shortwave\+\_\+optics}} (this, environmental\+\_\+state, mode\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Calculates shortwave optical properties for a given state and adds them to the set of optical properties. \end{DoxyCompactList}\item 
+pure real(kind=musica\+\_\+dk) function, dimension(number\+\_\+of\+\_\+bands) \mbox{\hyperlink{namespacemam__mode_aebeab65928c8fae0907184087d218ab0}{mam\+\_\+mode\+::asymmetry\+\_\+factor}} (this, mode\+\_\+state, number\+\_\+of\+\_\+bands, number\+\_\+of\+\_\+coefficients, coefficients, size\+\_\+function)
+\begin{DoxyCompactList}\small\item\em Calculates the asymmetry parameter \mbox{[}unitless ratio\mbox{]} for a given Chebyshev function. \end{DoxyCompactList}\item 
+type(mode\+\_\+t) function \mbox{\hyperlink{namespacemam__mode_a25e6d955f04e0983deec4f997108f59f}{mam\+\_\+mode\+::constructor}} (config)
+\begin{DoxyCompactList}\small\item\em Constructor of \mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}} objects. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_a8c57172dd59c4b8a4c2d0c04ad5c8b27}{mam\+\_\+mode\+::dump\+\_\+state}} (this, raw\+\_\+state, index)
+\begin{DoxyCompactList}\small\item\em Dumps the aerosol state into the raw state array. \end{DoxyCompactList}\item 
+elemental real(kind=musica\+\_\+dk) function \mbox{\hyperlink{namespacemam__mode_aed6eb31242c633871218ff4fc5904b53}{mam\+\_\+mode\+::geometric\+\_\+mean\+\_\+diameter\+\_\+of\+\_\+number\+\_\+distribution\+\_\+\+\_\+m}} (this, mode\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Returns the geometric mean diameter \mbox{[}m\mbox{]} of the number distribution of the mode. \end{DoxyCompactList}\item 
+elemental real(kind=musica\+\_\+dk) function \mbox{\hyperlink{namespacemam__mode_a77b300b9928311cdd3669c11f21245bf}{mam\+\_\+mode\+::geometric\+\_\+standard\+\_\+deviation\+\_\+of\+\_\+number\+\_\+distribution}} (this, mode\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Returns the geometric standard deviation of the number distribution of the mode. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_adfe9e0c2cc0a6193ea352caf19bb8a34}{mam\+\_\+mode\+::load\+\_\+state}} (this, raw\+\_\+state, index)
+\begin{DoxyCompactList}\small\item\em Loads raw mode state data to the \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\+\_\+state\+\_\+t}} object. \end{DoxyCompactList}\item 
+type(wavelength\+\_\+grid\+\_\+t) function \mbox{\hyperlink{namespacemam__mode_a02fd404f5a872221c7920dbb052f76af}{mam\+\_\+mode\+::longwave\+\_\+grid}} (this)
+\begin{DoxyCompactList}\small\item\em Returns the native longwave optics wavelength grid. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_af667ca39124593aab8a18a61f69c4a9e}{mam\+\_\+mode\+::longwave\+\_\+optics\+\_\+array}} (this, environmental\+\_\+state, aerosol\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Returns longwave optical properties. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_acb0411bbb3664ac15add2b5824cf1af4}{mam\+\_\+mode\+::longwave\+\_\+optics\+\_\+scalar}} (this, environmental\+\_\+state, aerosol\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Returns longwave optical properties. \end{DoxyCompactList}\item 
+pure complex(kind=musica\+\_\+dk) function, dimension(number\+\_\+of\+\_\+bands) \mbox{\hyperlink{namespacemam__mode_a05904f6e54a33e46e4c31c71b46f2462}{mam\+\_\+mode\+::net\+\_\+longwave\+\_\+refractive\+\_\+index}} (this, mode\+\_\+state, number\+\_\+of\+\_\+bands)
+\begin{DoxyCompactList}\small\item\em Calculates the net refractive index for the mode based on weighted contributions from constituent species in the longwave region. \end{DoxyCompactList}\item 
+pure complex(kind=musica\+\_\+dk) function, dimension(number\+\_\+of\+\_\+bands) \mbox{\hyperlink{namespacemam__mode_ab00a5ac6633ebf5f0026dfaa8f791a3f}{mam\+\_\+mode\+::net\+\_\+shortwave\+\_\+refractive\+\_\+index}} (this, mode\+\_\+state, number\+\_\+of\+\_\+bands)
+\begin{DoxyCompactList}\small\item\em Calculates the net refractive index for the mode based on weighted contributions from constituent species in the shortwave region. \end{DoxyCompactList}\item 
+class(optics\+\_\+t) function, pointer \mbox{\hyperlink{namespacemam__mode_acb7f4a162be7dda870afc7639c4f1218}{mam\+\_\+mode\+::new\+\_\+optics}} (this, property, output\+\_\+grid, interpolation\+\_\+strategy)
+\begin{DoxyCompactList}\small\item\em Creates an optics\+\_\+t object for a given property. \end{DoxyCompactList}\item 
+class(aerosol\+\_\+state\+\_\+t) function, pointer \mbox{\hyperlink{namespacemam__mode_aad541f5c30d4560200107db5909a70fa}{mam\+\_\+mode\+::new\+\_\+state}} (this)
+\begin{DoxyCompactList}\small\item\em Creates a new state object for the mode. \end{DoxyCompactList}\item 
+real(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__mode_a9b672a9f0c3a4eff42da6c9187117c2f}{mam\+\_\+mode\+::number\+\_\+mixing\+\_\+ratio\+\_\+\+\_\+num\+\_\+mol}} (this, mode\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Returns the particle number mixing ratio per mole air \mbox{[}\# mol-\/1\mbox{]}. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_a1eb9dcd1cdfb6aec2bfb56cbe31c2edb}{mam\+\_\+mode\+::print\+\_\+state}} (this, aerosol\+\_\+state, io\+\_\+unit)
+\begin{DoxyCompactList}\small\item\em Outputs the current mode state. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_a7aee73762887a8cfc3474f9e4fde4e55}{mam\+\_\+mode\+::randomize}} (this)
+\begin{DoxyCompactList}\small\item\em Set the mode state to a random, but reasonable, state. For testing only. \end{DoxyCompactList}\item 
+integer function \mbox{\hyperlink{namespacemam__mode_a252a03f38bce74ca1b65a075e6b513c2}{mam\+\_\+mode\+::raw\+\_\+size}} (this)
+\begin{DoxyCompactList}\small\item\em Returns the number of doubles needed to hold the raw mode state. \end{DoxyCompactList}\item 
+type(wavelength\+\_\+grid\+\_\+t) function \mbox{\hyperlink{namespacemam__mode_ac7cb7571d3de8688665535b9c0162b15}{mam\+\_\+mode\+::shortwave\+\_\+grid}} (this)
+\begin{DoxyCompactList}\small\item\em Returns the native shortwave optics wavelength grid. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_aa19b39cac6ed07aad10838a69c62ba2c}{mam\+\_\+mode\+::shortwave\+\_\+optics\+\_\+array}} (this, environmental\+\_\+state, aerosol\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Returns shortwave optical properties. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacemam__mode_ab39cdcb71e4dc0e8c3609351e9183f92}{mam\+\_\+mode\+::shortwave\+\_\+optics\+\_\+scalar}} (this, environmental\+\_\+state, aerosol\+\_\+state, optics)
+\begin{DoxyCompactList}\small\item\em Returns shortwave optical properties. \end{DoxyCompactList}\item 
+pure real(kind=musica\+\_\+dk) function, dimension(number\+\_\+of\+\_\+bands) \mbox{\hyperlink{namespacemam__mode_a7a7ccd5c378b5181b4bcbe5f2c5a2e6c}{mam\+\_\+mode\+::specific\+\_\+absorption\+\_\+\+\_\+m2\+\_\+kg}} (this, mode\+\_\+state, number\+\_\+of\+\_\+bands, number\+\_\+of\+\_\+coefficients, coefficients, size\+\_\+function, max\+\_\+absorption)
+\begin{DoxyCompactList}\small\item\em Calculates the specific absorption \mbox{[}m2 kg-\/1\mbox{]} for a given Chebyshev function. \end{DoxyCompactList}\item 
+pure real(kind=musica\+\_\+dk) function, dimension(number\+\_\+of\+\_\+bands) \mbox{\hyperlink{namespacemam__mode_aa0ed60cc0da1e1bf74ee66e8d83106ef}{mam\+\_\+mode\+::specific\+\_\+extinction\+\_\+\+\_\+m2\+\_\+kg}} (this, mode\+\_\+state, number\+\_\+of\+\_\+bands, number\+\_\+of\+\_\+coefficients, coefficients, size\+\_\+function, optics\+\_\+lookup)
+\begin{DoxyCompactList}\small\item\em Calculates the specific extinction \mbox{[}m2 kg-\/1\mbox{]} for a given Chebyshev function. \end{DoxyCompactList}\item 
+real(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__mode_a3b93e8dc29daa19366b17207b7d49bde}{mam\+\_\+mode\+::wet\+\_\+number\+\_\+mode\+\_\+diameter\+\_\+\+\_\+m}} (this, mode\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Returns the mode diameter \mbox{[}m\mbox{]} of the number distribution for the mode. \end{DoxyCompactList}\item 
+real(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__mode_a11beb1b0cb5b233244b0d06e7744d8f1}{mam\+\_\+mode\+::wet\+\_\+number\+\_\+mode\+\_\+radius\+\_\+\+\_\+m}} (this, mode\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Returns the mode radius \mbox{[}m\mbox{]} of the number distribution for the mode. \end{DoxyCompactList}\item 
+real(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__mode_a22b6f4aa85f086b94b4d88db92496f99}{mam\+\_\+mode\+::wet\+\_\+surface\+\_\+mode\+\_\+diameter\+\_\+\+\_\+m}} (this, mode\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Returns the mode diameter \mbox{[}m\mbox{]} of the surface area distribution for the mode. \end{DoxyCompactList}\item 
+real(kind=musica\+\_\+dk) elemental function \mbox{\hyperlink{namespacemam__mode_a8ae3b73811bb7429517002f5211f5187}{mam\+\_\+mode\+::wet\+\_\+surface\+\_\+mode\+\_\+radius\+\_\+\+\_\+m}} (this, mode\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Returns the mode radius \mbox{[}m\mbox{]} of the surface area distribution for the mode. \end{DoxyCompactList}\item 
+elemental real(kind=musica\+\_\+dk) function \mbox{\hyperlink{namespacemam__mode_af0de7d153f672d75afe61a5e0d5ed173}{mam\+\_\+mode\+::wet\+\_\+volume\+\_\+to\+\_\+mass\+\_\+mixing\+\_\+ratio\+\_\+\+\_\+m3\+\_\+kg}} (this, mode\+\_\+state)
+\begin{DoxyCompactList}\small\item\em Returns the wet volume to mass mixing ratio for the mode \mbox{[}m3 kg\+\_\+dryair-\/1\mbox{]}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{namespacemam__mode}{mam\+\_\+mode}} module. 
+

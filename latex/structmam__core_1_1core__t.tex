@@ -1,0 +1,173 @@
+\hypertarget{structmam__core_1_1core__t}{}\doxysection{mam\+\_\+core\+::core\+\_\+t Interface Reference}
+\label{structmam__core_1_1core__t}\index{mam\_core::core\_t@{mam\_core::core\_t}}
+
+
+The Modal Aerosol Model core.  
+
+
+Inheritance diagram for mam\+\_\+core\+::core\+\_\+t\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{structmam__core_1_1core__t}
+\end{center}
+\end{figure}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+type(\mbox{\hyperlink{structmam__core_1_1core__t}{core\+\_\+t}}) function, pointer \mbox{\hyperlink{structmam__core_1_1core__t_ad3db461d37062da24c4510e3f1209cfa}{constructor}} (config)
+\begin{DoxyCompactList}\small\item\em Constructor of the MAM core. \end{DoxyCompactList}\item 
+procedure, private \mbox{\hyperlink{structmam__core_1_1core__t_a02cfdcd903176fa73a15b866bd614ef8}{longwave\+\_\+optics\+\_\+array}}
+\item 
+procedure, private \mbox{\hyperlink{structmam__core_1_1core__t_a9661fd747a6fbc176a5e5d4efa77fad6}{longwave\+\_\+optics\+\_\+scalar}}
+\item 
+procedure \mbox{\hyperlink{structmam__core_1_1core__t_a89538cd1a74da882e375c9ae4ef925d9}{new\+\_\+optics}}
+\item 
+procedure \mbox{\hyperlink{structmam__core_1_1core__t_aebd986face959fe2fcc88a72a08ab529}{new\+\_\+state}}
+\item 
+procedure \mbox{\hyperlink{structmam__core_1_1core__t_ace0ab3b5db8c84dbc16889672be35ca1}{print\+\_\+state}}
+\item 
+procedure, private \mbox{\hyperlink{structmam__core_1_1core__t_a6e19b14c4bc92bcd86da988b08498bd7}{shortwave\+\_\+optics\+\_\+array}}
+\item 
+procedure, private \mbox{\hyperlink{structmam__core_1_1core__t_a6fe884877133eaa6e3858346ca7a41a3}{shortwave\+\_\+optics\+\_\+scalar}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+type(wavelength\+\_\+grid\+\_\+t) \mbox{\hyperlink{structmam__core_1_1core__t_ab434c572746cefb66106c44079cac4b0}{longwave\+\_\+grid\+\_\+}}
+\item 
+type(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), dimension(\+:), allocatable \mbox{\hyperlink{structmam__core_1_1core__t_aeb2c2c0ca4ff2c9b336632817c2c9d7d}{modes\+\_\+}}
+\item 
+type(wavelength\+\_\+grid\+\_\+t) \mbox{\hyperlink{structmam__core_1_1core__t_a9dafd8510f4f5fe217c5819ddb27221d}{shortwave\+\_\+grid\+\_\+}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The Modal Aerosol Model core. 
+
+Definition at line 21 of file core.\+F90.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structmam__core_1_1core__t_ad3db461d37062da24c4510e3f1209cfa}\label{structmam__core_1_1core__t_ad3db461d37062da24c4510e3f1209cfa}} 
+\index{mam\_core::core\_t@{mam\_core::core\_t}!constructor@{constructor}}
+\index{constructor@{constructor}!mam\_core::core\_t@{mam\_core::core\_t}}
+\doxysubsubsection{\texorpdfstring{constructor()}{constructor()}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structmam__core_1_1core__t}{core\+\_\+t}}) function, pointer mam\+\_\+core\+::core\+\_\+t\+::constructor (\begin{DoxyParamCaption}\item[{class(config\+\_\+t), intent(inout)}]{config }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Constructor of the MAM core. 
+
+
+
+Definition at line 56 of file core.\+F90.
+
+\mbox{\Hypertarget{structmam__core_1_1core__t_a02cfdcd903176fa73a15b866bd614ef8}\label{structmam__core_1_1core__t_a02cfdcd903176fa73a15b866bd614ef8}} 
+\index{mam\_core::core\_t@{mam\_core::core\_t}!longwave\_optics\_array@{longwave\_optics\_array}}
+\index{longwave\_optics\_array@{longwave\_optics\_array}!mam\_core::core\_t@{mam\_core::core\_t}}
+\doxysubsubsection{\texorpdfstring{longwave\_optics\_array()}{longwave\_optics\_array()}}
+{\footnotesize\ttfamily procedure, private mam\+\_\+core\+::core\+\_\+t\+::longwave\+\_\+optics\+\_\+array\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 32 of file core.\+F90.
+
+\mbox{\Hypertarget{structmam__core_1_1core__t_a9661fd747a6fbc176a5e5d4efa77fad6}\label{structmam__core_1_1core__t_a9661fd747a6fbc176a5e5d4efa77fad6}} 
+\index{mam\_core::core\_t@{mam\_core::core\_t}!longwave\_optics\_scalar@{longwave\_optics\_scalar}}
+\index{longwave\_optics\_scalar@{longwave\_optics\_scalar}!mam\_core::core\_t@{mam\_core::core\_t}}
+\doxysubsubsection{\texorpdfstring{longwave\_optics\_scalar()}{longwave\_optics\_scalar()}}
+{\footnotesize\ttfamily procedure, private mam\+\_\+core\+::core\+\_\+t\+::longwave\+\_\+optics\+\_\+scalar\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 31 of file core.\+F90.
+
+\mbox{\Hypertarget{structmam__core_1_1core__t_a89538cd1a74da882e375c9ae4ef925d9}\label{structmam__core_1_1core__t_a89538cd1a74da882e375c9ae4ef925d9}} 
+\index{mam\_core::core\_t@{mam\_core::core\_t}!new\_optics@{new\_optics}}
+\index{new\_optics@{new\_optics}!mam\_core::core\_t@{mam\_core::core\_t}}
+\doxysubsubsection{\texorpdfstring{new\_optics()}{new\_optics()}}
+{\footnotesize\ttfamily procedure mam\+\_\+core\+::core\+\_\+t\+::new\+\_\+optics\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 28 of file core.\+F90.
+
+\mbox{\Hypertarget{structmam__core_1_1core__t_aebd986face959fe2fcc88a72a08ab529}\label{structmam__core_1_1core__t_aebd986face959fe2fcc88a72a08ab529}} 
+\index{mam\_core::core\_t@{mam\_core::core\_t}!new\_state@{new\_state}}
+\index{new\_state@{new\_state}!mam\_core::core\_t@{mam\_core::core\_t}}
+\doxysubsubsection{\texorpdfstring{new\_state()}{new\_state()}}
+{\footnotesize\ttfamily procedure mam\+\_\+core\+::core\+\_\+t\+::new\+\_\+state\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 27 of file core.\+F90.
+
+\mbox{\Hypertarget{structmam__core_1_1core__t_ace0ab3b5db8c84dbc16889672be35ca1}\label{structmam__core_1_1core__t_ace0ab3b5db8c84dbc16889672be35ca1}} 
+\index{mam\_core::core\_t@{mam\_core::core\_t}!print\_state@{print\_state}}
+\index{print\_state@{print\_state}!mam\_core::core\_t@{mam\_core::core\_t}}
+\doxysubsubsection{\texorpdfstring{print\_state()}{print\_state()}}
+{\footnotesize\ttfamily procedure mam\+\_\+core\+::core\+\_\+t\+::print\+\_\+state\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 33 of file core.\+F90.
+
+\mbox{\Hypertarget{structmam__core_1_1core__t_a6e19b14c4bc92bcd86da988b08498bd7}\label{structmam__core_1_1core__t_a6e19b14c4bc92bcd86da988b08498bd7}} 
+\index{mam\_core::core\_t@{mam\_core::core\_t}!shortwave\_optics\_array@{shortwave\_optics\_array}}
+\index{shortwave\_optics\_array@{shortwave\_optics\_array}!mam\_core::core\_t@{mam\_core::core\_t}}
+\doxysubsubsection{\texorpdfstring{shortwave\_optics\_array()}{shortwave\_optics\_array()}}
+{\footnotesize\ttfamily procedure, private mam\+\_\+core\+::core\+\_\+t\+::shortwave\+\_\+optics\+\_\+array\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 30 of file core.\+F90.
+
+\mbox{\Hypertarget{structmam__core_1_1core__t_a6fe884877133eaa6e3858346ca7a41a3}\label{structmam__core_1_1core__t_a6fe884877133eaa6e3858346ca7a41a3}} 
+\index{mam\_core::core\_t@{mam\_core::core\_t}!shortwave\_optics\_scalar@{shortwave\_optics\_scalar}}
+\index{shortwave\_optics\_scalar@{shortwave\_optics\_scalar}!mam\_core::core\_t@{mam\_core::core\_t}}
+\doxysubsubsection{\texorpdfstring{shortwave\_optics\_scalar()}{shortwave\_optics\_scalar()}}
+{\footnotesize\ttfamily procedure, private mam\+\_\+core\+::core\+\_\+t\+::shortwave\+\_\+optics\+\_\+scalar\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 29 of file core.\+F90.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structmam__core_1_1core__t_ab434c572746cefb66106c44079cac4b0}\label{structmam__core_1_1core__t_ab434c572746cefb66106c44079cac4b0}} 
+\index{mam\_core::core\_t@{mam\_core::core\_t}!longwave\_grid\_@{longwave\_grid\_}}
+\index{longwave\_grid\_@{longwave\_grid\_}!mam\_core::core\_t@{mam\_core::core\_t}}
+\doxysubsubsection{\texorpdfstring{longwave\_grid\_}{longwave\_grid\_}}
+{\footnotesize\ttfamily type(wavelength\+\_\+grid\+\_\+t) mam\+\_\+core\+::core\+\_\+t\+::longwave\+\_\+grid\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 24 of file core.\+F90.
+
+\mbox{\Hypertarget{structmam__core_1_1core__t_aeb2c2c0ca4ff2c9b336632817c2c9d7d}\label{structmam__core_1_1core__t_aeb2c2c0ca4ff2c9b336632817c2c9d7d}} 
+\index{mam\_core::core\_t@{mam\_core::core\_t}!modes\_@{modes\_}}
+\index{modes\_@{modes\_}!mam\_core::core\_t@{mam\_core::core\_t}}
+\doxysubsubsection{\texorpdfstring{modes\_}{modes\_}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\+\_\+t}}), dimension(\+:), allocatable mam\+\_\+core\+::core\+\_\+t\+::modes\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 25 of file core.\+F90.
+
+\mbox{\Hypertarget{structmam__core_1_1core__t_a9dafd8510f4f5fe217c5819ddb27221d}\label{structmam__core_1_1core__t_a9dafd8510f4f5fe217c5819ddb27221d}} 
+\index{mam\_core::core\_t@{mam\_core::core\_t}!shortwave\_grid\_@{shortwave\_grid\_}}
+\index{shortwave\_grid\_@{shortwave\_grid\_}!mam\_core::core\_t@{mam\_core::core\_t}}
+\doxysubsubsection{\texorpdfstring{shortwave\_grid\_}{shortwave\_grid\_}}
+{\footnotesize\ttfamily type(wavelength\+\_\+grid\+\_\+t) mam\+\_\+core\+::core\+\_\+t\+::shortwave\+\_\+grid\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 23 of file core.\+F90.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/github/workspace/src/\mbox{\hyperlink{src_2core_8F90}{core.\+F90}}\end{DoxyCompactItemize}

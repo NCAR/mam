@@ -1,0 +1,53 @@
+
+\begin{DoxyRefList}
+\item[Module \mbox{\hyperlink{namespacemam__optics__lookup_amgrp01747264fe7bf50731df0522c351974e}{}} ]\label{todo__todo000011}%
+\Hypertarget{todo__todo000011}%
+there is no check to make sure the requested data is actually present, as this would require making this not a pure function. Check to see if this being a pure function has any benefit  
+\item[Module \mbox{\hyperlink{namespacemam__optics__lookup_amgrp1d1234ebe5af757beddabdb4075372a5}{Local indices for optics parameters}} ]\label{todo__todo000010}%
+\Hypertarget{todo__todo000010}%
+are \char`\"{}specific extinction\char`\"{}, \char`\"{}specific absorption\char`\"{}, and \char`\"{}asymmetry factor\char`\"{} the correct names for the optical properties returned from the lookup tables?
+
+
+\item[page \mbox{\hyperlink{index}{mam documentation}} ]\label{todo__todo000001}%
+\Hypertarget{todo__todo000001}%
+Finish installation instructions
+
+\label{todo__todo000002}%
+\Hypertarget{todo__todo000002}%
+Finish instructions for building the mam library 
+\item[Subprogram \mbox{\hyperlink{namespacemam__mode_ab9b38f854035795ee9ca700c989e93a4}{mam\+\_\+mode\+::add\+\_\+shortwave\+\_\+optics}} (this, environmental\+\_\+state, mode\+\_\+state, optics)]\label{todo__todo000004}%
+\Hypertarget{todo__todo000004}%
+Are single-\/scatter albedo and layer\+\_\+aod the correct terms to use?  
+\item[Subprogram \mbox{\hyperlink{structmam__mode_1_1mode__state__t_a7ac10b68c2ff25b49d2cda9825adc915}{mam\+\_\+mode\+::mode\+\_\+state\+\_\+t\+::number\+\_\+mixing\+\_\+ratio\+\_\+\+\_\+num\+\_\+mol\+\_\+}} ]\label{todo__todo000003}%
+\Hypertarget{todo__todo000003}%
+Is this dry air or wet air?  
+\item[Subprogram \mbox{\hyperlink{namespacemam__mode_a9b672a9f0c3a4eff42da6c9187117c2f}{mam\+\_\+mode\+::number\+\_\+mixing\+\_\+ratio\+\_\+\+\_\+num\+\_\+mol}} (this, mode\+\_\+state)]\label{todo__todo000005}%
+\Hypertarget{todo__todo000005}%
+is this per mole dry or wet air?  
+\item[Subprogram \mbox{\hyperlink{namespacemam__mode_a7a7ccd5c378b5181b4bcbe5f2c5a2e6c}{mam\+\_\+mode\+::specific\+\_\+absorption\+\_\+\+\_\+m2\+\_\+kg}} (this, mode\+\_\+state, number\+\_\+of\+\_\+bands, number\+\_\+of\+\_\+coefficients, coefficients, size\+\_\+function, max\+\_\+absorption)]\label{todo__todo000006}%
+\Hypertarget{todo__todo000006}%
+is \char`\"{}specific absorption\char`\"{} (m2 kg-\/1) the correct name/units for what is returned from this function?  
+\item[Subprogram \mbox{\hyperlink{namespacemam__mode_aa0ed60cc0da1e1bf74ee66e8d83106ef}{mam\+\_\+mode\+::specific\+\_\+extinction\+\_\+\+\_\+m2\+\_\+kg}} (this, mode\+\_\+state, number\+\_\+of\+\_\+bands, number\+\_\+of\+\_\+coefficients, coefficients, size\+\_\+function, optics\+\_\+lookup)]\label{todo__todo000007}%
+\Hypertarget{todo__todo000007}%
+is \char`\"{}specific extinction\char`\"{} (m2 kg-\/1) the correct name/units for what is returned from this function? 
+
+\label{todo__todo000008}%
+\Hypertarget{todo__todo000008}%
+is the data returned from the lookup table in ln( m2/kg )? 
+
+\label{todo__todo000009}%
+\Hypertarget{todo__todo000009}%
+in the original code, this is labelled as converting \char`\"{}m2/kg  water to m2/kg aerosol\char`\"{}, but it appears to convert instead to m2/kg dry air -\/ is this right???  
+\item[Subprogram \mbox{\hyperlink{namespacemam__optics__util_a0149038eae747d9b5e3809633415bab6}{mam\+\_\+optics\+\_\+util\+::add\+\_\+shortwave\+\_\+asymmetry\+\_\+factor}} (extinction\+\_\+optical\+\_\+depth, single\+\_\+scatter\+\_\+albedo, asymmetry\+\_\+factor, optics)]\label{todo__todo000013}%
+\Hypertarget{todo__todo000013}%
+the parameter calculated from the lookup-\/table is called asymmetry factor, as is the value returned to radiation after multiplying by extinction and single-\/scatter albedo. Which is correct?  
+\item[Subprogram \mbox{\hyperlink{namespacemam__optics__util_a8b91778ceede0fba8cfe3ee54c8e2a6c}{mam\+\_\+optics\+\_\+util\+::add\+\_\+shortwave\+\_\+single\+\_\+scatter\+\_\+albedo}} (extinction\+\_\+optical\+\_\+depth, single\+\_\+scatter\+\_\+albedo, asymmetry\+\_\+factor, optics)]\label{todo__todo000012}%
+\Hypertarget{todo__todo000012}%
+the parameter calculated from the lookup-\/table is called single-\/scatter albedo, as is the value returned to radiation after multiplying by extinction. Which is correct?  
+\item[Subprogram \mbox{\hyperlink{namespacemam__species_a1155acd61c6fe7c1c3192dd41b618b53}{mam\+\_\+species\+::constructor}} (config)]\label{todo__todo000015}%
+\Hypertarget{todo__todo000015}%
+The complex refractive indices in the Net\+CDF files use a different convention for specifying the complex index of refraction that results in the need to take the absolute value of the imaginary part to get the complex index of refraction used in MAM. The Net\+CDF files should be updated to use positive values for the imaginary part.  
+\item[Type \mbox{\hyperlink{structmam__species_1_1species__t}{mam\+\_\+species\+::species\+\_\+t}} ]\label{todo__todo000014}%
+\Hypertarget{todo__todo000014}%
+species should read in the wavelength grid for refractive indices instead of assuming it matches the MAM grid 
+\end{DoxyRefList}

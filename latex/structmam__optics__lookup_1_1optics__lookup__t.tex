@@ -1,0 +1,198 @@
+\hypertarget{structmam__optics__lookup_1_1optics__lookup__t}{}\doxysection{mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+lookup\+\_\+t Interface Reference}
+\label{structmam__optics__lookup_1_1optics__lookup__t}\index{mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_aa3f12ee4cbaab74c94d7fb9fef7a2b2b}{get\+\_\+optics}}
+\item 
+procedure \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_ac4902e12f4a08b88f71fd18e2da78796}{grid}}
+\item 
+procedure \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_a93d5f4133a42d9b71f2f419f235fc351}{maximum\+\_\+radius\+\_\+\+\_\+m}}
+\item 
+procedure \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_a6718aae30c394a1f8df6e2f1713f2eba}{minimum\+\_\+radius\+\_\+\+\_\+m}}
+\item 
+procedure \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_a5ed35c0c6051a344515b2b813f773fcc}{normalize\+\_\+radius}}
+\item 
+procedure \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_ae5e1dc275fab666f08278745657382f9}{number\+\_\+of\+\_\+chebyshev\+\_\+coefficients}}
+\item 
+procedure \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_a6994dcee7a0ea00a6bb17d1997dfa346}{number\+\_\+of\+\_\+wavelength\+\_\+bands}}
+\item 
+procedure, private \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_a9b2e82a328ae34163416393b105534d2}{set\+\_\+grid}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+type(lookup\+\_\+2d\+\_\+axis\+\_\+t), dimension(\+:), allocatable \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_afb819f205ecc76a78c68efa4352c3fca}{axes\+\_\+}}
+\item 
+type(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t}{optics\+\_\+data\+\_\+t}}), dimension(\mbox{\hyperlink{namespacemam__optics__lookup_a25b4140efe403c2b093d49121a140ecb}{knumberofparameters}}) \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_a4b0fde1bbaa4e34be2231de26342bdbd}{data\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Optics parameter lookup data. \end{DoxyCompactList}\item 
+type(wavelength\+\_\+grid\+\_\+t) \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_a3f79c683dd8b68240e1cbbb79b616bce}{grid\+\_\+}}
+\item 
+real(kind=musica\+\_\+dk) \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_a840227c28cb0a13606eb5877577b1d5f}{maximum\+\_\+ln\+\_\+radius\+\_\+}} = 0.\+0
+\item 
+real(kind=musica\+\_\+dk) \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_aab91eaeb6be5ebcf6ec80b97e5104936}{minimum\+\_\+ln\+\_\+radius\+\_\+}} = 0.\+0
+\item 
+integer \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_ac2c868b3ca3d9ad390ca9e83f8028d2f}{number\+\_\+of\+\_\+chebyshev\+\_\+coefficients\+\_\+}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line 47 of file optics\+\_\+lookup.\+F90.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\mbox{\Hypertarget{structmam__optics__lookup_1_1optics__lookup__t_aa3f12ee4cbaab74c94d7fb9fef7a2b2b}\label{structmam__optics__lookup_1_1optics__lookup__t_aa3f12ee4cbaab74c94d7fb9fef7a2b2b}} 
+\index{mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}!get\_optics@{get\_optics}}
+\index{get\_optics@{get\_optics}!mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}}
+\doxysubsubsection{\texorpdfstring{get\_optics()}{get\_optics()}}
+{\footnotesize\ttfamily procedure mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+lookup\+\_\+t\+::get\+\_\+optics\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 57 of file optics\+\_\+lookup.\+F90.
+
+\mbox{\Hypertarget{structmam__optics__lookup_1_1optics__lookup__t_ac4902e12f4a08b88f71fd18e2da78796}\label{structmam__optics__lookup_1_1optics__lookup__t_ac4902e12f4a08b88f71fd18e2da78796}} 
+\index{mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}!grid@{grid}}
+\index{grid@{grid}!mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}}
+\doxysubsubsection{\texorpdfstring{grid()}{grid()}}
+{\footnotesize\ttfamily procedure mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+lookup\+\_\+t\+::grid\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 63 of file optics\+\_\+lookup.\+F90.
+
+\mbox{\Hypertarget{structmam__optics__lookup_1_1optics__lookup__t_a93d5f4133a42d9b71f2f419f235fc351}\label{structmam__optics__lookup_1_1optics__lookup__t_a93d5f4133a42d9b71f2f419f235fc351}} 
+\index{mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}!maximum\_radius\_\_m@{maximum\_radius\_\_m}}
+\index{maximum\_radius\_\_m@{maximum\_radius\_\_m}!mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}}
+\doxysubsubsection{\texorpdfstring{maximum\_radius\_\_m()}{maximum\_radius\_\_m()}}
+{\footnotesize\ttfamily procedure mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+lookup\+\_\+t\+::maximum\+\_\+radius\+\_\+\+\_\+m\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 59 of file optics\+\_\+lookup.\+F90.
+
+\mbox{\Hypertarget{structmam__optics__lookup_1_1optics__lookup__t_a6718aae30c394a1f8df6e2f1713f2eba}\label{structmam__optics__lookup_1_1optics__lookup__t_a6718aae30c394a1f8df6e2f1713f2eba}} 
+\index{mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}!minimum\_radius\_\_m@{minimum\_radius\_\_m}}
+\index{minimum\_radius\_\_m@{minimum\_radius\_\_m}!mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}}
+\doxysubsubsection{\texorpdfstring{minimum\_radius\_\_m()}{minimum\_radius\_\_m()}}
+{\footnotesize\ttfamily procedure mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+lookup\+\_\+t\+::minimum\+\_\+radius\+\_\+\+\_\+m\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 60 of file optics\+\_\+lookup.\+F90.
+
+\mbox{\Hypertarget{structmam__optics__lookup_1_1optics__lookup__t_a5ed35c0c6051a344515b2b813f773fcc}\label{structmam__optics__lookup_1_1optics__lookup__t_a5ed35c0c6051a344515b2b813f773fcc}} 
+\index{mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}!normalize\_radius@{normalize\_radius}}
+\index{normalize\_radius@{normalize\_radius}!mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}}
+\doxysubsubsection{\texorpdfstring{normalize\_radius()}{normalize\_radius()}}
+{\footnotesize\ttfamily procedure mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+lookup\+\_\+t\+::normalize\+\_\+radius\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 58 of file optics\+\_\+lookup.\+F90.
+
+\mbox{\Hypertarget{structmam__optics__lookup_1_1optics__lookup__t_ae5e1dc275fab666f08278745657382f9}\label{structmam__optics__lookup_1_1optics__lookup__t_ae5e1dc275fab666f08278745657382f9}} 
+\index{mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}!number\_of\_chebyshev\_coefficients@{number\_of\_chebyshev\_coefficients}}
+\index{number\_of\_chebyshev\_coefficients@{number\_of\_chebyshev\_coefficients}!mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}}
+\doxysubsubsection{\texorpdfstring{number\_of\_chebyshev\_coefficients()}{number\_of\_chebyshev\_coefficients()}}
+{\footnotesize\ttfamily procedure mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+lookup\+\_\+t\+::number\+\_\+of\+\_\+chebyshev\+\_\+coefficients\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 61 of file optics\+\_\+lookup.\+F90.
+
+\mbox{\Hypertarget{structmam__optics__lookup_1_1optics__lookup__t_a6994dcee7a0ea00a6bb17d1997dfa346}\label{structmam__optics__lookup_1_1optics__lookup__t_a6994dcee7a0ea00a6bb17d1997dfa346}} 
+\index{mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}!number\_of\_wavelength\_bands@{number\_of\_wavelength\_bands}}
+\index{number\_of\_wavelength\_bands@{number\_of\_wavelength\_bands}!mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}}
+\doxysubsubsection{\texorpdfstring{number\_of\_wavelength\_bands()}{number\_of\_wavelength\_bands()}}
+{\footnotesize\ttfamily procedure mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+lookup\+\_\+t\+::number\+\_\+of\+\_\+wavelength\+\_\+bands\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 62 of file optics\+\_\+lookup.\+F90.
+
+\mbox{\Hypertarget{structmam__optics__lookup_1_1optics__lookup__t_a9b2e82a328ae34163416393b105534d2}\label{structmam__optics__lookup_1_1optics__lookup__t_a9b2e82a328ae34163416393b105534d2}} 
+\index{mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}!set\_grid@{set\_grid}}
+\index{set\_grid@{set\_grid}!mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}}
+\doxysubsubsection{\texorpdfstring{set\_grid()}{set\_grid()}}
+{\footnotesize\ttfamily procedure, private mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+lookup\+\_\+t\+::set\+\_\+grid\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 64 of file optics\+\_\+lookup.\+F90.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structmam__optics__lookup_1_1optics__lookup__t_afb819f205ecc76a78c68efa4352c3fca}\label{structmam__optics__lookup_1_1optics__lookup__t_afb819f205ecc76a78c68efa4352c3fca}} 
+\index{mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}!axes\_@{axes\_}}
+\index{axes\_@{axes\_}!mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}}
+\doxysubsubsection{\texorpdfstring{axes\_}{axes\_}}
+{\footnotesize\ttfamily type(lookup\+\_\+2d\+\_\+axis\+\_\+t), dimension(\+:), allocatable mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+lookup\+\_\+t\+::axes\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 55 of file optics\+\_\+lookup.\+F90.
+
+\mbox{\Hypertarget{structmam__optics__lookup_1_1optics__lookup__t_a4b0fde1bbaa4e34be2231de26342bdbd}\label{structmam__optics__lookup_1_1optics__lookup__t_a4b0fde1bbaa4e34be2231de26342bdbd}} 
+\index{mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}!data\_@{data\_}}
+\index{data\_@{data\_}!mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}}
+\doxysubsubsection{\texorpdfstring{data\_}{data\_}}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t}{optics\+\_\+data\+\_\+t}}), dimension( \mbox{\hyperlink{namespacemam__optics__lookup_a25b4140efe403c2b093d49121a140ecb}{knumberofparameters}} ) mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+lookup\+\_\+t\+::data\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Optics parameter lookup data. 
+
+
+
+Definition at line 50 of file optics\+\_\+lookup.\+F90.
+
+\mbox{\Hypertarget{structmam__optics__lookup_1_1optics__lookup__t_a3f79c683dd8b68240e1cbbb79b616bce}\label{structmam__optics__lookup_1_1optics__lookup__t_a3f79c683dd8b68240e1cbbb79b616bce}} 
+\index{mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}!grid\_@{grid\_}}
+\index{grid\_@{grid\_}!mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}}
+\doxysubsubsection{\texorpdfstring{grid\_}{grid\_}}
+{\footnotesize\ttfamily type(wavelength\+\_\+grid\+\_\+t) mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+lookup\+\_\+t\+::grid\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 52 of file optics\+\_\+lookup.\+F90.
+
+\mbox{\Hypertarget{structmam__optics__lookup_1_1optics__lookup__t_a840227c28cb0a13606eb5877577b1d5f}\label{structmam__optics__lookup_1_1optics__lookup__t_a840227c28cb0a13606eb5877577b1d5f}} 
+\index{mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}!maximum\_ln\_radius\_@{maximum\_ln\_radius\_}}
+\index{maximum\_ln\_radius\_@{maximum\_ln\_radius\_}!mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}}
+\doxysubsubsection{\texorpdfstring{maximum\_ln\_radius\_}{maximum\_ln\_radius\_}}
+{\footnotesize\ttfamily real(kind=musica\+\_\+dk) mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+lookup\+\_\+t\+::maximum\+\_\+ln\+\_\+radius\+\_\+ = 0.\+0\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 54 of file optics\+\_\+lookup.\+F90.
+
+\mbox{\Hypertarget{structmam__optics__lookup_1_1optics__lookup__t_aab91eaeb6be5ebcf6ec80b97e5104936}\label{structmam__optics__lookup_1_1optics__lookup__t_aab91eaeb6be5ebcf6ec80b97e5104936}} 
+\index{mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}!minimum\_ln\_radius\_@{minimum\_ln\_radius\_}}
+\index{minimum\_ln\_radius\_@{minimum\_ln\_radius\_}!mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}}
+\doxysubsubsection{\texorpdfstring{minimum\_ln\_radius\_}{minimum\_ln\_radius\_}}
+{\footnotesize\ttfamily real(kind=musica\+\_\+dk) mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+lookup\+\_\+t\+::minimum\+\_\+ln\+\_\+radius\+\_\+ = 0.\+0\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 53 of file optics\+\_\+lookup.\+F90.
+
+\mbox{\Hypertarget{structmam__optics__lookup_1_1optics__lookup__t_ac2c868b3ca3d9ad390ca9e83f8028d2f}\label{structmam__optics__lookup_1_1optics__lookup__t_ac2c868b3ca3d9ad390ca9e83f8028d2f}} 
+\index{mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}!number\_of\_chebyshev\_coefficients\_@{number\_of\_chebyshev\_coefficients\_}}
+\index{number\_of\_chebyshev\_coefficients\_@{number\_of\_chebyshev\_coefficients\_}!mam\_optics\_lookup::optics\_lookup\_t@{mam\_optics\_lookup::optics\_lookup\_t}}
+\doxysubsubsection{\texorpdfstring{number\_of\_chebyshev\_coefficients\_}{number\_of\_chebyshev\_coefficients\_}}
+{\footnotesize\ttfamily integer mam\+\_\+optics\+\_\+lookup\+::optics\+\_\+lookup\+\_\+t\+::number\+\_\+of\+\_\+chebyshev\+\_\+coefficients\+\_\+ = 0\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Definition at line 51 of file optics\+\_\+lookup.\+F90.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/github/workspace/src/\mbox{\hyperlink{src_2optics__lookup_8F90}{optics\+\_\+lookup.\+F90}}\end{DoxyCompactItemize}
