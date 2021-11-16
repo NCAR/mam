@@ -17,6 +17,9 @@ module mam_optics_lookup
 
   public :: optics_lookup_t
 
+  !> \todo are "specific extinction", "specific absorption", and
+  !!       "asymmetry factor" the correct names for the optical
+  !!       properties returned from the lookup tables?
   !> @name Local indices for optics parameters
   !! @{
   integer, parameter :: kAbsorption      = 1
@@ -164,7 +167,7 @@ contains
     !> Complex indices of refraction (wavelength band)
     complex(kind=musica_dk),        intent(in)  :: refractive_indices(:)
     !> @name optical properties (Chebychev coefficient, wavelength band)
-    !! {
+    !! @{
     real(kind=musica_dk), optional, intent(out) :: absorption(:,:)
     real(kind=musica_dk), optional, intent(out) :: extinction(:,:)
     real(kind=musica_dk), optional, intent(out) :: asymmetry_factor(:,:)

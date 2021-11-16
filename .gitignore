@@ -1,6 +1,7 @@
 doc/*.gv
 doc/*.pdf
-doc/output/
+doc/html/
+doc/latex/
 
 build/
 **/.DS_Store

@@ -305,7 +305,9 @@ contains
     use musica_assert,                 only : die_msg
     use musica_string,                 only : to_char
 
+    !> MAM mode
     class(mode_t),          intent(in) :: this
+    !> MAM mode state
     class(aerosol_state_t), intent(in) :: aerosol_state
     !> Optional output unit (defaults to 6)
     integer, optional,      intent(in) :: io_unit
@@ -413,6 +415,7 @@ contains
     asymmetry_factor = this%asymmetry_factor( mode_state, n_bands, n_cheby,   &
                                               asymmetry_factor_coefficients,  &
                                              size_function )
+    !> \todo Are single-scatter albedo and layer_aod the correct terms to use?
     ssa(:) = 1.0_musica_dk - absorption(:)                                    &
              / ( max( extinction(:), 1.0e-40_musica_dk ) )
     layer_aod = extinction(:) * environmental_state%layer_thickness__Pa( )    &
@@ -678,6 +681,9 @@ contains
 
   !> Calculates the specific absorption [m2 kg-1] for a given Chebyshev
   !! function
+  !!
+  !! \todo is "specific absorption" (m2 kg-1) the correct name/units for what
+  !!       is returned from this function?
   pure function specific_absorption__m2_kg( this, mode_state, number_of_bands,&
       number_of_coefficients, coefficients, size_function, max_absorption )
 
@@ -720,16 +726,24 @@ contains
 
   !> Calculates the specific extinction [m2 kg-1] for a given Chebyshev
   !! function
+  !!
+  !! \todo is "specific extinction" (m2 kg-1) the correct name/units for what
+  !!       is returned from this function?
   pure function specific_extinction__m2_kg( this, mode_state, number_of_bands,&
       number_of_coefficients, coefficients, size_function, optics_lookup )
 
     use mam_constants,                 only : kWaterDensitySTP
     use musica_math,                   only : weighted_chebyshev
 
+    !> Specific extinction by wavelength
     real(kind=musica_dk) :: specific_extinction__m2_kg( number_of_bands )
+    !> MAM mode
     class(mode_t),        intent(in) :: this
+    !> MAM mode state
     class(mode_state_t),  intent(in) :: mode_state
+    !> Number of wavelength bands
     integer,              intent(in) :: number_of_bands
+    !> Number of Chebyshev coefficients
     integer,              intent(in) :: number_of_coefficients
     !> Chebyshev coefficients for extinction calculation
     real(kind=musica_dk), intent(in) :: coefficients( number_of_coefficients, &
@@ -776,10 +790,15 @@ contains
     use mam_constants,                 only : kWaterDensitySTP
     use musica_math,                   only : weighted_chebyshev
 
+    !> Asymmetry factor by wavelength
     real(kind=musica_dk) :: asymmetry_factor( number_of_bands )
+    !> MAM mode
     class(mode_t),        intent(in) :: this
+    !> MAM mode state
     class(mode_state_t),  intent(in) :: mode_state
+    !> Number of wavelength bands
     integer,              intent(in) :: number_of_bands
+    !> Number of Chebyshev coefficients
     integer,              intent(in) :: number_of_coefficients
     !> Chebyshev coefficients for asymmetry parameter calculation
     real(kind=musica_dk), intent(in) :: coefficients( number_of_coefficients, &
