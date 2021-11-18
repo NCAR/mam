@@ -15,7 +15,7 @@ RUN sudo dnf -y install \
         gcc \
         cmake \
         make \
-        gcovr \
+        lcov \
         netcdf-fortran-devel \
         openmpi-devel \
         git \

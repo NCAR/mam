@@ -16,9 +16,10 @@ option(ENABLE_COVERAGE "Enable code coverage output" ON)
 if(ENABLE_COVERAGE)
   include(CodeCoverage)
   if(CMAKE_COMPILER_IS_GNUCXX)
-    setup_target_for_coverage_gcovr_xml(
+    setup_target_for_coverage_lcov(
         NAME coverage
         EXECUTABLE "ctest"
+        EXCLUDE "${PROJECT_SOURCE_DIR}/test/*"
         BASE_DIRECTORY "${PROJECT_SOURCE_DIR}/src")
   endif()
 endif()
