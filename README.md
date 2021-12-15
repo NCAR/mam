@@ -9,3 +9,15 @@ UNDER DEVELOPMENT
 
 A working draft of the documentation can be found [here](https://ncar.github.io/mam)
 
+## Install and Run ##
+
+The only requirement to run the code is to have git and to have [Docker Desktop](https://www.docker.com/get-started) installed and running. To build the MAM library and run the tests:
+
+```
+git clone --recurse-submodules https://github.com/NCAR/mam.git
+cd mam/
+docker build -t mam-test .
+docker run -it mam-test bash
+cd build/
+make test
+```
