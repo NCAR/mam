@@ -1,0 +1,174 @@
+\hypertarget{code__structure_8F90_source}{}\doxysection{code\+\_\+structure.\+F90}
+\label{code__structure_8F90_source}\index{doxygen\_files/code\_structure.F90@{doxygen\_files/code\_structure.F90}}
+\mbox{\hyperlink{code__structure_8F90}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00001}00001 \textcolor{comment}{!> \(\backslash\)page code\_structure MAM Code Structure}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00002}00002 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00003}00003 \textcolor{comment}{!! MAM code is being developed to demonstrate the possibility of}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00004}00004 \textcolor{comment}{!! applying a common interface for aerosol packages that host models can}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00005}00005 \textcolor{comment}{!! use to maintan the state of an aerosol system, retrieve aerosol}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00006}00006 \textcolor{comment}{!! properties required by other model components, and advance the aerosol}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00007}00007 \textcolor{comment}{!! state during a simulation.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00008}00008 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00009}00009 \textcolor{comment}{!! It is also being developed to apply contemporary best practice for}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00010}00010 \textcolor{comment}{!! design and testing. This document lays out the science requirements and}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00011}00011 \textcolor{comment}{!! design principles for MAM, provides an overview of the refactored}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00012}00012 \textcolor{comment}{!! codebase, and describes in more detail specific parts of the code where}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00013}00013 \textcolor{comment}{!! object-\/oriented design patterns have been applied to components of the}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00014}00014 \textcolor{comment}{!! MAM codebase.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00015}00015 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00016}00016 \textcolor{comment}{!! \#\# Software Requirements \#\#}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00017}00017 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00018}00018 \textcolor{comment}{!! \#\#\# Aerosol\&ndash;Radiation Interface \#\#\#}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00019}00019 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00020}00020 \textcolor{comment}{!! -\/ Permit radiation schemes to use whatever wavelength grid they want}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00021}00021 \textcolor{comment}{!!   and not have to be aware of the native wavelength grid of the}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00022}00022 \textcolor{comment}{!!   aerosol package}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00023}00023 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00024}00024 \textcolor{comment}{!! -\/ Perform expensive setup for optical property calculations during}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00025}00025 \textcolor{comment}{!!   initialization (reading files, setting up interpolations, etc.)}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00026}00026 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00027}00027 \textcolor{comment}{!! -\/ Remove assumptions of the way aerosols are represented from the}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00028}00028 \textcolor{comment}{!!   radiation code (mode number, size, shape, sectional schemes, etc.)}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00029}00029 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00030}00030 \textcolor{comment}{!! -\/ Allow radiation schemes interested in optical properties to maintain}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00031}00031 \textcolor{comment}{!!   their own wavelength grids (i.e., not have aerosol packages maintain}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00032}00032 \textcolor{comment}{!!   grids for every scheme that needs aerosol optical properties)}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00033}00033 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00034}00034 \textcolor{comment}{!! \#\# Design Principles \#\#}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00035}00035 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00036}00036 \textcolor{comment}{!! MAM is being developed according to the}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00037}00037 \textcolor{comment}{!! [recommendations for MUSICA contributors](https://ncar.github.io/musica-\/core/html/contributors.html)}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00038}00038 \textcolor{comment}{!! and following the}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00039}00039 \textcolor{comment}{!! [MUSICA style guide](https://ncar.github.io/musica-\/core/html/coding\_style.html).}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00040}00040 \textcolor{comment}{!! Here we outline some specific design principles from these guides}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00041}00041 \textcolor{comment}{!! that are particularly relevant to the MAM code structure, and briefly}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00042}00042 \textcolor{comment}{!! describe how they are acheived.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00043}00043 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00044}00044 \textcolor{comment}{!! -\/ An aerosol package shoud compile as a library with a clearly defined}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00045}00045 \textcolor{comment}{!!   application programming interface (API).}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00046}00046 \textcolor{comment}{!!   -\/ The [MAM GitHub repository](https://github.com/NCAR/mam)}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00047}00047 \textcolor{comment}{!!     includes CMake configurations that}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00048}00048 \textcolor{comment}{!!     allow a user to build the MAM library. Interactions with MAM primarily}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00049}00049 \textcolor{comment}{!!     occur through instances of the \(\backslash\)c mam\_core::core\_t class. Documentation for the}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00050}00050 \textcolor{comment}{!!     \(\backslash\)c mam\_core::core\_t class acts as the MAM API. Integration tests included}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00051}00051 \textcolor{comment}{!!     in the repository can be used as examples of how to use the MAM API.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00052}00052 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00053}00053 \textcolor{comment}{!! -\/ An aerosol package should be comprised of functions that are of}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00054}00054 \textcolor{comment}{!!   limited, clearly defined scope and purpose for readability and testability.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00055}00055 \textcolor{comment}{!!   -\/ Functions are almost all less than 40 lines long. Functions are}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00056}00056 \textcolor{comment}{!!     designed to do one specific task, with clear documentation. Function}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00057}00057 \textcolor{comment}{!!     arguments are clearly defined with units.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00058}00058 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00059}00059 \textcolor{comment}{!! -\/ An aerosol package should employ automated testing with a}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00060}00060 \textcolor{comment}{!!   combination of integration and unit tests, with a goal of 100\% code}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00061}00061 \textcolor{comment}{!!   coverage by unit tests.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00062}00062 \textcolor{comment}{!!   -\/ The MAM library, along with the \(\backslash\)c aerosol and \(\backslash\)c musica-\/core}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00063}00063 \textcolor{comment}{!!     libraries it links to, use CMake with CTest to maintain the suite of}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00064}00064 \textcolor{comment}{!!     tests. GitHub Actions automates testing, document generation, and code}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00065}00065 \textcolor{comment}{!!     coverage assessment using \(\backslash\)c gcov. [CodeCov.io](https://about.codecov.io/)}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00066}00066 \textcolor{comment}{!!     is used to visualize the coverage reports.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00067}00067 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00068}00068 \textcolor{comment}{!! -\/ An aerosol package should employ data and implementation hiding to}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00069}00069 \textcolor{comment}{!!   the extent possible to facilitate the interoperability of aerosol}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00070}00070 \textcolor{comment}{!!   packages with distinct parameterizations and ways of representing}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00071}00071 \textcolor{comment}{!!   aerosol systems.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00072}00072 \textcolor{comment}{!!   -\/ The MAM code base is object-\/oriented with almost entirely private}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00073}00073 \textcolor{comment}{!!     class data members. Aerosol information and functionality are exposed}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00074}00074 \textcolor{comment}{!!     through type-\/bound procedures of each class.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00075}00075 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00076}00076 \textcolor{comment}{!! \#\# Codebase Overview \#\#}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00077}00077 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00078}00078 \textcolor{comment}{!! \#\#\# Library Structure \#\#\#}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00079}00079 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00080}00080 \textcolor{comment}{!! The MAM software packages comprises three libraries, each of which}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00081}00081 \textcolor{comment}{!! provides specific functionality required to simulate the modal aerosol}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00082}00082 \textcolor{comment}{!! system.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00083}00083 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00084}00084 \textcolor{comment}{!! -\/ \(\backslash\)b musica-\/core: The [musica-\/core](https://github.com/NCAR/musica-\/core)}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00085}00085 \textcolor{comment}{!!   library includes a set of classes that perform general, reusable}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00086}00086 \textcolor{comment}{!!   tasks and are applicable to a variety of MUSICA software components,}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00087}00087 \textcolor{comment}{!!   including MAM. Some \(\backslash\)c musica-\/core classes used by MAM are}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00088}00088 \textcolor{comment}{!!   \(\backslash\)c string\_t, \(\backslash\)c config\_t, \(\backslash\)c io\_t, \(\backslash\)c grid\_t, and \(\backslash\)c}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00089}00089 \textcolor{comment}{!!   interpolator\_t. These are described in more detail below and in the}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00090}00090 \textcolor{comment}{!!   [musica-\/core documentation](https://ncar.github.io/musica-\/core/index.html)}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00091}00091 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00092}00092 \textcolor{comment}{!! -\/ \(\backslash\)b aerosol-\/interface: The}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00093}00093 \textcolor{comment}{!!   [aerosol-\/interface](https://github.com/NCAR/aerosol-\/interface)}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00094}00094 \textcolor{comment}{!!   library defines the common aerosol API used for MUSICA aerosol}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00095}00095 \textcolor{comment}{!!   packages including MAM.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00096}00096 \textcolor{comment}{!!   The \(\backslash\)c aerosol-\/interface library also includes some classes for}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00097}00097 \textcolor{comment}{!!   general use by aerosol packages that expose the API.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00098}00098 \textcolor{comment}{!!   These include the \(\backslash\)c wavelength\_grid\_t, optics\_t, and}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00099}00099 \textcolor{comment}{!!   \(\backslash\)c environmental\_state\_t classes.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00100}00100 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00101}00101 \textcolor{comment}{!! -\/ \(\backslash\)b mam: The [mam](https://github.com/NCAR/mam) library provides}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00102}00102 \textcolor{comment}{!!   the core functionality needed to simulate the modal aerosol system}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00103}00103 \textcolor{comment}{!!   exposed through the common aerosol API. The primary interactions}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00104}00104 \textcolor{comment}{!!   through instances of the \(\backslash\)c mam\_core::core\_t class, which manages}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00105}00105 \textcolor{comment}{!!   MAM aerosol configuration, and instances of the}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00106}00106 \textcolor{comment}{!!   \(\backslash\)c mam\_core::state\_t class, which maintains the state of a MAM}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00107}00107 \textcolor{comment}{!!   aerosol.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00108}00108 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00109}00109 \textcolor{comment}{!! \#\#\# Object Structure \#\#\#}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00110}00110 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00111}00111 \textcolor{comment}{!! The MAM class diagram including classes from the \(\backslash\)c aerosol-\/interface}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00112}00112 \textcolor{comment}{!! and \(\backslash\)c musica-\/core libraries is shown below}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00113}00113 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00114}00114 \textcolor{comment}{!! \(\backslash\)htmlinclude doc/doxygen\_files/images/mam-\/class-\/diagram.html}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00115}00115 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00116}00116 \textcolor{comment}{!! The boxes of various color indicate general functionality provided by}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00117}00117 \textcolor{comment}{!! sets of related classes.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00118}00118 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00119}00119 \textcolor{comment}{!! Things to note in the class structure:}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00120}00120 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00121}00121 \textcolor{comment}{!! -\/ both the whole MAM aerosol and individual modes extend the aerosol}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00122}00122 \textcolor{comment}{!!   API. This would allow a radiation or other package work with the}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00123}00123 \textcolor{comment}{!!   full set of modes or a single mode interchangeably, similar to the}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00124}00124 \textcolor{comment}{!!   effect of applying the Composite Pattern.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00125}00125 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00126}00126 \textcolor{comment}{!! -\/ Interpolators apply the Strategy Pattern, whereby you can specify}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00127}00127 \textcolor{comment}{!!   how you want an interpolation to be calculated when you create an}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00128}00128 \textcolor{comment}{!!   \(\backslash\)b interpolator\_t object. See}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00129}00129 \textcolor{comment}{!!   [here](https://ncar.github.io/musica-\/core/html/structmusica\_\_interpolator\_1\_1interpolator\_\_t.html\#details)}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00130}00130 \textcolor{comment}{!!   for an example of how to use \(\backslash\)c interpolator\_t objects.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00131}00131 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00132}00132 \textcolor{comment}{!! -\/ Reusable components, like \(\backslash\)c interpolator\_t, \(\backslash\)c lookup\_axis\_t,}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00133}00133 \textcolor{comment}{!!   \(\backslash\)c lookup\_2D\_axis\_t, and \(\backslash\)c grid\_t, are}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00134}00134 \textcolor{comment}{!!   included in the \(\backslash\)c musica-\/core library and can be extended if needed}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00135}00135 \textcolor{comment}{!!   for specific applications, as in the case of \(\backslash\)c wavelength\_grid\_t.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00136}00136 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00137}00137 \textcolor{comment}{!! -\/ Class data members are private.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00138}00138 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00139}00139 \textcolor{comment}{!! -\/ Class, variable, and function names are meaningful and include}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00140}00140 \textcolor{comment}{!!   units where applicable}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00141}00141 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00142}00142 \textcolor{comment}{!! \#\#\# Workflow \#\#\#}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00143}00143 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00144}00144 \textcolor{comment}{!! The over workflow for MAM interactions with radiaion are show below.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00145}00145 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00146}00146 \textcolor{comment}{!! \#\#\#\# Initialization \#\#\#\#}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00147}00147 \textcolor{comment}{!! \(\backslash\)htmlinclude doc/doxygen\_files/images/mam-\/radiation-\/workflow-\/initialization.html}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00148}00148 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00149}00149 \textcolor{comment}{!! \#\#\#\# Run-\/Time \#\#\#\#}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00150}00150 \textcolor{comment}{!! \(\backslash\)htmlinclude doc/doxygen\_files/images/mam-\/radiation-\/workflow-\/runtime.html}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00151}00151 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00152}00152 \textcolor{comment}{!! \#\#\# Testing \#\#\#}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00153}00153 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00154}00154 \textcolor{comment}{!! Tests are stored in the \(\backslash\)c test/ folder with integration tests in}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00155}00155 \textcolor{comment}{!! \(\backslash\)c test/integration/ and unit tests in \(\backslash\)c test/unit/. There are}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00156}00156 \textcolor{comment}{!! currently two integration tests:}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00157}00157 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00158}00158 \textcolor{comment}{!! -\/ \(\backslash\)b current\_cam: This test was extracted from the CAM code base and}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00159}00159 \textcolor{comment}{!! used to test against during development of the refactored MAM-\/-\/RRTMG}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00160}00160 \textcolor{comment}{!! interactions.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00161}00161 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00162}00162 \textcolor{comment}{!! -\/ \(\backslash\)b radiation: This test serves as an example of how an arbitrary}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00163}00163 \textcolor{comment}{!! radiation package can interact with MAM. The results of the optical}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00164}00164 \textcolor{comment}{!! property calculations are not evaluated.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00165}00165 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00166}00166 \textcolor{comment}{!! The unit tests are organized into files of the same name as those in}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00167}00167 \textcolor{comment}{!! \(\backslash\)b src/ with additional mock classes and configuration files.}}
+\DoxyCodeLine{\Hypertarget{code__structure_8F90_source_l00168}00168 \textcolor{comment}{!!}}
+
+\end{DoxyCode}

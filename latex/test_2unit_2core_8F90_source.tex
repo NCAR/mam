@@ -1,0 +1,238 @@
+\hypertarget{test_2unit_2core_8F90_source}{}\doxysection{core.\+F90}
+\label{test_2unit_2core_8F90_source}\index{/github/workspace/test/unit/core.F90@{/github/workspace/test/unit/core.F90}}
+\mbox{\hyperlink{test_2unit_2core_8F90}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2021 National Center for Atmospheric Research}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00002}00002 \textcolor{comment}{! SPDX-\/License-\/Identifier: Apache-\/2.0}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00003}00003 \textcolor{comment}{!}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00004}00004 \textcolor{comment}{!> \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00005}00005 \textcolor{comment}{!> Tests for the mam\_core module}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00006}00006 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00007}00007 \textcolor{comment}{!> Test program for the core\_t type and related functions}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00008}\mbox{\hyperlink{test_2unit_2core_8F90_a085a28f8e7ba3e885dc4119bacd6516b}{00008}} \textcolor{keyword}{program} \mbox{\hyperlink{test_2unit_2core_8F90_a085a28f8e7ba3e885dc4119bacd6516b}{test\_core}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00009}00009 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00010}00010   \textcolor{keywordtype}{implicit none}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00011}00011 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00012}00012   \textcolor{keyword}{call }\mbox{\hyperlink{test_2unit_2core_8F90_a8bca97bc5eecdc5697cb04327c39caeb}{test\_core\_t}}( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00013}00013 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00014}00014 \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00015}00015 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00016}00016 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00017}00017 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00018}\mbox{\hyperlink{test_2unit_2core_8F90_a8bca97bc5eecdc5697cb04327c39caeb}{00018}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{test_2unit_2core_8F90_a8bca97bc5eecdc5697cb04327c39caeb}{test\_core\_t}}( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00019}00019 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00020}00020     \textcolor{keywordtype}{use }ai\_aerosol\_state,              \textcolor{keywordtype}{only} : aerosol\_state\_t}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00021}00021     \textcolor{keywordtype}{use }ai\_environmental\_state,        \textcolor{keywordtype}{only} : environmental\_state\_t}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00022}00022     \textcolor{keywordtype}{use }ai\_optics,                     \textcolor{keywordtype}{only} : optics\_t, optics\_ptr}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00023}00023     \textcolor{keywordtype}{use }ai\_wavelength\_grid,            \textcolor{keywordtype}{only} : wavelength\_grid\_t}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00024}00024     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__core}{mam\_core}},                      \textcolor{keywordtype}{only} : \mbox{\hyperlink{structmam__core_1_1core__t}{core\_t}}, \mbox{\hyperlink{structmam__core_1_1state__t}{state\_t}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00025}00025     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__optics__lookup}{mam\_optics\_lookup}},             \textcolor{keywordtype}{only} : \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00026}00026     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : assert, almost\_equal}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00027}00027     \textcolor{keywordtype}{use }musica\_config,                 \textcolor{keywordtype}{only} : config\_t}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00028}00028     \textcolor{keywordtype}{use }musica\_constants,              \textcolor{keywordtype}{only} : dk => musica\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00029}00029     \textcolor{keywordtype}{use }musica\_property,               \textcolor{keywordtype}{only} : property\_t}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00030}00030 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00031}00031     \textcolor{keywordtype}{character(len=*)}, \textcolor{keywordtype}{parameter} :: my\_name = \textcolor{stringliteral}{"{}core\_t tests"{}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00032}00032     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__core_1_1core__t}{core\_t}}), \textcolor{keywordtype}{pointer} :: core}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00033}00033     \textcolor{keywordtype}{class}(aerosol\_state\_t), \textcolor{keywordtype}{pointer} :: state\_a, state\_b}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00034}00034     \textcolor{keywordtype}{type}(config\_t) :: core\_config, optics\_config}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00035}00035     \textcolor{keywordtype}{class}(optics\_t), \textcolor{keywordtype}{pointer} :: optics}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00036}00036     \textcolor{keywordtype}{type}(optics\_ptr), \textcolor{keywordtype}{allocatable} :: optics\_set(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00037}00037     \textcolor{keywordtype}{type}(environmental\_state\_t) :: env\_state}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00038}00038     \textcolor{keywordtype}{type}(wavelength\_grid\_t) :: grid}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00039}00039     \textcolor{keywordtype}{type}(property\_t) :: prop}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00040}00040     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}) :: mock\_optics\_lookup}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00041}00041 \textcolor{keywordtype}{    real}(kind=dk), \textcolor{keywordtype}{allocatable} :: raw\_state\_a(:), raw\_state\_b(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00042}00042 \textcolor{keywordtype}{    real}(kind=dk), \textcolor{keywordtype}{allocatable} :: optics\_values(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00043}00043 \textcolor{keywordtype}{    real}(kind=dk), \textcolor{keywordtype}{allocatable} :: compare\_values(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00044}00044     \textcolor{keywordtype}{integer} :: i\_elem, i\_band}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00045}00045     \textcolor{keywordtype}{logical} :: flag}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00046}00046 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00047}00047     \textcolor{keyword}{call }core\_config\%from\_file( \textcolor{stringliteral}{"{}core\_config.json"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00048}00048     core => \mbox{\hyperlink{structmam__core_1_1core__t}{core\_t}}( core\_config )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00049}00049 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00050}00050     state\_a => core\%new\_state( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00051}00051     state\_b => core\%new\_state( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00052}00052 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00053}00053     \textcolor{comment}{! test state\_t functions}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00054}00054     \textcolor{keyword}{call }state\_a\%randomize( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00055}00055     \textcolor{keyword}{call }state\_b\%randomize( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00056}00056     \textcolor{keyword}{call }assert( 240883501, state\_a\%raw\_size( ) .eq. state\_b\%raw\_size( ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00057}00057     \textcolor{keyword}{allocate}( raw\_state\_a( state\_a\%raw\_size( ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00058}00058     \textcolor{keyword}{allocate}( raw\_state\_b( state\_b\%raw\_size( ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00059}00059     \textcolor{keyword}{call }state\_a\%dump\_state( raw\_state\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00060}00060     \textcolor{keyword}{call }state\_b\%dump\_state( raw\_state\_b )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00061}00061     flag = .true.}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00062}00062     \textcolor{keywordflow}{do} i\_elem = 1, \textcolor{keyword}{size}( raw\_state\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00063}00063       flag = flag .and. raw\_state\_a( i\_elem ) .eq. raw\_state\_b( i\_elem )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00064}00064 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00065}00065     \textcolor{keyword}{call }assert( 635677095, .not. flag )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00066}00066     \textcolor{keyword}{call }state\_b\%load\_state( raw\_state\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00067}00067     \textcolor{keyword}{call }state\_b\%dump\_state( raw\_state\_b )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00068}00068     flag = .true.}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00069}00069     \textcolor{keywordflow}{do} i\_elem = 1, \textcolor{keyword}{size}( raw\_state\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00070}00070       flag = flag .and. raw\_state\_a( i\_elem ) .eq. raw\_state\_b( i\_elem )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00071}00071 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00072}00072     \textcolor{keyword}{call }assert( 747995440, flag )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00073}00073     \textcolor{keyword}{deallocate}( raw\_state\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00074}00074     \textcolor{keyword}{deallocate}( raw\_state\_b )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00075}00075 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00076}00076     \textcolor{keyword}{allocate}( raw\_state\_a( state\_a\%raw\_size( ) + 15 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00077}00077     \textcolor{keyword}{allocate}( raw\_state\_b( state\_b\%raw\_size( ) + 25 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00078}00078     raw\_state\_a(:) = 12.5\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00079}00079     raw\_state\_b(:) = 43.1\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00080}00080     \textcolor{keyword}{call }state\_a\%randomize( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00081}00081     \textcolor{keyword}{call }state\_b\%randomize( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00082}00082     i\_elem = 11}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00083}00083     \textcolor{keyword}{call }state\_a\%dump\_state( raw\_state\_a, i\_elem )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00084}00084     \textcolor{keyword}{call }assert( 860313785, i\_elem .eq. 11 + state\_a\%raw\_size( ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00085}00085     i\_elem = 16}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00086}00086     \textcolor{keyword}{call }state\_b\%dump\_state( raw\_state\_b, i\_elem )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00087}00087     \textcolor{keyword}{call }assert( 690156881, i\_elem .eq. 16 + state\_b\%raw\_size( ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00088}00088     flag = .true.}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00089}00089     \textcolor{keywordflow}{do} i\_elem = 1, state\_a\%raw\_size( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00090}00090       flag = flag .and. raw\_state\_a( 10 + i\_elem ) .eq. raw\_state\_b( 15 + i\_elem )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00091}00091 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00092}00092     \textcolor{keyword}{call }assert( 519999977, .not. flag )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00093}00093     i\_elem = 11}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00094}00094     \textcolor{keyword}{call }state\_b\%load\_state( raw\_state\_a, i\_elem )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00095}00095     \textcolor{keyword}{call }assert( 632318322, i\_elem .eq. 11 + state\_b\%raw\_size( ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00096}00096     i\_elem = 16}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00097}00097     \textcolor{keyword}{call }state\_a\%dump\_state( raw\_state\_b, i\_elem )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00098}00098     \textcolor{keyword}{call }assert( 462161418, i\_elem .eq. 16 + state\_b\%raw\_size( ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00099}00099     flag = .true.}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00100}00100     \textcolor{keywordflow}{do} i\_elem = 1, state\_a\%raw\_size( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00101}00101       flag = flag .and. raw\_state\_a( 10 + i\_elem ) .eq. raw\_state\_b( 15 + i\_elem )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00102}00102 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00103}00103     \textcolor{keyword}{call }assert( 856955012, flag )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00104}00104     \textcolor{keywordflow}{do} i\_elem = 1, 10}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00105}00105       \textcolor{keyword}{call }assert( 673363016, raw\_state\_a( i\_elem ) .eq. 12.5\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00106}00106 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00107}00107     \textcolor{keywordflow}{do} i\_elem = 11 + state\_a\%raw\_size( ), 15 + state\_a\%raw\_size( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00108}00108       \textcolor{keyword}{call }assert( 686798108, raw\_state\_a( i\_elem ) .eq. 12.5\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00109}00109 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00110}00110     \textcolor{keywordflow}{do} i\_elem = 1, 15}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00111}00111       \textcolor{keyword}{call }assert( 681533801, raw\_state\_b( i\_elem ) .eq. 43.1\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00112}00112 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00113}00113     \textcolor{keywordflow}{do} i\_elem = 16 + state\_a\%raw\_size( ), 25 + state\_a\%raw\_size( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00114}00114       \textcolor{keyword}{call }assert( 511376897, raw\_state\_b( i\_elem ) .eq. 43.1\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00115}00115 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00116}00116 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00117}00117     \textcolor{keyword}{deallocate}( raw\_state\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00118}00118     \textcolor{keyword}{deallocate}( raw\_state\_b )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00119}00119 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00120}00120     \textcolor{keyword}{allocate}( compare\_values( 2 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00121}00121     \textcolor{keyword}{call }env\_state\%randomize( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00122}00122 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00123}00123     \textcolor{comment}{! get optics shortwave}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00124}00124     \textcolor{keyword}{call }optics\_config\%empty( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00125}00125     \textcolor{keyword}{call }optics\_config\%add( \textcolor{stringliteral}{"{}type"{}}, 1, my\_name )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00126}00126     mock\_optics\_lookup = \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}( optics\_config )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00127}00127     grid = wavelength\_grid\_t( (/ 12.3\_dk,  100.0\_dk /),                       \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00128}00128                               (/ 92.3\_dk, 1145.0\_dk /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00129}00129     \textcolor{keyword}{allocate}( optics\_values( grid\%number\_of\_sections( ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00130}00130 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00131}00131     \textcolor{comment}{! scalar optics}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00132}00132     prop = property\_t( my\_name, \textcolor{stringliteral}{"{}asymmetry factor"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00133}00133     optics => core\%new\_optics( prop, grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00134}00134     \textcolor{keyword}{call }assert( 842692121, optics\%output\_grid( ) .eq. grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00135}00135     \textcolor{keyword}{call }core\%shortwave\_optics( env\_state, state\_a, optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00136}00136     \textcolor{keyword}{call }optics\%get\_values( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00137}00137     compare\_values(:) = (/ 6.0\_dk, 5.4\_dk /) * 2}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00138}00138     \textcolor{keyword}{call }assert( 267690901, \textcolor{keyword}{size}( optics\_values ) .eq. \textcolor{keyword}{size}( compare\_values ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00139}00139     \textcolor{keywordflow}{do} i\_band = 1, \textcolor{keyword}{size}( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00140}00140       \textcolor{keyword}{call }assert( 941600971, optics\_values( i\_band ) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00141}00141       \textcolor{keyword}{call }assert( 488968818, optics\_values( i\_band ) .lt. 1.0e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00142}00142       \textcolor{keyword}{call }assert( 601287163, almost\_equal( optics\_values(  i\_band ),         \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00143}00143                                             compare\_values( i\_band ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00144}00144 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00145}00145     \textcolor{keyword}{deallocate}(        optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00146}00146 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00147}00147     \textcolor{comment}{! array optics}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00148}00148     \textcolor{keyword}{allocate}( optics\_set( 3 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00149}00149     prop = property\_t( my\_name, \textcolor{stringliteral}{"{}layer extinction optical depth"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00150}00150     optics\_set( 1 )\%ptr\_ => core\%new\_optics( prop, grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00151}00151     prop = property\_t( my\_name, \textcolor{stringliteral}{"{}layer single-\/scatter albedo"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00152}00152     optics\_set( 2 )\%ptr\_ => core\%new\_optics( prop, grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00153}00153     prop = property\_t( my\_name, \textcolor{stringliteral}{"{}forward scattered fraction"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00154}00154     optics\_set( 3 )\%ptr\_ => core\%new\_optics( prop, grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00155}00155     \textcolor{keyword}{call }core\%shortwave\_optics( env\_state, state\_a, optics\_set )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00156}00156     \textcolor{keyword}{call }optics\_set( 1 )\%ptr\_\%get\_values( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00157}00157     compare\_values(:) = (/ 2.0\_dk, 8.5\_dk /) * 2}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00158}00158     \textcolor{keywordflow}{do} i\_band = 1, \textcolor{keyword}{size}( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00159}00159       \textcolor{keyword}{call }assert( 706799581, optics\_values( i\_band ) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00160}00160       \textcolor{keyword}{call }assert( 766543674, optics\_values( i\_band ) .lt. 1.0e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00161}00161       \textcolor{keyword}{call }assert( 991180364, almost\_equal( optics\_values(  i\_band ),         \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00162}00162                                             compare\_values( i\_band ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00163}00163 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00164}00164     \textcolor{keyword}{call }optics\_set( 2 )\%ptr\_\%get\_values( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00165}00165     compare\_values(:) = (/ 4.0\_dk, 1.8\_dk /) * 2}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00166}00166     \textcolor{keywordflow}{do} i\_band = 1, \textcolor{keyword}{size}( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00167}00167       \textcolor{keyword}{call }assert( 138490310, optics\_values( i\_band ) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00168}00168       \textcolor{keyword}{call }assert( 315817055, optics\_values( i\_band ) .lt. 1.0e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00169}00169       \textcolor{keyword}{call }assert( 763184901, almost\_equal( optics\_values(  i\_band ),         \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00170}00170                                             compare\_values( i\_band ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00171}00171 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00172}00172     \textcolor{keyword}{call }optics\_set( 3 )\%ptr\_\%get\_values( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00173}00173     compare\_values(:) = (/ 8.0\_dk, 3.2\_dk /) * 2}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00174}00174     \textcolor{keywordflow}{do} i\_band = 1, \textcolor{keyword}{size}( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00175}00175       \textcolor{keyword}{call }assert( 257978496, optics\_values( i\_band ) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00176}00176       \textcolor{keyword}{call }assert( 987821591, optics\_values( i\_band ) .lt. 1.0e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00177}00177       \textcolor{keyword}{call }assert( 817664687, almost\_equal( optics\_values(  i\_band ),         \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00178}00178                                             compare\_values( i\_band ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00179}00179 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00180}00180     \textcolor{keyword}{deallocate}(    optics\_set )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00181}00181     \textcolor{keyword}{deallocate}( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00182}00182 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00183}00183     \textcolor{comment}{! get optics longwave}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00184}00184     \textcolor{keyword}{call }optics\_config\%empty( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00185}00185     \textcolor{keyword}{call }optics\_config\%add( \textcolor{stringliteral}{"{}type"{}}, 2, my\_name )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00186}00186     mock\_optics\_lookup = \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}( optics\_config )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00187}00187     grid = wavelength\_grid\_t( (/ 12.3\_dk,  100.0\_dk * 2 /),                   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00188}00188                               (/ 92.3\_dk, 1145.0\_dk * 2 /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00189}00189     \textcolor{keyword}{allocate}( optics\_values( grid\%number\_of\_sections( ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00190}00190 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00191}00191     \textcolor{comment}{! scalar get optics}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00192}00192     prop = property\_t( my\_name, \textcolor{stringliteral}{"{}layer absorption optical depth"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00193}00193     optics  => core\%new\_optics( prop, grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00194}00194     \textcolor{keyword}{call }assert( 516490039, optics\%native\_grid( ) .eq.                        \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00195}00195                             mock\_optics\_lookup\%grid( ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00196}00196     \textcolor{keyword}{call }assert( 346333135, optics\%output\_grid( ) .eq. grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00197}00197     \textcolor{keyword}{call }core\%longwave\_optics( env\_state, state\_a, optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00198}00198     \textcolor{keyword}{call }optics\%get\_values( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00199}00199     compare\_values(:) = (/ 20.0\_dk, 82.5\_dk /) * 2}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00200}00200     \textcolor{keyword}{call }assert( 855350608, \textcolor{keyword}{size}( optics\_values ) .eq. \textcolor{keyword}{size}( compare\_values ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00201}00201     \textcolor{keywordflow}{do} i\_band = 1, \textcolor{keyword}{size}( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00202}00202       \textcolor{keyword}{call }assert( 402718455, optics\_values( i\_band ) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00203}00203       \textcolor{keyword}{call }assert( 850086301, optics\_values( i\_band ) .lt. 1.0e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00204}00204       \textcolor{keyword}{call }assert( 397454148, almost\_equal( optics\_values(  i\_band ),         \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00205}00205                                             compare\_values( i\_band ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00206}00206 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00207}00207 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00208}00208     \textcolor{comment}{! array get optics}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00209}00209     \textcolor{keyword}{allocate}( optics\_set( 1 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00210}00210     optics\_set( 1 )\%ptr\_ => optics}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00211}00211     \textcolor{keyword}{call }core\%longwave\_optics( env\_state, state\_a, optics\_set )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00212}00212     \textcolor{keyword}{call }optics\_set( 1 )\%ptr\_\%get\_values( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00213}00213     compare\_values(:) = (/ 20.0\_dk, 82.5\_dk /) * 2}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00214}00214     \textcolor{keyword}{call }assert( 339615589, \textcolor{keyword}{size}( optics\_values ) .eq. \textcolor{keyword}{size}( compare\_values ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00215}00215     \textcolor{keywordflow}{do} i\_band = 1, \textcolor{keyword}{size}( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00216}00216       \textcolor{keyword}{call }assert( 169458685, optics\_values( i\_band ) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00217}00217       \textcolor{keyword}{call }assert( 346785430, optics\_values( i\_band ) .lt. 1.0e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00218}00218       \textcolor{keyword}{call }assert( 794153276, almost\_equal( optics\_values(  i\_band ),         \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00219}00219                                             compare\_values( i\_band ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00220}00220 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00221}00221 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00222}00222     \textcolor{keyword}{deallocate}(        optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00223}00223     \textcolor{keyword}{deallocate}(    optics\_set )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00224}00224     \textcolor{keyword}{deallocate}( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00225}00225     \textcolor{keyword}{deallocate}(       state\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00226}00226     \textcolor{keyword}{deallocate}(       state\_b )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00227}00227 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00228}00228   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{test_2unit_2core_8F90_a8bca97bc5eecdc5697cb04327c39caeb}{test\_core\_t}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00229}00229 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00230}00230 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00231}00231 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2core_8F90_source_l00232}00232 \textcolor{keyword}{end program }\mbox{\hyperlink{test_2unit_2core_8F90_a085a28f8e7ba3e885dc4119bacd6516b}{test\_core}}}
+
+\end{DoxyCode}

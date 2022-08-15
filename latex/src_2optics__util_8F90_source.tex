@@ -1,0 +1,237 @@
+\hypertarget{src_2optics__util_8F90_source}{}\doxysection{optics\+\_\+util.\+F90}
+\label{src_2optics__util_8F90_source}\index{/github/workspace/src/optics\_util.F90@{/github/workspace/src/optics\_util.F90}}
+\mbox{\hyperlink{src_2optics__util_8F90}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2021 National Center for Atmospheric Research}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00002}00002 \textcolor{comment}{! SPDX-\/License-\/Identifier: Apache-\/2.0}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00003}00003 \textcolor{comment}{!}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00004}00004 \textcolor{comment}{!> \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00005}00005 \textcolor{comment}{!> The mam\_optics\_constants module}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00006}00006 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00007}00007 \textcolor{comment}{!> Constants used to calculate MAM optical properties}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00008}\mbox{\hyperlink{namespacemam__optics__util}{00008}} \textcolor{keyword}{module} \mbox{\hyperlink{namespacemam__optics__util}{mam\_optics\_util}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00009}00009 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00010}00010     \textcolor{keywordtype}{use }ai\_optics,                     \textcolor{keywordtype}{only} : optics\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00011}00011     \textcolor{keywordtype}{use }ai\_optics\_absorption\_optical\_depth,                                   \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00012}00012         only : optics\_absorption\_optical\_depth\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00013}00013     \textcolor{keywordtype}{use }ai\_optics\_asymmetry\_factor,   \textcolor{keywordtype}{only} : optics\_asymmetry\_factor\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00014}00014     \textcolor{keywordtype}{use }ai\_optics\_extinction\_optical\_depth,                                   \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00015}00015         only : optics\_extinction\_optical\_depth\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00016}00016     \textcolor{keywordtype}{use }ai\_optics\_forward\_scattered\_fraction,                                 \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00017}00017         only : optics\_forward\_scattered\_fraction\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00018}00018     \textcolor{keywordtype}{use }ai\_optics\_single\_scatter\_albedo,                                      \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00019}00019         only : optics\_single\_scatter\_albedo\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00020}00020   \textcolor{keywordtype}{use }musica\_constants,                \textcolor{keywordtype}{only} : musica\_dk}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00021}00021 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00022}00022   \textcolor{keywordtype}{implicit none}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00023}00023   \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00024}00024 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00025}00025   \textcolor{keywordtype}{public} :: \mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}}, \mbox{\hyperlink{namespacemam__optics__util_ab1d8fd653e3523e1e8d23ce7ba21f5d7}{add\_shortwave\_property}}, \mbox{\hyperlink{namespacemam__optics__util_ab252336adf9500f549d921fd1a461840}{add\_longwave\_property}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00026}00026 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00027}00027 \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00028}00028 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00029}00029 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00030}00030 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00031}00031 \textcolor{comment}{  !> Returns an optics\_t object for a given property}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00032}\mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{00032}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}}( property, native\_shortwave\_grid,                    \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00033}00033       native\_longwave\_grid, output\_grid, interpolation\_strategy )             \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00034}00034       result( new\_optics )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00036}00036     \textcolor{keywordtype}{use }ai\_wavelength\_grid,            \textcolor{keywordtype}{only} : wavelength\_grid\_t, kwavenumber, \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00037}00037                                               kcentimeter}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00038}00038     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : die\_msg}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00039}00039     \textcolor{keywordtype}{use }musica\_interpolator,           \textcolor{keywordtype}{only} : interpolation\_strategy\_i}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00040}00040     \textcolor{keywordtype}{use }musica\_property,               \textcolor{keywordtype}{only} : property\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00041}00041     \textcolor{keywordtype}{use }musica\_string,                 \textcolor{keywordtype}{only} : string\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00042}00042 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00043}00043     \textcolor{keywordtype}{class}(optics\_t),  \textcolor{keywordtype}{pointer} :: new\_optics}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00044}00044     \textcolor{keywordtype}{class}(property\_t), \textcolor{keywordtype}{intent(in)} :: property}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00045}00045     \textcolor{keywordtype}{type}(wavelength\_grid\_t), \textcolor{keywordtype}{intent(in)} :: native\_shortwave\_grid}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00046}00046     \textcolor{keywordtype}{type}(wavelength\_grid\_t), \textcolor{keywordtype}{intent(in)} :: native\_longwave\_grid}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00047}00047     \textcolor{keywordtype}{type}(wavelength\_grid\_t), \textcolor{keywordtype}{intent(in)} :: output\_grid}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00048}00048     \textcolor{keywordtype}{procedure}(interpolation\_strategy\_i), \textcolor{keywordtype}{optional} :: interpolation\_strategy}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00049}00049 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00050}00050     \textcolor{keywordtype}{type}(wavelength\_grid\_t) :: native\_grid}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00051}00051     \textcolor{keywordtype}{type}(string\_t)          :: property\_name}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00052}00052 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00053}00053     property\_name = property\%name( )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00054}00054     \textcolor{keywordflow}{if}( property\_name .eq. \textcolor{stringliteral}{"{}layer extinction optical depth"{}} ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00055}00055       new\_optics => optics\_extinction\_optical\_depth\_t( native\_shortwave\_grid, \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00056}00056                                                        output\_grid,           \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00057}00057                              interpolation\_strategy = interpolation\_strategy )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00058}00058     \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}( property\_name .eq. \textcolor{stringliteral}{"{}layer single-\/scatter albedo"{}} ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00059}00059       new\_optics => optics\_single\_scatter\_albedo\_t(    native\_shortwave\_grid, \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00060}00060                                                        output\_grid,           \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00061}00061                              interpolation\_strategy = interpolation\_strategy )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00062}00062     \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}( property\_name .eq. \textcolor{stringliteral}{"{}asymmetry factor"{}} ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00063}00063       new\_optics => optics\_asymmetry\_factor\_t(         native\_shortwave\_grid, \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00064}00064                                                        output\_grid,           \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00065}00065                              interpolation\_strategy = interpolation\_strategy )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00066}00066     \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}( property\_name .eq. \textcolor{stringliteral}{"{}forward scattered fraction"{}} ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00067}00067       new\_optics => optics\_forward\_scattered\_fraction\_t(                      \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00068}00068                                                        native\_shortwave\_grid, \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00069}00069                                                        output\_grid,           \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00070}00070                              interpolation\_strategy = interpolation\_strategy )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00071}00071     \textcolor{keywordflow}{else} \textcolor{keywordflow}{if}( property\_name .eq. \textcolor{stringliteral}{"{}layer absorption optical depth"{}} ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00072}00072       new\_optics => optics\_absorption\_optical\_depth\_t( native\_longwave\_grid,  \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00073}00073                                                        output\_grid,           \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00074}00074                              interpolation\_strategy = interpolation\_strategy )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00075}00075     \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00076}00076       \textcolor{keyword}{call }die\_msg( 769442313, \textcolor{stringliteral}{"{}Unsupported optical property: '"{}}//            \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00077}00077                                property\_name//\textcolor{stringliteral}{"{}'"{}} )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00078}00078 \textcolor{keywordflow}{    end if}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00079}00079 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00080}00080   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00081}00081 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00082}00082 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00083}00083 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00084}00084 \textcolor{comment}{  !> Adds extinction optical depths to optical property values}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00085}\mbox{\hyperlink{namespacemam__optics__util_a127e93924d0e692f1e40673ebef91892}{00085}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__optics__util_a127e93924d0e692f1e40673ebef91892}{add\_shortwave\_extinction\_optical\_depth}}(                          \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00086}00086       extinction\_optical\_depth, single\_scatter\_albedo, asymmetry\_factor,      \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00087}00087       optics )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00088}00088 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00089}00089 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: extinction\_optical\_depth(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00090}00090 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: single\_scatter\_albedo(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00091}00091 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00092}00092     \textcolor{keywordtype}{class}(optics\_extinction\_optical\_depth\_t), \textcolor{keywordtype}{intent(inout)} :: optics}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00093}00093 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00094}00094     \textcolor{keyword}{call }optics\%add\_values( extinction\_optical\_depth )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00095}00095 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00096}00096   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__optics__util_a127e93924d0e692f1e40673ebef91892}{add\_shortwave\_extinction\_optical\_depth}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00097}00097 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00098}00098 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00099}00099 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00100}00100 \textcolor{comment}{  !> Adds single-\/scatter albedo to optical property values}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00101}\mbox{\hyperlink{namespacemam__optics__util_a8b91778ceede0fba8cfe3ee54c8e2a6c}{00101}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__optics__util_a8b91778ceede0fba8cfe3ee54c8e2a6c}{add\_shortwave\_single\_scatter\_albedo}}(                             \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00102}00102       extinction\_optical\_depth, single\_scatter\_albedo, asymmetry\_factor,      \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00103}00103       optics )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00104}00104 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00105}00105 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: extinction\_optical\_depth(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00106}00106 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: single\_scatter\_albedo(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00107}00107 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00108}00108     \textcolor{keywordtype}{class}(optics\_single\_scatter\_albedo\_t), \textcolor{keywordtype}{intent(inout)} :: optics}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00109}00109 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00110}00110 \textcolor{comment}{    !> \(\backslash\)todo the parameter calculated from the lookup-\/table is called}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00111}00111 \textcolor{comment}{    !!       single-\/scatter albedo, as is the value returned to radiation}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00112}00112 \textcolor{comment}{    !!       after multiplying by extinction. Which is correct?}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00113}00113     \textcolor{keyword}{call }optics\%add\_values( extinction\_optical\_depth(:)                       \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00114}00114                             * single\_scatter\_albedo(:) )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00115}00115 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00116}00116   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__optics__util_a8b91778ceede0fba8cfe3ee54c8e2a6c}{add\_shortwave\_single\_scatter\_albedo}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00117}00117 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00118}00118 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00119}00119 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00120}00120 \textcolor{comment}{  !> Adds asymmetry factor to optical property values}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00121}\mbox{\hyperlink{namespacemam__optics__util_a0149038eae747d9b5e3809633415bab6}{00121}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__optics__util_a0149038eae747d9b5e3809633415bab6}{add\_shortwave\_asymmetry\_factor}}(                                  \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00122}00122       extinction\_optical\_depth, single\_scatter\_albedo, asymmetry\_factor,      \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00123}00123       optics )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00124}00124 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00125}00125 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: extinction\_optical\_depth(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00126}00126 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: single\_scatter\_albedo(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00127}00127 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00128}00128     \textcolor{keywordtype}{class}(optics\_asymmetry\_factor\_t), \textcolor{keywordtype}{intent(inout)} :: optics}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00129}00129 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00130}00130 \textcolor{comment}{    !> \(\backslash\)todo the parameter calculated from the lookup-\/table is called}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00131}00131 \textcolor{comment}{    !!       asymmetry factor, as is the value returned to radiation}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00132}00132 \textcolor{comment}{    !!       after multiplying by extinction and single-\/scatter albedo.}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00133}00133 \textcolor{comment}{    !!       Which is correct?}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00134}00134     \textcolor{keyword}{call }optics\%add\_values( extinction\_optical\_depth(:)                       \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00135}00135                             * single\_scatter\_albedo(:)                        \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00136}00136                             * \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(:) )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00137}00137 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00138}00138   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__optics__util_a0149038eae747d9b5e3809633415bab6}{add\_shortwave\_asymmetry\_factor}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00139}00139 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00140}00140 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00141}00141 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00142}00142 \textcolor{comment}{  !> Adds forward scattered fraction to optical property values}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00143}\mbox{\hyperlink{namespacemam__optics__util_a3871f1fe202a74af5921147ff9cbeaeb}{00143}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__optics__util_a3871f1fe202a74af5921147ff9cbeaeb}{add\_shortwave\_forward\_scattered\_fraction}}(                        \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00144}00144       extinction\_optical\_depth, single\_scatter\_albedo, asymmetry\_factor,      \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00145}00145       optics )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00146}00146 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00147}00147 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: extinction\_optical\_depth(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00148}00148 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: single\_scatter\_albedo(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00149}00149 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00150}00150     \textcolor{keywordtype}{class}(optics\_forward\_scattered\_fraction\_t), \textcolor{keywordtype}{intent(inout)} :: optics}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00151}00151 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00152}00152     \textcolor{keyword}{call }optics\%add\_values( extinction\_optical\_depth(:)                       \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00153}00153                             * single\_scatter\_albedo(:)                        \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00154}00154                             * \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(:)                             \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00155}00155                             * \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(:) )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00156}00156 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00157}00157   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__optics__util_a3871f1fe202a74af5921147ff9cbeaeb}{add\_shortwave\_forward\_scattered\_fraction}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00158}00158 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00159}00159 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00160}00160 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00161}00161 \textcolor{comment}{  !> Adds to shortwave property values}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00162}\mbox{\hyperlink{namespacemam__optics__util_ab1d8fd653e3523e1e8d23ce7ba21f5d7}{00162}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__optics__util_ab1d8fd653e3523e1e8d23ce7ba21f5d7}{add\_shortwave\_property}}(                                          \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00163}00163       extinction\_optical\_depth, single\_scatter\_albedo, asymmetry\_factor,      \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00164}00164       optics )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00165}00165 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00166}00166     \textcolor{keywordtype}{use }musica\_assert,               \textcolor{keywordtype}{only} : die\_msg}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00167}00167 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00168}00168 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)}    :: extinction\_optical\_depth(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00169}00169 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)}    :: single\_scatter\_albedo(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00170}00170 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)}    :: \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00171}00171     \textcolor{keywordtype}{class}(optics\_t),      \textcolor{keywordtype}{intent(inout)} :: optics}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00172}00172 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00173}00173     \textcolor{keywordflow}{select type}( optics )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00174}00174 \textcolor{keywordflow}{    class is}( optics\_extinction\_optical\_depth\_t )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00175}00175       \textcolor{keyword}{call }\mbox{\hyperlink{namespacemam__optics__util_a127e93924d0e692f1e40673ebef91892}{add\_shortwave\_extinction\_optical\_depth}}(                            \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00176}00176         extinction\_optical\_depth, single\_scatter\_albedo, \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}},    \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00177}00177         optics )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00178}00178 \textcolor{keywordflow}{    class is}( optics\_single\_scatter\_albedo\_t )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00179}00179       \textcolor{keyword}{call }\mbox{\hyperlink{namespacemam__optics__util_a8b91778ceede0fba8cfe3ee54c8e2a6c}{add\_shortwave\_single\_scatter\_albedo}}(                               \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00180}00180         extinction\_optical\_depth, single\_scatter\_albedo, \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}},    \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00181}00181         optics )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00182}00182 \textcolor{keywordflow}{    class is}( optics\_asymmetry\_factor\_t )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00183}00183       \textcolor{keyword}{call }\mbox{\hyperlink{namespacemam__optics__util_a0149038eae747d9b5e3809633415bab6}{add\_shortwave\_asymmetry\_factor}}(                                    \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00184}00184         extinction\_optical\_depth, single\_scatter\_albedo, \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}},    \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00185}00185         optics )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00186}00186 \textcolor{keywordflow}{    class is}( optics\_forward\_scattered\_fraction\_t )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00187}00187       \textcolor{keyword}{call }\mbox{\hyperlink{namespacemam__optics__util_a3871f1fe202a74af5921147ff9cbeaeb}{add\_shortwave\_forward\_scattered\_fraction}}(                          \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00188}00188         extinction\_optical\_depth, single\_scatter\_albedo, \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}},    \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00189}00189         optics )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00190}00190 \textcolor{keywordflow}{    class default}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00191}00191       \textcolor{keyword}{call }die\_msg( 628273876, \textcolor{stringliteral}{"{}Unsupported MAM shortwave optical property"{}} )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00192}00192 \textcolor{keywordflow}{    end select}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00193}00193 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00194}00194   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__optics__util_ab1d8fd653e3523e1e8d23ce7ba21f5d7}{add\_shortwave\_property}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00195}00195 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00196}00196 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00197}00197 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00198}00198 \textcolor{comment}{  !> Adds absorption optical depth to optical property values}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00199}\mbox{\hyperlink{namespacemam__optics__util_a15ae1872e068eb3df567f06cee561248}{00199}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__optics__util_a15ae1872e068eb3df567f06cee561248}{add\_longwave\_absorption\_optical\_depth}}(                           \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00200}00200       extinction\_optical\_depth, optics )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00201}00201 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00202}00202 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: extinction\_optical\_depth(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00203}00203     \textcolor{keywordtype}{class}(optics\_absorption\_optical\_depth\_t), \textcolor{keywordtype}{intent(inout)} :: optics}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00204}00204 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00205}00205     \textcolor{keyword}{call }optics\%add\_values( extinction\_optical\_depth )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00206}00206 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00207}00207   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__optics__util_a15ae1872e068eb3df567f06cee561248}{add\_longwave\_absorption\_optical\_depth}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00208}00208 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00209}00209 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00210}00210 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00211}00211 \textcolor{comment}{  !> Adds to longwave property values}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00212}\mbox{\hyperlink{namespacemam__optics__util_ab252336adf9500f549d921fd1a461840}{00212}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__optics__util_ab252336adf9500f549d921fd1a461840}{add\_longwave\_property}}( extinction\_optical\_depth, optics )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00213}00213 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00214}00214     \textcolor{keywordtype}{use }musica\_assert,               \textcolor{keywordtype}{only} : die\_msg}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00215}00215 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00216}00216 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)}    :: extinction\_optical\_depth(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00217}00217     \textcolor{keywordtype}{class}(optics\_t),      \textcolor{keywordtype}{intent(inout)} :: optics}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00218}00218 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00219}00219     \textcolor{keywordflow}{select type}( optics )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00220}00220 \textcolor{keywordflow}{    class is}( optics\_absorption\_optical\_depth\_t )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00221}00221       \textcolor{keyword}{call }\mbox{\hyperlink{namespacemam__optics__util_a15ae1872e068eb3df567f06cee561248}{add\_longwave\_absorption\_optical\_depth}}( extinction\_optical\_depth,   \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00222}00222                                                   optics )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00223}00223 \textcolor{keywordflow}{    class default}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00224}00224       \textcolor{keyword}{call }die\_msg(405116022, \textcolor{stringliteral}{"{}Unsupported MAM longwave optical property"{}} )}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00225}00225 \textcolor{keywordflow}{    end select}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00226}00226 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00227}00227   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__optics__util_ab252336adf9500f549d921fd1a461840}{add\_longwave\_property}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00228}00228 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00229}00229 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00230}00230 }
+\DoxyCodeLine{\Hypertarget{src_2optics__util_8F90_source_l00231}00231 \textcolor{keyword}{end module }\mbox{\hyperlink{namespacemam__optics__util}{mam\_optics\_util}}}
+
+\end{DoxyCode}

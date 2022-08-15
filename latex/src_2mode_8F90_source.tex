@@ -1,0 +1,908 @@
+\hypertarget{src_2mode_8F90_source}{}\doxysection{mode.\+F90}
+\label{src_2mode_8F90_source}\index{/github/workspace/src/mode.F90@{/github/workspace/src/mode.F90}}
+\mbox{\hyperlink{src_2mode_8F90}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2021 National Center for Atmospheric Research}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00002}00002 \textcolor{comment}{! SPDX-\/License-\/Identifier: Apache-\/2.0}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00003}00003 \textcolor{comment}{!}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00004}00004 \textcolor{comment}{!> \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00005}00005 \textcolor{comment}{!> The mam\_mode module}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00006}00006 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00007}00007 \textcolor{comment}{!> The mode\_t type and related functions}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00008}\mbox{\hyperlink{namespacemam__mode}{00008}} \textcolor{keyword}{module} \mbox{\hyperlink{namespacemam__mode}{mam\_mode}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00009}00009 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00010}00010   \textcolor{keywordtype}{use }ai\_aerosol,                      \textcolor{keywordtype}{only} : aerosol\_t}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00011}00011   \textcolor{keywordtype}{use }ai\_aerosol\_state,                \textcolor{keywordtype}{only} : aerosol\_state\_t}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00012}00012   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__optics__lookup}{mam\_optics\_lookup}},               \textcolor{keywordtype}{only} : \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00013}00013   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__species}{mam\_species}},                     \textcolor{keywordtype}{only} : \mbox{\hyperlink{structmam__species_1_1species__t}{species\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00014}00014   \textcolor{keywordtype}{use }musica\_constants,                \textcolor{keywordtype}{only} : musica\_dk}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00015}00015 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00016}00016   \textcolor{keywordtype}{implicit none}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00017}00017   \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00018}00018 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00019}00019   \textcolor{keywordtype}{public} :: \mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}, \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00020}00020 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00021}00021 \textcolor{comment}{  !> An aerosol mode}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00022}\mbox{\hyperlink{structmam__mode_1_1mode__t}{00022}}   \textcolor{keyword}{type}, \textcolor{keyword}{extends}(aerosol\_t) :: \mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00023}00023     \textcolor{keywordtype}{private}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00024}00024 \textcolor{comment}{    !> Geometric mean diameter [m] of number distribution}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00025}\mbox{\hyperlink{structmam__mode_1_1mode__t_a1e1920a0f59bbd3dcb5907e836b37c05}{00025}} \textcolor{keywordtype}{    real}(kind=musica\_dk)         :: geometric\_mean\_diameter\_\_m\_\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00026}00026 \textcolor{comment}{    !> Geometric standard deviation of number distribution}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00027}\mbox{\hyperlink{structmam__mode_1_1mode__t_a5d811ec02e9bdb00dcca532186104e5e}{00027}} \textcolor{keywordtype}{    real}(kind=musica\_dk)         :: geometric\_standard\_deviation\_\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00028}00028 \textcolor{comment}{    !> Chemical species that can be present in the mode}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00029}\mbox{\hyperlink{structmam__mode_1_1mode__t_a92795a6d2cdb066314582b3686aa3cb2}{00029}}     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__species_1_1species__t}{species\_t}}), \textcolor{keywordtype}{allocatable} :: species\_(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00030}00030 \textcolor{comment}{    !> Shortwave optical property lookup table}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00031}\mbox{\hyperlink{structmam__mode_1_1mode__t_afff7a64306cb4d972f81382cc6ebc6f0}{00031}}     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}})        :: shortwave\_lookup\_\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00032}00032 \textcolor{comment}{    !> Longwave optical property lookup table}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00033}\mbox{\hyperlink{structmam__mode_1_1mode__t_ab15873125b7fd918f26dc5d9309b7662}{00033}}     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}})        :: longwave\_lookup\_}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00034}00034   \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00035}\mbox{\hyperlink{structmam__mode_1_1mode__t_a9bda596d211e437221ae0403eef0ff97}{00035}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_aad541f5c30d4560200107db5909a70fa}{new\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00036}\mbox{\hyperlink{structmam__mode_1_1mode__t_a231ce15a2a3088fe88dd7afc9a88a766}{00036}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_acb7f4a162be7dda870afc7639c4f1218}{new\_optics}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00037}\mbox{\hyperlink{structmam__mode_1_1mode__t_a1c38ce8e000516d9a795b1677c8614d9}{00037}}     \textcolor{keywordtype}{procedure}, \textcolor{keywordtype}{private} :: \mbox{\hyperlink{namespacemam__mode_ab39cdcb71e4dc0e8c3609351e9183f92}{shortwave\_optics\_scalar}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00038}\mbox{\hyperlink{structmam__mode_1_1mode__t_a3690af2eb2894610aca71e3b645bba9c}{00038}}     \textcolor{keywordtype}{procedure}, \textcolor{keywordtype}{private} :: \mbox{\hyperlink{namespacemam__mode_aa19b39cac6ed07aad10838a69c62ba2c}{shortwave\_optics\_array}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00039}\mbox{\hyperlink{structmam__mode_1_1mode__t_a3fcb0e2ab96af321285cd2ce5e3a721f}{00039}}     \textcolor{keywordtype}{procedure}, \textcolor{keywordtype}{private} :: \mbox{\hyperlink{namespacemam__mode_acb0411bbb3664ac15add2b5824cf1af4}{longwave\_optics\_scalar}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00040}\mbox{\hyperlink{structmam__mode_1_1mode__t_ae73fc28fda2aa334eddb8674e6813815}{00040}}     \textcolor{keywordtype}{procedure}, \textcolor{keywordtype}{private} :: \mbox{\hyperlink{namespacemam__mode_af667ca39124593aab8a18a61f69c4a9e}{longwave\_optics\_array}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00041}\mbox{\hyperlink{structmam__mode_1_1mode__t_a5f3203ba972ed922276c2aa8b83fe79c}{00041}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_ac7cb7571d3de8688665535b9c0162b15}{shortwave\_grid}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00042}\mbox{\hyperlink{structmam__mode_1_1mode__t_a36dcf9ea1fccbfc5b8f01e187e618f85}{00042}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_a02fd404f5a872221c7920dbb052f76af}{longwave\_grid}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00043}\mbox{\hyperlink{structmam__mode_1_1mode__t_aa7386b3c6bd540923c5c45c55de671ee}{00043}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_a1eb9dcd1cdfb6aec2bfb56cbe31c2edb}{print\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00044}\mbox{\hyperlink{structmam__mode_1_1mode__t_ae6d53a00155506dd5e136dd7c26c27ac}{00044}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_ab9b38f854035795ee9ca700c989e93a4}{add\_shortwave\_optics}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00045}\mbox{\hyperlink{structmam__mode_1_1mode__t_a16290adb1ee1808fea92804bf99dcf59}{00045}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_ad80be0f94556c1bc6865b44f6b270b2f}{add\_longwave\_optics}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00046}\mbox{\hyperlink{structmam__mode_1_1mode__t_a2e63c17f1b33c813a6aa92516dfdcac7}{00046}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_aed6eb31242c633871218ff4fc5904b53}{geometric\_mean\_diameter\_of\_number\_distribution\_\_m}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00047}\mbox{\hyperlink{structmam__mode_1_1mode__t_afc762e5b3c49f79f0ea9ebdb96c0d1b3}{00047}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_a77b300b9928311cdd3669c11f21245bf}{geometric\_standard\_deviation\_of\_number\_distribution}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00048}\mbox{\hyperlink{structmam__mode_1_1mode__t_a9768e40ecbe9909f0ebbf686bca02805}{00048}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_af0de7d153f672d75afe61a5e0d5ed173}{wet\_volume\_to\_mass\_mixing\_ratio\_\_m3\_kg}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00049}\mbox{\hyperlink{structmam__mode_1_1mode__t_acd78e5f4349a4421a65807a1243e5d7d}{00049}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_a11beb1b0cb5b233244b0d06e7744d8f1}{wet\_number\_mode\_radius\_\_m}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00050}\mbox{\hyperlink{structmam__mode_1_1mode__t_a9a5b20f9fa311455d7cec00b09c22f2e}{00050}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_a3b93e8dc29daa19366b17207b7d49bde}{wet\_number\_mode\_diameter\_\_m}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00051}\mbox{\hyperlink{structmam__mode_1_1mode__t_ab3c2619e7976d741da9d6cac1c2bff84}{00051}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_a8ae3b73811bb7429517002f5211f5187}{wet\_surface\_mode\_radius\_\_m}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00052}\mbox{\hyperlink{structmam__mode_1_1mode__t_abb081220ddb83d27d01baf70d770fe59}{00052}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_a22b6f4aa85f086b94b4d88db92496f99}{wet\_surface\_mode\_diameter\_\_m}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00053}\mbox{\hyperlink{structmam__mode_1_1mode__t_a963d989e4669b358ab7ec4d917cc79f1}{00053}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_a9b672a9f0c3a4eff42da6c9187117c2f}{number\_mixing\_ratio\_\_num\_mol}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00054}\mbox{\hyperlink{structmam__mode_1_1mode__t_ae4a3718fd0600769519fa27002e07b82}{00054}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_ab00a5ac6633ebf5f0026dfaa8f791a3f}{net\_shortwave\_refractive\_index}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00055}\mbox{\hyperlink{structmam__mode_1_1mode__t_a8157fa1933c403b4da77bf89f09e2ccc}{00055}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_a05904f6e54a33e46e4c31c71b46f2462}{net\_longwave\_refractive\_index}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00056}\mbox{\hyperlink{structmam__mode_1_1mode__t_a2644c9c7317387e730ea0db2c29f281d}{00056}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_a7a7ccd5c378b5181b4bcbe5f2c5a2e6c}{specific\_absorption\_\_m2\_kg}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00057}\mbox{\hyperlink{structmam__mode_1_1mode__t_a1a849fa026aaf4ab3555e76ff5d7a63b}{00057}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_aa0ed60cc0da1e1bf74ee66e8d83106ef}{specific\_extinction\_\_m2\_kg}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00058}\mbox{\hyperlink{structmam__mode_1_1mode__t_a17901a3881d3a17b5229a4469530dc31}{00058}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00059}00059   \textcolor{keyword}{end type }\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00060}00060 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00061}00061   \textcolor{keyword}{interface} \mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00062}00062     \textcolor{keyword}{module procedure} :: \mbox{\hyperlink{namespacemam__mode_a25e6d955f04e0983deec4f997108f59f}{constructor}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00063}00063   \textcolor{keyword}{end interface }\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00064}00064 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00065}00065 \textcolor{comment}{  !> Aerosol mode state}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00066}\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{00066}}   \textcolor{keyword}{type}, \textcolor{keyword}{extends}(aerosol\_state\_t) :: \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00067}00067     \textcolor{keywordtype}{private}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00068}00068 \textcolor{comment}{    !> Mode diameter of the wet aerosol number distribution [m]}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00069}\mbox{\hyperlink{structmam__mode_1_1mode__state__t_aec6419758a23c0afcce19a0082692dbb}{00069}} \textcolor{keywordtype}{    real}(kind=musica\_dk)              :: wet\_number\_mode\_diameter\_\_m\_\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00070}00070 \textcolor{comment}{    !> Particle number mixing ratio per mol\_air [\# mol-\/1]}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00071}00071 \textcolor{comment}{    !! \(\backslash\)todo Is this dry air or wet air?}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00072}\mbox{\hyperlink{structmam__mode_1_1mode__state__t_a7ac10b68c2ff25b49d2cda9825adc915}{00072}} \textcolor{keywordtype}{    real}(kind=musica\_dk)              :: number\_mixing\_ratio\_\_num\_mol\_\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00073}00073 \textcolor{comment}{    !> Mass mixing ratio of each mode species relative to dry air [kg kg-\/1]}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00074}\mbox{\hyperlink{structmam__mode_1_1mode__state__t_a12f625be845d59a6201035d572c8c59b}{00074}} \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{allocatable} :: mass\_mixing\_ratio\_\_kg\_kg\_(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00075}00075   \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00076}\mbox{\hyperlink{structmam__mode_1_1mode__state__t_af1db04e3b89e8d32f61db5df5b727f38}{00076}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_a252a03f38bce74ca1b65a075e6b513c2}{raw\_size}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00077}\mbox{\hyperlink{structmam__mode_1_1mode__state__t_a71879cac5a01d9a25afab076b24baa3f}{00077}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_adfe9e0c2cc0a6193ea352caf19bb8a34}{load\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00078}\mbox{\hyperlink{structmam__mode_1_1mode__state__t_af2414d8fe3e5cb0643b9057f08a054d2}{00078}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_a8c57172dd59c4b8a4c2d0c04ad5c8b27}{dump\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00079}\mbox{\hyperlink{structmam__mode_1_1mode__state__t_a6c5492071aac45b61b354a45ac32c8a9}{00079}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__mode_a7aee73762887a8cfc3474f9e4fde4e55}{randomize}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00080}00080   \textcolor{keyword}{end type }\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00081}00081 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00082}00082 \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00083}00083 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00084}00084 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00085}00085 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00086}00086 \textcolor{comment}{  !> Constructor of mode\_t objects}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00087}\mbox{\hyperlink{structmam__mode_1_1mode__t_ad0c46da3a7d78fe464269ee53037cd20}{00087}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_a25e6d955f04e0983deec4f997108f59f}{constructor}}( config ) \textcolor{keyword}{result}( new\_obj )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00088}00088 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00089}00089     \textcolor{keywordtype}{use }musica\_config,                 \textcolor{keywordtype}{only} : config\_t}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00090}00090     \textcolor{keywordtype}{use }musica\_iterator,               \textcolor{keywordtype}{only} : iterator\_t}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00091}00091 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00092}00092     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}})                   :: new\_obj}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00093}00093     \textcolor{keywordtype}{class}(config\_t), \textcolor{keywordtype}{intent(inout)} :: config}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00094}00094 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00095}00095     \textcolor{keywordtype}{character(len=*)}, \textcolor{keywordtype}{parameter} :: my\_name = \textcolor{stringliteral}{"{}MAM mode\_t constructor"{}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00096}00096     \textcolor{keywordtype}{type}(config\_t) :: optics\_config, species\_set, species}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00097}00097     \textcolor{keywordtype}{class}(iterator\_t), \textcolor{keywordtype}{pointer} :: iter}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00098}00098     \textcolor{keywordtype}{integer} :: i\_species}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00099}00099 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00100}00100     \textcolor{keyword}{call }config\%get( \textcolor{stringliteral}{"{}geometric mean diameter of number distribution"{}}, \textcolor{stringliteral}{"{}m"{}},   \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00101}00101                      new\_obj\%geometric\_mean\_diameter\_\_m\_,   my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00102}00102     \textcolor{keyword}{call }config\%get( \textcolor{stringliteral}{"{}geometric standard deviation of number distribution"{}},   \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00103}00103                      new\_obj\%geometric\_standard\_deviation\_, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00104}00104     \textcolor{keyword}{call }config\%get( \textcolor{stringliteral}{"{}species"{}}, species\_set, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00105}00105     \textcolor{keyword}{allocate}( new\_obj\%species\_( species\_set\%number\_of\_children( ) ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00106}00106     iter => species\_set\%get\_iterator( )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00107}00107     i\_species = 1}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00108}00108     \textcolor{keywordflow}{do} \textcolor{keywordflow}{while}( iter\%next( ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00109}00109       \textcolor{keyword}{call }species\_set\%get( iter, species, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00110}00110       \textcolor{keyword}{call }species\%add( \textcolor{stringliteral}{"{}name"{}}, species\_set\%key( iter ), my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00111}00111       new\_obj\%species\_( i\_species ) = \mbox{\hyperlink{structmam__species_1_1species__t}{species\_t}}( species )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00112}00112       i\_species = i\_species + 1}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00113}00113 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00114}00114     \textcolor{keyword}{call }config\%get( \textcolor{stringliteral}{"{}shortwave lookup tables"{}}, optics\_config, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00115}00115     new\_obj\%shortwave\_lookup\_ = \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}( optics\_config )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00116}00116     \textcolor{keyword}{call }config\%get( \textcolor{stringliteral}{"{}longwave lookup tables"{}},  optics\_config, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00117}00117     new\_obj\%longwave\_lookup\_  = \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}( optics\_config )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00118}00118     \textcolor{keyword}{deallocate}( iter )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00119}00119 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00120}00120   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_a25e6d955f04e0983deec4f997108f59f}{constructor}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00121}00121 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00122}00122 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00123}00123 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00124}00124 \textcolor{comment}{  !> Creates a new state object for the mode}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00125}\mbox{\hyperlink{namespacemam__mode_aad541f5c30d4560200107db5909a70fa}{00125}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_aad541f5c30d4560200107db5909a70fa}{new\_state}}( this )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00126}00126 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00127}00127     \textcolor{keywordtype}{use }ai\_aerosol\_state,              \textcolor{keywordtype}{only} : aerosol\_state\_t}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00128}00128 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00129}00129     \textcolor{keywordtype}{class}(aerosol\_state\_t), \textcolor{keywordtype}{pointer}    :: \mbox{\hyperlink{namespacemam__mode_aad541f5c30d4560200107db5909a70fa}{new\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00130}00130     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),          \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00131}00131 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00132}00132     \textcolor{keyword}{allocate}( \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}} :: \mbox{\hyperlink{namespacemam__mode_aad541f5c30d4560200107db5909a70fa}{new\_state}} )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00133}00133     \textcolor{keywordflow}{select type}( \mbox{\hyperlink{namespacemam__mode_aad541f5c30d4560200107db5909a70fa}{new\_state}} )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00134}00134 \textcolor{keywordflow}{    type is}( \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}} )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00135}00135        \textcolor{keyword}{allocate}( \mbox{\hyperlink{namespacemam__mode_aad541f5c30d4560200107db5909a70fa}{new\_state}}\%mass\_mixing\_ratio\_\_kg\_kg\_( \textcolor{keyword}{size}( this\%species\_ ) ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00136}00136 \textcolor{keywordflow}{    end select}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00137}00137 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00138}00138   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_aad541f5c30d4560200107db5909a70fa}{new\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00139}00139 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00140}00140 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00141}00141 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00142}00142 \textcolor{comment}{  !> Creates an optics\_t object for a given property}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00143}\mbox{\hyperlink{namespacemam__mode_acb7f4a162be7dda870afc7639c4f1218}{00143}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_acb7f4a162be7dda870afc7639c4f1218}{new\_optics}}( this, property, output\_grid, interpolation\_strategy )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00144}00144 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00145}00145     \textcolor{keywordtype}{use }ai\_optics,                     \textcolor{keywordtype}{only} : optics\_t}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00146}00146     \textcolor{keywordtype}{use }ai\_wavelength\_grid,            \textcolor{keywordtype}{only} : wavelength\_grid\_t}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00147}00147     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__optics__util}{mam\_optics\_util}},               \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00148}00148     \textcolor{keywordtype}{use }musica\_interpolator,           \textcolor{keywordtype}{only} : interpolation\_strategy\_i}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00149}00149     \textcolor{keywordtype}{use }musica\_property,               \textcolor{keywordtype}{only} : property\_t}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00150}00150 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00151}00151     \textcolor{keywordtype}{class}(optics\_t),         \textcolor{keywordtype}{pointer}    :: \mbox{\hyperlink{namespacemam__mode_acb7f4a162be7dda870afc7639c4f1218}{new\_optics}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00152}00152     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),           \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00153}00153     \textcolor{keywordtype}{class}(property\_t),       \textcolor{keywordtype}{intent(in)} :: property}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00154}00154     \textcolor{keywordtype}{type}(wavelength\_grid\_t), \textcolor{keywordtype}{intent(in)} :: output\_grid}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00155}00155     \textcolor{keywordtype}{procedure}(interpolation\_strategy\_i), \textcolor{keywordtype}{optional} :: interpolation\_strategy}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00156}00156 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00157}00157     \mbox{\hyperlink{namespacemam__mode_acb7f4a162be7dda870afc7639c4f1218}{new\_optics}} =>                                                             \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00158}00158         \mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}}( property, this\%shortwave\_lookup\_\%grid( ),              \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00159}00159                        this\%longwave\_lookup\_\%grid( ), output\_grid,            \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00160}00160                        interpolation\_strategy )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00161}00161 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00162}00162   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_acb7f4a162be7dda870afc7639c4f1218}{new\_optics}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00163}00163 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00164}00164 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00165}00165 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00166}00166 \textcolor{comment}{  !> Returns shortwave optical properties}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00167}\mbox{\hyperlink{namespacemam__mode_ab39cdcb71e4dc0e8c3609351e9183f92}{00167}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__mode_ab39cdcb71e4dc0e8c3609351e9183f92}{shortwave\_optics\_scalar}}( this, environmental\_state,              \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00168}00168       aerosol\_state, optics )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00169}00169 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00170}00170     \textcolor{keywordtype}{use }ai\_environmental\_state,        \textcolor{keywordtype}{only} : environmental\_state\_t}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00171}00171     \textcolor{keywordtype}{use }ai\_optics,                     \textcolor{keywordtype}{only} : optics\_t, optics\_ptr}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00172}00172 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00173}00173     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),                \textcolor{keywordtype}{intent(in)}    :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00174}00174     \textcolor{keywordtype}{class}(environmental\_state\_t), \textcolor{keywordtype}{intent(in)}    :: environmental\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00175}00175     \textcolor{keywordtype}{class}(aerosol\_state\_t),       \textcolor{keywordtype}{intent(in)}    :: aerosol\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00176}00176     \textcolor{keywordtype}{class}(optics\_t), \textcolor{keywordtype}{target},      \textcolor{keywordtype}{intent(inout)} :: optics}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00177}00177 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00178}00178     \textcolor{keywordtype}{type}(optics\_ptr) :: optics\_set(1)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00179}00179 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00180}00180     optics\_set(1)\%ptr\_ => optics}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00181}00181     \textcolor{keyword}{call }this\%shortwave\_optics( environmental\_state, aerosol\_state,           \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00182}00182                                 optics\_set )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00183}00183     \textcolor{keyword}{nullify}( optics\_set(1)\%ptr\_ )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00184}00184 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00185}00185   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__mode_ab39cdcb71e4dc0e8c3609351e9183f92}{shortwave\_optics\_scalar}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00186}00186 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00187}00187 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00188}00188 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00189}00189 \textcolor{comment}{  !> Returns shortwave optical properties}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00190}\mbox{\hyperlink{namespacemam__mode_aa19b39cac6ed07aad10838a69c62ba2c}{00190}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__mode_aa19b39cac6ed07aad10838a69c62ba2c}{shortwave\_optics\_array}}( this, environmental\_state,               \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00191}00191       aerosol\_state, optics )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00192}00192 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00193}00193     \textcolor{keywordtype}{use }ai\_environmental\_state,        \textcolor{keywordtype}{only} : environmental\_state\_t}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00194}00194     \textcolor{keywordtype}{use }ai\_optics,                     \textcolor{keywordtype}{only} : optics\_ptr}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00195}00195     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : die\_msg}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00196}00196 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00197}00197     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),                \textcolor{keywordtype}{intent(in)}    :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00198}00198     \textcolor{keywordtype}{class}(environmental\_state\_t), \textcolor{keywordtype}{intent(in)}    :: environmental\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00199}00199     \textcolor{keywordtype}{class}(aerosol\_state\_t),       \textcolor{keywordtype}{intent(in)}    :: aerosol\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00200}00200     \textcolor{keywordtype}{type}(optics\_ptr),             \textcolor{keywordtype}{intent(inout)} :: optics(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00201}00201 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00202}00202     \textcolor{keywordtype}{integer} :: i\_prop}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00203}00203 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00204}00204     \textcolor{keywordflow}{select type}( aerosol\_state )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00205}00205 \textcolor{keywordflow}{    class is}( \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}} )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00206}00206       \textcolor{keywordflow}{do} i\_prop = 1, \textcolor{keyword}{size}( optics )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00207}00207         \textcolor{keyword}{call }optics( i\_prop )\%ptr\_\%reset\_values( )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00208}00208 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00209}00209       \textcolor{keyword}{call }this\%add\_shortwave\_optics( environmental\_state, aerosol\_state,     \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00210}00210                                       optics )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00211}00211 \textcolor{keywordflow}{    class default}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00212}00212       \textcolor{keyword}{call }die\_msg( 713383720, \textcolor{stringliteral}{"{}Invalid state passed to MAM mode shortwave "{}}//\&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00213}00213                                \textcolor{stringliteral}{"{}optics calculator"{}} )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00214}00214 \textcolor{keywordflow}{    end select}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00215}00215 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00216}00216   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__mode_aa19b39cac6ed07aad10838a69c62ba2c}{shortwave\_optics\_array}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00217}00217 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00218}00218 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00219}00219 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00220}00220 \textcolor{comment}{  !> Returns longwave optical properties}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00221}\mbox{\hyperlink{namespacemam__mode_acb0411bbb3664ac15add2b5824cf1af4}{00221}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__mode_acb0411bbb3664ac15add2b5824cf1af4}{longwave\_optics\_scalar}}( this, environmental\_state,               \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00222}00222       aerosol\_state, optics )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00223}00223 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00224}00224     \textcolor{keywordtype}{use }ai\_environmental\_state,        \textcolor{keywordtype}{only} : environmental\_state\_t}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00225}00225     \textcolor{keywordtype}{use }ai\_optics,                     \textcolor{keywordtype}{only} : optics\_t, optics\_ptr}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00226}00226 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00227}00227     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),                \textcolor{keywordtype}{intent(in)}    :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00228}00228     \textcolor{keywordtype}{class}(environmental\_state\_t), \textcolor{keywordtype}{intent(in)}    :: environmental\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00229}00229     \textcolor{keywordtype}{class}(aerosol\_state\_t),       \textcolor{keywordtype}{intent(in)}    :: aerosol\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00230}00230     \textcolor{keywordtype}{class}(optics\_t), \textcolor{keywordtype}{target},      \textcolor{keywordtype}{intent(inout)} :: optics}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00231}00231 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00232}00232     \textcolor{keywordtype}{type}(optics\_ptr) :: optics\_set(1)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00233}00233 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00234}00234     optics\_set(1)\%ptr\_ => optics}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00235}00235     \textcolor{keyword}{call }this\%longwave\_optics( environmental\_state, aerosol\_state,            \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00236}00236                                 optics\_set )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00237}00237     \textcolor{keyword}{nullify}( optics\_set(1)\%ptr\_ )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00238}00238 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00239}00239   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__mode_acb0411bbb3664ac15add2b5824cf1af4}{longwave\_optics\_scalar}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00240}00240 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00241}00241 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00242}00242 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00243}00243 \textcolor{comment}{  !> Returns longwave optical properties}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00244}\mbox{\hyperlink{namespacemam__mode_af667ca39124593aab8a18a61f69c4a9e}{00244}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__mode_af667ca39124593aab8a18a61f69c4a9e}{longwave\_optics\_array}}( this, environmental\_state,                \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00245}00245       aerosol\_state, optics )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00246}00246 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00247}00247     \textcolor{keywordtype}{use }ai\_environmental\_state,        \textcolor{keywordtype}{only} : environmental\_state\_t}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00248}00248     \textcolor{keywordtype}{use }ai\_optics,                     \textcolor{keywordtype}{only} : optics\_ptr}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00249}00249     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : die\_msg}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00250}00250 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00251}00251     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),                \textcolor{keywordtype}{intent(in)}    :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00252}00252     \textcolor{keywordtype}{class}(environmental\_state\_t), \textcolor{keywordtype}{intent(in)}    :: environmental\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00253}00253     \textcolor{keywordtype}{class}(aerosol\_state\_t),       \textcolor{keywordtype}{intent(in)}    :: aerosol\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00254}00254     \textcolor{keywordtype}{type}(optics\_ptr),             \textcolor{keywordtype}{intent(inout)} :: optics(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00255}00255 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00256}00256     \textcolor{keywordtype}{integer} :: i\_prop}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00257}00257 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00258}00258     \textcolor{keywordflow}{select type}( aerosol\_state )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00259}00259 \textcolor{keywordflow}{    class is}( \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}} )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00260}00260       \textcolor{keywordflow}{do} i\_prop = 1, \textcolor{keyword}{size}( optics )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00261}00261         \textcolor{keyword}{call }optics( i\_prop )\%ptr\_\%reset\_values( )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00262}00262 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00263}00263       \textcolor{keyword}{call }this\%add\_longwave\_optics( environmental\_state, aerosol\_state,      \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00264}00264                                       optics )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00265}00265 \textcolor{keywordflow}{    class default}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00266}00266       \textcolor{keyword}{call }die\_msg( 713383720, \textcolor{stringliteral}{"{}Invalid state passed to MAM mode longwave "{}}// \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00267}00267                                \textcolor{stringliteral}{"{}optics calculator"{}} )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00268}00268 \textcolor{keywordflow}{    end select}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00269}00269 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00270}00270   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__mode_af667ca39124593aab8a18a61f69c4a9e}{longwave\_optics\_array}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00271}00271 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00272}00272 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00273}00273 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00274}00274 \textcolor{comment}{  !> Returns the native shortwave optics wavelength grid}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00275}\mbox{\hyperlink{namespacemam__mode_ac7cb7571d3de8688665535b9c0162b15}{00275}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_ac7cb7571d3de8688665535b9c0162b15}{shortwave\_grid}}( this )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00276}00276 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00277}00277     \textcolor{keywordtype}{use }ai\_wavelength\_grid,            \textcolor{keywordtype}{only} : wavelength\_grid\_t}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00278}00278 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00279}00279     \textcolor{keywordtype}{type}(wavelength\_grid\_t)   :: \mbox{\hyperlink{namespacemam__mode_ac7cb7571d3de8688665535b9c0162b15}{shortwave\_grid}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00280}00280     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}), \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00281}00281 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00282}00282     \mbox{\hyperlink{namespacemam__mode_ac7cb7571d3de8688665535b9c0162b15}{shortwave\_grid}} = this\%shortwave\_lookup\_\%grid( )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00283}00283 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00284}00284   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_ac7cb7571d3de8688665535b9c0162b15}{shortwave\_grid}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00285}00285 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00286}00286 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00287}00287 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00288}00288 \textcolor{comment}{  !> Returns the native longwave optics wavelength grid}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00289}\mbox{\hyperlink{namespacemam__mode_a02fd404f5a872221c7920dbb052f76af}{00289}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_a02fd404f5a872221c7920dbb052f76af}{longwave\_grid}}( this )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00290}00290 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00291}00291     \textcolor{keywordtype}{use }ai\_wavelength\_grid,            \textcolor{keywordtype}{only} : wavelength\_grid\_t}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00292}00292 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00293}00293     \textcolor{keywordtype}{type}(wavelength\_grid\_t)   :: \mbox{\hyperlink{namespacemam__mode_a02fd404f5a872221c7920dbb052f76af}{longwave\_grid}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00294}00294     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}), \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00295}00295 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00296}00296     \mbox{\hyperlink{namespacemam__mode_a02fd404f5a872221c7920dbb052f76af}{longwave\_grid}} = this\%longwave\_lookup\_\%grid( )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00297}00297 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00298}00298   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_a02fd404f5a872221c7920dbb052f76af}{longwave\_grid}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00299}00299 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00300}00300 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00301}00301 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00302}00302 \textcolor{comment}{  !> Outputs the current mode state}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00303}\mbox{\hyperlink{namespacemam__mode_a1eb9dcd1cdfb6aec2bfb56cbe31c2edb}{00303}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__mode_a1eb9dcd1cdfb6aec2bfb56cbe31c2edb}{print\_state}}( this, aerosol\_state, io\_unit )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00304}00304 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00305}00305     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : die\_msg}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00306}00306     \textcolor{keywordtype}{use }musica\_string,                 \textcolor{keywordtype}{only} : to\_char}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00307}00307 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00308}00308 \textcolor{comment}{    !> MAM mode}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00309}00309     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),          \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00310}00310 \textcolor{comment}{    !> MAM mode state}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00311}00311     \textcolor{keywordtype}{class}(aerosol\_state\_t), \textcolor{keywordtype}{intent(in)} :: aerosol\_state\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00312}00312 \textcolor{comment}{    !> Optional output unit (defaults to 6)}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00313}00313     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{optional},      \textcolor{keywordtype}{intent(in)} :: io\_unit}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00314}00314 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00315}00315     \textcolor{keywordtype}{integer} :: lunit, i\_species}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00316}00316 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00317}00317     lunit = 6}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00318}00318     \textcolor{keywordflow}{if}( \textcolor{keyword}{present}( io\_unit ) ) lunit = io\_unit}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00319}00319     \textcolor{keywordflow}{select type}( aerosol\_state )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00320}00320 \textcolor{keywordflow}{    class is}( \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}} )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00321}00321       \textcolor{keyword}{write}(lunit,*) \textcolor{stringliteral}{"{}** MAM Mode State **"{}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00322}00322       \textcolor{keywordflow}{if}( .not. \textcolor{keyword}{allocated}( this\%species\_ ) ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00323}00323         \textcolor{keyword}{write}(lunit,*) \textcolor{stringliteral}{"{}-\/-\/-\/ Uninitialized MAM Mode -\/-\/-\/"{}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00324}00324         \textcolor{keyword}{write}(lunit,*) \textcolor{stringliteral}{"{}** End MAM Mode State **"{}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00325}00325         \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00326}00326 \textcolor{keywordflow}{      end if}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00327}00327       \textcolor{keywordflow}{if}( .not. \textcolor{keyword}{allocated}( aerosol\_state\%mass\_mixing\_ratio\_\_kg\_kg\_ ) ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00328}00328         \textcolor{keyword}{write}(lunit,*) \textcolor{stringliteral}{"{}-\/-\/-\/ Uninitialized MAM Mode State -\/-\/-\/"{}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00329}00329         \textcolor{keyword}{write}(lunit,*) \textcolor{stringliteral}{"{}** End MAM Mode State **"{}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00330}00330         \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00331}00331 \textcolor{keywordflow}{      end if}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00332}00332       \textcolor{keyword}{write}(lunit,*) \textcolor{stringliteral}{"{}wet mode diameter of number distribution [m]: "{}}//       \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00333}00333                      trim( to\_char(                                           \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00334}00334                          aerosol\_state\%wet\_number\_mode\_diameter\_\_m\_ ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00335}00335       \textcolor{keyword}{write}(lunit,*) \textcolor{stringliteral}{"{}number mixing ratio [\# mol]: "{}}//trim( to\_char(          \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00336}00336                      aerosol\_state\%number\_mixing\_ratio\_\_num\_mol\_ ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00337}00337       \textcolor{keywordflow}{do} i\_species = 1, \textcolor{keyword}{size}( this\%species\_ )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00338}00338         \textcolor{keyword}{write}(lunit,*) \textcolor{stringliteral}{"{}species '"{}}//this\%species\_( i\_species )\%name( )//      \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00339}00339                        \textcolor{stringliteral}{"{}' mass mixing ratio [kg kg-\/1]: "{}}//                    \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00340}00340                        trim( to\_char(                                         \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00341}00341                        aerosol\_state\%mass\_mixing\_ratio\_\_kg\_kg\_( i\_species ) ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00342}00342 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00343}00343 \textcolor{keywordflow}{    class default}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00344}00344       \textcolor{keyword}{call }die\_msg( 285756314, \textcolor{stringliteral}{"{}Invalid state passed to MAM mode"{}} )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00345}00345 \textcolor{keywordflow}{    end select}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00346}00346 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00347}00347   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__mode_a1eb9dcd1cdfb6aec2bfb56cbe31c2edb}{print\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00348}00348 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00349}00349 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00350}00350 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00351}00351 \textcolor{comment}{  !> Calculates shortwave optical properties for a given state and adds them}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00352}00352 \textcolor{comment}{  !! to the set of optical properties}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00353}\mbox{\hyperlink{namespacemam__mode_ab9b38f854035795ee9ca700c989e93a4}{00353}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__mode_ab9b38f854035795ee9ca700c989e93a4}{add\_shortwave\_optics}}( this, environmental\_state, mode\_state,     \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00354}00354       optics )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00355}00355 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00356}00356     \textcolor{keywordtype}{use }ai\_environmental\_state,        \textcolor{keywordtype}{only} : environmental\_state\_t}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00357}00357     \textcolor{keywordtype}{use }ai\_optics,                     \textcolor{keywordtype}{only} : optics\_ptr}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00358}00358     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__constants}{mam\_constants}},                 \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacemam__constants_a7e019f9e4ca78c7222796cafe81b7e2b}{kaccellerationbygravity}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00359}00359     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__optics__util}{mam\_optics\_util}},               \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacemam__optics__util_ab1d8fd653e3523e1e8d23ce7ba21f5d7}{add\_shortwave\_property}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00360}00360     \textcolor{keywordtype}{use }musica\_math,                   \textcolor{keywordtype}{only} : chebyshev\_function}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00361}00361 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00362}00362     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),                \textcolor{keywordtype}{intent(in)}    :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00363}00363     \textcolor{keywordtype}{class}(environmental\_state\_t), \textcolor{keywordtype}{intent(in)}    :: environmental\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00364}00364     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}),          \textcolor{keywordtype}{intent(in)}    :: mode\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00365}00365     \textcolor{keywordtype}{class}(optics\_ptr),            \textcolor{keywordtype}{intent(inout)} :: optics(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00366}00366 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00367}00367     \textcolor{keywordtype}{integer}                 :: i\_prop, n\_cheby, n\_bands}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00368}00368 \textcolor{keywordtype}{    real}(kind=musica\_dk),    \textcolor{keywordtype}{allocatable} :: absorption\_coefficients(:,:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00369}00369 \textcolor{keywordtype}{    real}(kind=musica\_dk),    \textcolor{keywordtype}{allocatable} :: extinction\_coefficients(:,:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00370}00370 \textcolor{keywordtype}{    real}(kind=musica\_dk),    \textcolor{keywordtype}{allocatable} :: asymmetry\_factor\_coefficients(:,:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00371}00371 \textcolor{keywordtype}{    real}(kind=musica\_dk),    \textcolor{keywordtype}{allocatable} :: size\_function(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00372}00372     \textcolor{keywordtype}{complex(kind=musica\_dk)}, \textcolor{keywordtype}{allocatable} :: net\_refractive\_index(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00373}00373 \textcolor{keywordtype}{    real}(kind=musica\_dk),    \textcolor{keywordtype}{allocatable} :: \mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{absorption}}(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00374}00374 \textcolor{keywordtype}{    real}(kind=musica\_dk),    \textcolor{keywordtype}{allocatable} :: \mbox{\hyperlink{src_2optics__lookup_8F90_adf05b821a31ec1048d1c124d5ceab938}{extinction}}(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00375}00375 \textcolor{keywordtype}{    real}(kind=musica\_dk),    \textcolor{keywordtype}{allocatable} :: \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00376}00376 \textcolor{keywordtype}{    real}(kind=musica\_dk),    \textcolor{keywordtype}{allocatable} :: ssa(:)       \textcolor{comment}{! single scattering albedo}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00377}00377 \textcolor{keywordtype}{    reaL}(kind=musica\_dk),    \textcolor{keywordtype}{allocatable} :: layer\_aod(:) \textcolor{comment}{! layer aerosol optical depth}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00378}00378 \textcolor{keywordtype}{    real}(kind=musica\_dk)                 :: normalized\_radius}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00379}00379 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00380}00380     n\_cheby = this\%shortwave\_lookup\_\%number\_of\_chebyshev\_coefficients( )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00381}00381     n\_bands = this\%shortwave\_lookup\_\%number\_of\_wavelength\_bands( )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00382}00382     \textcolor{keyword}{allocate}( absorption\_coefficients(       n\_cheby, n\_bands ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00383}00383     \textcolor{keyword}{allocate}( extinction\_coefficients(       n\_cheby, n\_bands ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00384}00384     \textcolor{keyword}{allocate}( asymmetry\_factor\_coefficients( n\_cheby, n\_bands ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00385}00385     \textcolor{keyword}{allocate}( size\_function(        n\_cheby ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00386}00386     \textcolor{keyword}{allocate}( net\_refractive\_index( n\_bands ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00387}00387     \textcolor{keyword}{allocate}( \mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{absorption}}(           n\_bands ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00388}00388     \textcolor{keyword}{allocate}( \mbox{\hyperlink{src_2optics__lookup_8F90_adf05b821a31ec1048d1c124d5ceab938}{extinction}}(           n\_bands ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00389}00389     \textcolor{keyword}{allocate}( \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(     n\_bands ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00390}00390     \textcolor{keyword}{allocate}( ssa(                  n\_bands ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00391}00391     \textcolor{keyword}{allocate}( layer\_aod(            n\_bands ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00392}00392     net\_refractive\_index =                                                    \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00393}00393         this\%net\_shortwave\_refractive\_index( mode\_state, n\_bands )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00394}00394     \textcolor{comment}{! lookup Chebyshev coefficients for optical properties}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00395}00395     \textcolor{keyword}{call }this\%shortwave\_lookup\_\%get\_optics( net\_refractive\_index,             \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00396}00396                       \mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{absorption}} = absorption\_coefficients,                   \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00397}00397                       \mbox{\hyperlink{src_2optics__lookup_8F90_adf05b821a31ec1048d1c124d5ceab938}{extinction}} = extinction\_coefficients,                   \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00398}00398                       \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}} = asymmetry\_factor\_coefficients )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00399}00399     \textcolor{comment}{! get Chebyshev function for normalized wet number mode diameter}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00400}00400     normalized\_radius = this\%shortwave\_lookup\_\%normalize\_radius(              \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00401}00401                               this\%wet\_surface\_mode\_radius\_\_m( mode\_state ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00402}00402     \textcolor{keyword}{call }chebyshev\_function( normalized\_radius, size\_function )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00403}00403     \textcolor{comment}{! calculate optical properties}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00404}00404     \mbox{\hyperlink{src_2optics__lookup_8F90_adf05b821a31ec1048d1c124d5ceab938}{extinction}} = this\%specific\_extinction\_\_m2\_kg( mode\_state, n\_bands,        \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00405}00405                                                   n\_cheby,                    \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00406}00406                                                   extinction\_coefficients,    \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00407}00407                                                   size\_function,              \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00408}00408                                                   this\%shortwave\_lookup\_ )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00409}00409     \mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{absorption}} = this\%specific\_absorption\_\_m2\_kg( mode\_state, n\_bands,        \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00410}00410                                                  n\_cheby,                     \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00411}00411                                                  absorption\_coefficients,     \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00412}00412                                                  size\_function,               \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00413}00413                                                  max\_absorption = \mbox{\hyperlink{src_2optics__lookup_8F90_adf05b821a31ec1048d1c124d5ceab938}{extinction}} )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00414}00414     \mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{absorption}}(:) = min( \mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{absorption}}(:), \mbox{\hyperlink{src_2optics__lookup_8F90_adf05b821a31ec1048d1c124d5ceab938}{extinction}}(:) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00415}00415     \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}} = this\%asymmetry\_factor( mode\_state, n\_bands, n\_cheby,   \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00416}00416                                               asymmetry\_factor\_coefficients,  \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00417}00417                                              size\_function )\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00418}00418 \textcolor{comment}{    !> \(\backslash\)todo Are single-\/scatter albedo and layer\_aod the correct terms to use?}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00419}00419     ssa(:) = 1.0\_musica\_dk -\/ \mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{absorption}}(:)                                    \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00420}00420              / ( max( \mbox{\hyperlink{src_2optics__lookup_8F90_adf05b821a31ec1048d1c124d5ceab938}{extinction}}(:), 1.0e-\/40\_musica\_dk ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00421}00421     layer\_aod = \mbox{\hyperlink{src_2optics__lookup_8F90_adf05b821a31ec1048d1c124d5ceab938}{extinction}}(:) * environmental\_state\%layer\_thickness\_\_Pa( )    \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00422}00422                 / \mbox{\hyperlink{namespacemam__constants_a7e019f9e4ca78c7222796cafe81b7e2b}{kaccellerationbygravity}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00423}00423     \textcolor{keywordflow}{do} i\_prop = 1, \textcolor{keyword}{size}( optics )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00424}00424       \textcolor{keyword}{call }\mbox{\hyperlink{namespacemam__optics__util_ab1d8fd653e3523e1e8d23ce7ba21f5d7}{add\_shortwave\_property}}( layer\_aod, ssa, \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}},          \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00425}00425                                    optics( i\_prop )\%ptr\_ )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00426}00426 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00427}00427 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00428}00428   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__mode_ab9b38f854035795ee9ca700c989e93a4}{add\_shortwave\_optics}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00429}00429 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00430}00430 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00431}00431 \textcolor{comment}{! to the set of optical properties}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00432}00432 \textcolor{comment}{  !> Calculates longwave optical properties for a given state and adds them}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00433}00433 \textcolor{comment}{  !!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00434}\mbox{\hyperlink{namespacemam__mode_ad80be0f94556c1bc6865b44f6b270b2f}{00434}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__mode_ad80be0f94556c1bc6865b44f6b270b2f}{add\_longwave\_optics}}( this, environmental\_state, mode\_state,      \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00435}00435       optics )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00436}00436 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00437}00437     \textcolor{keywordtype}{use }ai\_environmental\_state,        \textcolor{keywordtype}{only} : environmental\_state\_t}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00438}00438     \textcolor{keywordtype}{use }ai\_optics,                     \textcolor{keywordtype}{only} : optics\_ptr}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00439}00439     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__constants}{mam\_constants}},                 \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacemam__constants_a7e019f9e4ca78c7222796cafe81b7e2b}{kaccellerationbygravity}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00440}00440     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__optics__util}{mam\_optics\_util}},               \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacemam__optics__util_ab252336adf9500f549d921fd1a461840}{add\_longwave\_property}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00441}00441     \textcolor{keywordtype}{use }musica\_math,                   \textcolor{keywordtype}{only} : chebyshev\_function}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00442}00442 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00443}00443     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),                \textcolor{keywordtype}{intent(in)}    :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00444}00444     \textcolor{keywordtype}{class}(environmental\_state\_t), \textcolor{keywordtype}{intent(in)}    :: environmental\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00445}00445     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}),          \textcolor{keywordtype}{intent(in)}    :: mode\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00446}00446     \textcolor{keywordtype}{class}(optics\_ptr),            \textcolor{keywordtype}{intent(inout)} :: optics(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00447}00447 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00448}00448     \textcolor{keywordtype}{integer}                 :: i\_prop, n\_cheby, n\_bands}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00449}00449 \textcolor{keywordtype}{    real}(kind=musica\_dk),    \textcolor{keywordtype}{allocatable} :: absorption\_coefficients(:,:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00450}00450 \textcolor{keywordtype}{    real}(kind=musica\_dk),    \textcolor{keywordtype}{allocatable} :: chebyshev\_coefficients(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00451}00451 \textcolor{keywordtype}{    real}(kind=musica\_dk),    \textcolor{keywordtype}{allocatable} :: size\_function(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00452}00452     \textcolor{keywordtype}{complex(kind=musica\_dk)}, \textcolor{keywordtype}{allocatable} :: net\_refractive\_index(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00453}00453 \textcolor{keywordtype}{    real}(kind=musica\_dk),    \textcolor{keywordtype}{allocatable} :: \mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{absorption}}(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00454}00454 \textcolor{keywordtype}{    real}(kind=musica\_dk),    \textcolor{keywordtype}{allocatable} :: layer\_aod(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00455}00455 \textcolor{keywordtype}{    real}(kind=musica\_dk)    :: normalized\_radius}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00456}00456 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00457}00457     n\_cheby = this\%longwave\_lookup\_\%number\_of\_chebyshev\_coefficients( )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00458}00458     n\_bands = this\%longwave\_lookup\_\%number\_of\_wavelength\_bands( )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00459}00459     \textcolor{keyword}{allocate}( absorption\_coefficients( n\_cheby, n\_bands ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00460}00460     \textcolor{keyword}{allocate}( chebyshev\_coefficients(  n\_cheby ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00461}00461     \textcolor{keyword}{allocate}( size\_function(           n\_cheby ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00462}00462     \textcolor{keyword}{allocate}( net\_refractive\_index(    n\_bands ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00463}00463     \textcolor{keyword}{allocate}( \mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{absorption}}(              n\_bands ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00464}00464     \textcolor{keyword}{allocate}( layer\_aod(               n\_bands ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00465}00465     net\_refractive\_index =                                                    \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00466}00466         this\%net\_longwave\_refractive\_index( mode\_state, n\_bands )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00467}00467     \textcolor{comment}{! lookup Chebyshev coefficients for optical properties}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00468}00468     \textcolor{keyword}{call }this\%longwave\_lookup\_\%get\_optics( net\_refractive\_index,              \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00469}00469                                         \mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{absorption}} = absorption\_coefficients )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00470}00470     \textcolor{comment}{! get Chebyshev function for normalized wet number mode diameter}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00471}00471     normalized\_radius = this\%longwave\_lookup\_\%normalize\_radius(               \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00472}00472                               this\%wet\_surface\_mode\_radius\_\_m( mode\_state ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00473}00473     \textcolor{keyword}{call }chebyshev\_function( normalized\_radius, size\_function )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00474}00474     \textcolor{comment}{! calculate optical properties}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00475}00475     \mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{absorption}} = this\%specific\_absorption\_\_m2\_kg( mode\_state, n\_bands,        \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00476}00476                                                   n\_cheby,                    \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00477}00477                                                   absorption\_coefficients,    \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00478}00478                                                   size\_function )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00479}00479     layer\_aod(:) = \mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{absorption}}(:) * environmental\_state\%layer\_thickness\_\_Pa( ) \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00480}00480                    / \mbox{\hyperlink{namespacemam__constants_a7e019f9e4ca78c7222796cafe81b7e2b}{kaccellerationbygravity}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00481}00481     \textcolor{keywordflow}{do} i\_prop = 1, \textcolor{keyword}{size}( optics )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00482}00482       \textcolor{keyword}{call }\mbox{\hyperlink{namespacemam__optics__util_ab252336adf9500f549d921fd1a461840}{add\_longwave\_property}}( layer\_aod, optics( i\_prop )\%ptr\_ )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00483}00483 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00484}00484 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00485}00485   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__mode_ad80be0f94556c1bc6865b44f6b270b2f}{add\_longwave\_optics}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00486}00486 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00487}00487 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00488}00488 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00489}00489 \textcolor{comment}{  !> Returns the geometric mean diameter [m] of the number distribution of the}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00490}00490 \textcolor{comment}{  !! mode}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00491}\mbox{\hyperlink{namespacemam__mode_aed6eb31242c633871218ff4fc5904b53}{00491}}   \textcolor{keywordtype}{elemental} \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_aed6eb31242c633871218ff4fc5904b53}{geometric\_mean\_diameter\_of\_number\_distribution\_\_m}}( this, \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00492}00492       mode\_state ) \textcolor{keyword}{result}( gmd )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00493}00493 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00494}00494 \textcolor{keywordtype}{    real}(kind=musica\_dk)            :: gmd}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00495}00495     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),       \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00496}00496     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: mode\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00497}00497 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00498}00498     gmd = this\%geometric\_mean\_diameter\_\_m\_}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00499}00499 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00500}00500   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_aed6eb31242c633871218ff4fc5904b53}{geometric\_mean\_diameter\_of\_number\_distribution\_\_m}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00501}00501 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00502}00502 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00503}00503 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00504}00504 \textcolor{comment}{  !> Returns the geometric standard deviation of the number distribution of}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00505}00505 \textcolor{comment}{  !! the mode}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00506}\mbox{\hyperlink{namespacemam__mode_a77b300b9928311cdd3669c11f21245bf}{00506}}   \textcolor{keywordtype}{elemental} \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_a77b300b9928311cdd3669c11f21245bf}{geometric\_standard\_deviation\_of\_number\_distribution}}(     \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00507}00507       this, mode\_state ) \textcolor{keyword}{result}( gsd )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00508}00508 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00509}00509 \textcolor{keywordtype}{    real}(kind=musica\_dk)            :: gsd}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00510}00510     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),       \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00511}00511     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: mode\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00512}00512 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00513}00513     gsd = this\%geometric\_standard\_deviation\_}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00514}00514 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00515}00515   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_a77b300b9928311cdd3669c11f21245bf}{geometric\_standard\_deviation\_of\_number\_distribution}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00516}00516 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00517}00517 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00518}00518 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00519}00519 \textcolor{comment}{  !> Returns the wet volume to mass mixing ratio for the mode [m3 kg\_dryair-\/1]}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00520}\mbox{\hyperlink{namespacemam__mode_af0de7d153f672d75afe61a5e0d5ed173}{00520}}   \textcolor{keywordtype}{elemental} \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_af0de7d153f672d75afe61a5e0d5ed173}{wet\_volume\_to\_mass\_mixing\_ratio\_\_m3\_kg}}( this,            \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00521}00521       mode\_state ) \textcolor{keyword}{result}( vmmr )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00522}00522 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00523}00523 \textcolor{keywordtype}{    real}(kind=musica\_dk)            :: vmmr}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00524}00524     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),       \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00525}00525     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: mode\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00526}00526 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00527}00527     \textcolor{keywordtype}{integer} :: i\_species}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00528}00528 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00529}00529     vmmr = 0.0}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00530}00530     \textcolor{keywordflow}{do} i\_species = 1, \textcolor{keyword}{size}( this\%species\_ )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00531}00531     associate( species => this\%species\_( i\_species ),                         \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00532}00532                species\_mmr =>                                                 \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00533}00533                    mode\_state\%mass\_mixing\_ratio\_\_kg\_kg\_( i\_species ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00534}00534       vmmr = vmmr + species\%volume\_\_m3( species\_mmr )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00535}00535     \textcolor{keyword}{end }associate}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00536}00536 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00537}00537 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00538}00538   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_af0de7d153f672d75afe61a5e0d5ed173}{wet\_volume\_to\_mass\_mixing\_ratio\_\_m3\_kg}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00539}00539 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00540}00540 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00541}00541 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00542}00542 \textcolor{comment}{  !> Returns the mode radius [m] of the number distribution for the mode}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00543}\mbox{\hyperlink{namespacemam__mode_a11beb1b0cb5b233244b0d06e7744d8f1}{00543}} \textcolor{keywordtype}{  real}(kind=musica\_dk) \textcolor{keywordtype}{elemental} \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_a11beb1b0cb5b233244b0d06e7744d8f1}{wet\_number\_mode\_radius\_\_m}}( this,    \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00544}00544       mode\_state ) \textcolor{keyword}{result}( radius )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00545}00545 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00546}00546     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),       \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00547}00547     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: mode\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00548}00548 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00549}00549     radius = mode\_state\%wet\_number\_mode\_diameter\_\_m\_ * 0.5\_musica\_dk}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00550}00550 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00551}00551   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_a11beb1b0cb5b233244b0d06e7744d8f1}{wet\_number\_mode\_radius\_\_m}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00552}00552 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00553}00553 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00554}00554 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00555}00555 \textcolor{comment}{  !> Returns the mode diameter [m] of the number distribution for the mode}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00556}\mbox{\hyperlink{namespacemam__mode_a3b93e8dc29daa19366b17207b7d49bde}{00556}} \textcolor{keywordtype}{  real}(kind=musica\_dk) \textcolor{keywordtype}{elemental} \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_a3b93e8dc29daa19366b17207b7d49bde}{wet\_number\_mode\_diameter\_\_m}}( this,  \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00557}00557       mode\_state ) \textcolor{keyword}{result}( diameter )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00558}00558 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00559}00559     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),       \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00560}00560     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: mode\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00561}00561 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00562}00562     diameter = mode\_state\%wet\_number\_mode\_diameter\_\_m\_}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00563}00563 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00564}00564   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_a3b93e8dc29daa19366b17207b7d49bde}{wet\_number\_mode\_diameter\_\_m}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00565}00565 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00566}00566 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00567}00567 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00568}00568 \textcolor{comment}{  !> Returns the mode diameter [m] of the surface area distribution for the}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00569}00569 \textcolor{comment}{  !! mode}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00570}\mbox{\hyperlink{namespacemam__mode_a22b6f4aa85f086b94b4d88db92496f99}{00570}} \textcolor{keywordtype}{  real}(kind=musica\_dk) \textcolor{keywordtype}{elemental} \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_a22b6f4aa85f086b94b4d88db92496f99}{wet\_surface\_mode\_diameter\_\_m}}( this, \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00571}00571       mode\_state ) \textcolor{keyword}{result}( radius )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00572}00572 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00573}00573     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),       \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00574}00574     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: mode\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00575}00575 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00576}00576     radius = 2.0\_musica\_dk * this\%wet\_surface\_mode\_radius\_\_m( mode\_state )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00577}00577 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00578}00578   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_a22b6f4aa85f086b94b4d88db92496f99}{wet\_surface\_mode\_diameter\_\_m}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00579}00579 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00580}00580 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00581}00581 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00582}00582 \textcolor{comment}{  !> Returns the mode radius [m] of the surface area distribution for the mode}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00583}\mbox{\hyperlink{namespacemam__mode_a8ae3b73811bb7429517002f5211f5187}{00583}} \textcolor{keywordtype}{  real}(kind=musica\_dk) \textcolor{keywordtype}{elemental} \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_a8ae3b73811bb7429517002f5211f5187}{wet\_surface\_mode\_radius\_\_m}}( this,   \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00584}00584       mode\_state ) \textcolor{keyword}{result}( radius )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00585}00585 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00586}00586     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),       \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00587}00587     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: mode\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00588}00588 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00589}00589     associate( sigma =>                                                       \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00590}00590                this\%geometric\_standard\_deviation\_of\_number\_distribution(      \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00591}00591                                                                 mode\_state ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00592}00592       radius = this\%wet\_number\_mode\_radius\_\_m( mode\_state ) *                 \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00593}00593                exp( 2.0\_musica\_dk * ( log( sigma )**2 ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00594}00594     \textcolor{keyword}{end }associate}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00595}00595 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00596}00596   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_a8ae3b73811bb7429517002f5211f5187}{wet\_surface\_mode\_radius\_\_m}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00597}00597 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00598}00598 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00599}00599 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00600}00600 \textcolor{comment}{  !> Returns the particle number mixing ratio per mole air [\# mol-\/1]}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00601}00601 \textcolor{comment}{  !! \(\backslash\)todo is this per mole dry or wet air?}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00602}\mbox{\hyperlink{namespacemam__mode_a9b672a9f0c3a4eff42da6c9187117c2f}{00602}} \textcolor{keywordtype}{  real}(kind=musica\_dk) \textcolor{keywordtype}{elemental} \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_a9b672a9f0c3a4eff42da6c9187117c2f}{number\_mixing\_ratio\_\_num\_mol}}( this, \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00603}00603       mode\_state ) \textcolor{keyword}{result}( mixing\_ratio )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00604}00604 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00605}00605     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),       \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00606}00606     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: mode\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00607}00607 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00608}00608     mixing\_ratio = mode\_state\%number\_mixing\_ratio\_\_num\_mol\_}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00609}00609 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00610}00610   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_a9b672a9f0c3a4eff42da6c9187117c2f}{number\_mixing\_ratio\_\_num\_mol}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00611}00611 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00612}00612 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00613}00613 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00614}00614 \textcolor{comment}{  !> Calculates the net refractive index for the mode based on weighted}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00615}00615 \textcolor{comment}{  !! contributions from constituent species in the shortwave region}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00616}\mbox{\hyperlink{namespacemam__mode_ab00a5ac6633ebf5f0026dfaa8f791a3f}{00616}}   \textcolor{keywordtype}{pure} \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_ab00a5ac6633ebf5f0026dfaa8f791a3f}{net\_shortwave\_refractive\_index}}( this, mode\_state,             \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00617}00617       number\_of\_bands ) \textcolor{keyword}{result}( refractive\_index )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00618}00618 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00619}00619     \textcolor{keywordtype}{complex(kind=musica\_dk)}         :: refractive\_index( number\_of\_bands )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00620}00620     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),       \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00621}00621     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: mode\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00622}00622     \textcolor{keywordtype}{integer},             \textcolor{keywordtype}{intent(in)} :: number\_of\_bands}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00623}00623 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00624}00624     \textcolor{keywordtype}{integer}              :: i\_species, \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00625}00625 \textcolor{keywordtype}{    real}(kind=musica\_dk) :: total\_vmmr, species\_vmmr}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00626}00626 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00627}00627     refractive\_index(:) = ( 0.0\_musica\_dk, 0.0\_musica\_dk )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00628}00628     total\_vmmr = 0.0\_musica\_dk}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00629}00629     \textcolor{keywordflow}{do} i\_species = 1, \textcolor{keyword}{size}( this\%species\_ )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00630}00630     associate( species     => this\%species\_( i\_species ),                     \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00631}00631                species\_mmr =>                                                 \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00632}00632                    mode\_state\%mass\_mixing\_ratio\_\_kg\_kg\_( i\_species ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00633}00633       species\_vmmr = species\%volume\_\_m3( species\_mmr )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00634}00634       \textcolor{keywordflow}{do} \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} = 1, number\_of\_bands}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00635}00635         refractive\_index( \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ) = refractive\_index( \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} )               \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00636}00636                  + species\%shortwave\_refractive\_index( \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ) * species\_vmmr}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00637}00637 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00638}00638       total\_vmmr = total\_vmmr + species\_vmmr}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00639}00639     \textcolor{keyword}{end }associate}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00640}00640 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00641}00641     refractive\_index(:) = refractive\_index(:)                                 \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00642}00642                           / max( total\_vmmr, 1.0e-\/60\_musica\_dk )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00643}00643 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00644}00644   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_ab00a5ac6633ebf5f0026dfaa8f791a3f}{net\_shortwave\_refractive\_index}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00645}00645 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00646}00646 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00647}00647 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00648}00648 \textcolor{comment}{  !> Calculates the net refractive index for the mode based on weighted}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00649}00649 \textcolor{comment}{  !! contributions from constituent species in the longwave region}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00650}\mbox{\hyperlink{namespacemam__mode_a05904f6e54a33e46e4c31c71b46f2462}{00650}}   \textcolor{keywordtype}{pure} \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_a05904f6e54a33e46e4c31c71b46f2462}{net\_longwave\_refractive\_index}}( this, mode\_state,             \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00651}00651       number\_of\_bands ) \textcolor{keyword}{result}( refractive\_index )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00652}00652 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00653}00653     \textcolor{keywordtype}{complex(kind=musica\_dk)}         :: refractive\_index( number\_of\_bands )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00654}00654     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),       \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00655}00655     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: mode\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00656}00656     \textcolor{keywordtype}{integer},             \textcolor{keywordtype}{intent(in)} :: number\_of\_bands}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00657}00657 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00658}00658     \textcolor{keywordtype}{integer}              :: i\_species, \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00659}00659 \textcolor{keywordtype}{    real}(kind=musica\_dk) :: total\_vmmr, species\_vmmr}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00660}00660 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00661}00661     refractive\_index(:) = ( 0.0\_musica\_dk, 0.0\_musica\_dk )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00662}00662     total\_vmmr = 0.0\_musica\_dk}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00663}00663     \textcolor{keywordflow}{do} i\_species = 1, \textcolor{keyword}{size}( this\%species\_ )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00664}00664     associate( species     => this\%species\_( i\_species ),                     \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00665}00665                species\_mmr =>                                                 \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00666}00666                    mode\_state\%mass\_mixing\_ratio\_\_kg\_kg\_( i\_species ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00667}00667       species\_vmmr = species\%volume\_\_m3( species\_mmr )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00668}00668       \textcolor{keywordflow}{do} \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} = 1, number\_of\_bands}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00669}00669         refractive\_index( \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ) = refractive\_index( \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} )               \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00670}00670                  + species\%longwave\_refractive\_index( \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ) * species\_vmmr}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00671}00671 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00672}00672       total\_vmmr = total\_vmmr + species\_vmmr}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00673}00673     \textcolor{keyword}{end }associate}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00674}00674 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00675}00675     refractive\_index(:) = refractive\_index(:)                                 \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00676}00676                           / max( total\_vmmr, 1.0e-\/60\_musica\_dk )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00677}00677 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00678}00678   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_a05904f6e54a33e46e4c31c71b46f2462}{net\_longwave\_refractive\_index}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00679}00679 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00680}00680 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00681}00681 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00682}00682 \textcolor{comment}{  !> Calculates the specific absorption [m2 kg-\/1] for a given Chebyshev}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00683}00683 \textcolor{comment}{  !! function}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00684}00684 \textcolor{comment}{  !!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00685}00685 \textcolor{comment}{  !! \(\backslash\)todo is "{}specific absorption"{} (m2 kg-\/1) the correct name/units for what}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00686}00686 \textcolor{comment}{  !!       is returned from this function?}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00687}\mbox{\hyperlink{namespacemam__mode_a7a7ccd5c378b5181b4bcbe5f2c5a2e6c}{00687}}   \textcolor{keywordtype}{pure} \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_a7a7ccd5c378b5181b4bcbe5f2c5a2e6c}{specific\_absorption\_\_m2\_kg}}( this, mode\_state, number\_of\_bands,\&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00688}00688       number\_of\_coefficients, coefficients, size\_function, max\_absorption )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00689}00689 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00690}00690     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__constants}{mam\_constants}},                 \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacemam__constants_aba3922cce725e4e68e9f3d90b21f16b3}{kwaterdensitystp}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00691}00691     \textcolor{keywordtype}{use }musica\_math,                   \textcolor{keywordtype}{only} : weighted\_chebyshev}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00692}00692 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00693}00693 \textcolor{keywordtype}{    real}(kind=musica\_dk) :: \mbox{\hyperlink{namespacemam__mode_a7a7ccd5c378b5181b4bcbe5f2c5a2e6c}{specific\_absorption\_\_m2\_kg}}( number\_of\_bands )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00694}00694     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),        \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00695}00695     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}),  \textcolor{keywordtype}{intent(in)} :: mode\_state}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00696}00696     \textcolor{keywordtype}{integer},              \textcolor{keywordtype}{intent(in)} :: number\_of\_bands}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00697}00697     \textcolor{keywordtype}{integer},              \textcolor{keywordtype}{intent(in)} :: number\_of\_coefficients\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00698}00698 \textcolor{comment}{    !> Chebyshev coefficients for absorption calculation}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00699}00699 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: coefficients( number\_of\_coefficients, \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00700}00700                                                       number\_of\_bands )\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00701}00701 \textcolor{comment}{    !> Chebyshev function for the current surface mode radius}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00702}00702 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: size\_function( number\_of\_coefficients )\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00703}00703 \textcolor{comment}{    !> Maximum values for specific absorption for each band [m2 kg-\/1]}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00704}00704 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)}, \textcolor{keywordtype}{optional} :: max\_absorption(             \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00705}00705                                                              number\_of\_bands )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00706}00706 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00707}00707     \textcolor{keywordtype}{integer} :: \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00708}00708     \textcolor{keywordflow}{do} \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} = 1, number\_of\_bands}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00709}00709     associate( absorp => \mbox{\hyperlink{namespacemam__mode_a7a7ccd5c378b5181b4bcbe5f2c5a2e6c}{specific\_absorption\_\_m2\_kg}}( \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00710}00710       absorp = weighted\_chebyshev( number\_of\_coefficients,                    \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00711}00711                                    coefficients( :, \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ),                 \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00712}00712                                    size\_function )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00713}00713       absorp = absorp *                                                       \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00714}00714                this\%wet\_volume\_to\_mass\_mixing\_ratio\_\_m3\_kg( mode\_state ) *    \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00715}00715                \mbox{\hyperlink{namespacemam__constants_aba3922cce725e4e68e9f3d90b21f16b3}{kwaterdensitystp}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00716}00716       absorp = max( 0.0\_musica\_dk, absorp )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00717}00717       \textcolor{keywordflow}{if}( \textcolor{keyword}{present}( max\_absorption ) ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00718}00718         absorp = min( max\_absorption( \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ), absorp )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00719}00719 \textcolor{keywordflow}{      end if}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00720}00720     \textcolor{keyword}{end }associate}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00721}00721 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00722}00722 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00723}00723   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_a7a7ccd5c378b5181b4bcbe5f2c5a2e6c}{specific\_absorption\_\_m2\_kg}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00724}00724 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00725}00725 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00726}00726 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00727}00727 \textcolor{comment}{  !> Calculates the specific extinction [m2 kg-\/1] for a given Chebyshev}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00728}00728 \textcolor{comment}{  !! function}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00729}00729 \textcolor{comment}{  !!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00730}00730 \textcolor{comment}{  !! \(\backslash\)todo is "{}specific extinction"{} (m2 kg-\/1) the correct name/units for what}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00731}00731 \textcolor{comment}{  !!       is returned from this function?}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00732}\mbox{\hyperlink{namespacemam__mode_aa0ed60cc0da1e1bf74ee66e8d83106ef}{00732}}   \textcolor{keywordtype}{pure} \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_aa0ed60cc0da1e1bf74ee66e8d83106ef}{specific\_extinction\_\_m2\_kg}}( this, mode\_state, number\_of\_bands,\&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00733}00733       number\_of\_coefficients, coefficients, size\_function, optics\_lookup )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00734}00734 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00735}00735     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__constants}{mam\_constants}},                 \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacemam__constants_aba3922cce725e4e68e9f3d90b21f16b3}{kwaterdensitystp}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00736}00736     \textcolor{keywordtype}{use }musica\_math,                   \textcolor{keywordtype}{only} : weighted\_chebyshev}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00737}00737 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00738}00738 \textcolor{comment}{    !> Specific extinction by wavelength}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00739}00739 \textcolor{keywordtype}{    real}(kind=musica\_dk) :: \mbox{\hyperlink{namespacemam__mode_aa0ed60cc0da1e1bf74ee66e8d83106ef}{specific\_extinction\_\_m2\_kg}}( number\_of\_bands )\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00740}00740 \textcolor{comment}{    !> MAM mode}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00741}00741     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),        \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00742}00742 \textcolor{comment}{    !> MAM mode state}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00743}00743     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}),  \textcolor{keywordtype}{intent(in)} :: mode\_state\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00744}00744 \textcolor{comment}{    !> Number of wavelength bands}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00745}00745     \textcolor{keywordtype}{integer},              \textcolor{keywordtype}{intent(in)} :: number\_of\_bands\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00746}00746 \textcolor{comment}{    !> Number of Chebyshev coefficients}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00747}00747     \textcolor{keywordtype}{integer},              \textcolor{keywordtype}{intent(in)} :: number\_of\_coefficients\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00748}00748 \textcolor{comment}{    !> Chebyshev coefficients for extinction calculation}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00749}00749 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: coefficients( number\_of\_coefficients, \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00750}00750                                                       number\_of\_bands )\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00751}00751 \textcolor{comment}{    !> Chebyshev function for the current surface mode radius}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00752}00752 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: size\_function( number\_of\_coefficients )\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00753}00753 \textcolor{comment}{    !> Optics lookup table}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00754}00754     \textcolor{keywordtype}{class}(optics\_lookup\_t), \textcolor{keywordtype}{intent(in)} :: optics\_lookup}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00755}00755 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00756}00756     \textcolor{keywordtype}{integer} :: \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00757}00757 \textcolor{keywordtype}{    real}(kind=musica\_dk) :: surf\_rad}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00758}00758 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00759}00759     surf\_rad = this\%wet\_surface\_mode\_radius\_\_m( mode\_state )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00760}00760     \textcolor{keywordflow}{if}( surf\_rad .le. optics\_lookup\%maximum\_radius\_\_m( ) ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00761}00761       \textcolor{keywordflow}{do} \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} = 1, number\_of\_bands}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00762}00762       associate( ext => \mbox{\hyperlink{namespacemam__mode_aa0ed60cc0da1e1bf74ee66e8d83106ef}{specific\_extinction\_\_m2\_kg}}( \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00763}00763         ext = weighted\_chebyshev( number\_of\_coefficients,                     \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00764}00764                                   coefficients( :, \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ),                  \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00765}00765                                   size\_function )\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00766}00766 \textcolor{comment}{        !> \(\backslash\)todo is the data returned from the lookup table in ln( m2/kg )?}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00767}00767         ext = exp( ext )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00768}00768       \textcolor{keyword}{end }associate}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00769}00769 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00770}00770     \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00771}00771       \mbox{\hyperlink{namespacemam__mode_aa0ed60cc0da1e1bf74ee66e8d83106ef}{specific\_extinction\_\_m2\_kg}}(:) = 1.5\_musica\_dk                           \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00772}00772                                       / ( surf\_rad * kwaterdensitystp )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00773}00773 \textcolor{keywordflow}{    end if}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00774}00774 \textcolor{comment}{    !> \(\backslash\)todo in the original code, this is labelled as converting "{}m2/kg}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00775}00775 \textcolor{comment}{    !! water to m2/kg aerosol"{}, but it appears to convert instead to}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00776}00776 \textcolor{comment}{    !! m2/kg dry air -\/ is this right???}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00777}00777     \mbox{\hyperlink{namespacemam__mode_aa0ed60cc0da1e1bf74ee66e8d83106ef}{specific\_extinction\_\_m2\_kg}}(:) = \mbox{\hyperlink{namespacemam__mode_aa0ed60cc0da1e1bf74ee66e8d83106ef}{specific\_extinction\_\_m2\_kg}}(:)             \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00778}00778                   * this\%wet\_volume\_to\_mass\_mixing\_ratio\_\_m3\_kg( mode\_state ) \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00779}00779                   * kwaterdensitystp}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00780}00780 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00781}00781   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_aa0ed60cc0da1e1bf74ee66e8d83106ef}{specific\_extinction\_\_m2\_kg}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00782}00782 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00783}00783 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00784}00784 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00785}00785 \textcolor{comment}{  !> Calculates the asymmetry parameter [unitless ratio] for a given Chebyshev}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00786}00786 \textcolor{comment}{  !! function}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00787}\mbox{\hyperlink{namespacemam__mode_aebeab65928c8fae0907184087d218ab0}{00787}}   \textcolor{keywordtype}{pure} \textcolor{keyword}{function }\mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}( this, mode\_state, number\_of\_bands,          \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00788}00788       number\_of\_coefficients, coefficients, size\_function )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00789}00789 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00790}00790     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__constants}{mam\_constants}},                 \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacemam__constants_aba3922cce725e4e68e9f3d90b21f16b3}{kwaterdensitystp}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00791}00791     \textcolor{keywordtype}{use }musica\_math,                   \textcolor{keywordtype}{only} : weighted\_chebyshev}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00792}00792 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00793}00793 \textcolor{comment}{    !> Asymmetry factor by wavelength}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00794}00794 \textcolor{keywordtype}{    real}(kind=musica\_dk) :: \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}( number\_of\_bands )\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00795}00795 \textcolor{comment}{    !> MAM mode}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00796}00796     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),        \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00797}00797 \textcolor{comment}{    !> MAM mode state}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00798}00798     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}),  \textcolor{keywordtype}{intent(in)} :: mode\_state\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00799}00799 \textcolor{comment}{    !> Number of wavelength bands}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00800}00800     \textcolor{keywordtype}{integer},              \textcolor{keywordtype}{intent(in)} :: number\_of\_bands\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00801}00801 \textcolor{comment}{    !> Number of Chebyshev coefficients}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00802}00802     \textcolor{keywordtype}{integer},              \textcolor{keywordtype}{intent(in)} :: number\_of\_coefficients\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00803}00803 \textcolor{comment}{    !> Chebyshev coefficients for asymmetry parameter calculation}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00804}00804 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: coefficients( number\_of\_coefficients, \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00805}00805                                                       number\_of\_bands )\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00806}00806 \textcolor{comment}{    !> Chebyshev function for the current surface mode radius}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00807}00807 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)} :: size\_function( number\_of\_coefficients )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00808}00808 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00809}00809     \textcolor{keywordtype}{integer} :: \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00810}00810 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00811}00811     \textcolor{keywordflow}{do} \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} = 1, number\_of\_bands}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00812}00812     associate( asym => \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}( \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ) )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00813}00813       asym = weighted\_chebyshev( number\_of\_coefficients,                      \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00814}00814                                  coefficients( :, \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ),                   \&}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00815}00815                                  size\_function )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00816}00816     \textcolor{keyword}{end }associate}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00817}00817 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00818}00818 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00819}00819   \textcolor{keyword}{end function }\mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00820}00820 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00821}00821 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00822}00822 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00823}00823 \textcolor{comment}{!! mode\_state\_t functions}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00824}00824 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00825}00825 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00826}00826 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00827}00827 \textcolor{comment}{  !> Returns the number of doubles needed to hold the raw mode state}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00828}\mbox{\hyperlink{namespacemam__mode_a252a03f38bce74ca1b65a075e6b513c2}{00828}}   \textcolor{keyword}{integer }\textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__mode_a252a03f38bce74ca1b65a075e6b513c2}{raw\_size}}( this )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00829}00829 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00830}00830     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00831}00831 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00832}00832     \mbox{\hyperlink{namespacemam__mode_a252a03f38bce74ca1b65a075e6b513c2}{raw\_size}} = 2 + \textcolor{keyword}{size}( this\%mass\_mixing\_ratio\_\_kg\_kg\_ )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00833}00833 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00834}00834   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__mode_a252a03f38bce74ca1b65a075e6b513c2}{raw\_size}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00835}00835 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00836}00836 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00837}00837 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00838}00838 \textcolor{comment}{  !> Loads raw mode state data to the mode\_state\_t object}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00839}\mbox{\hyperlink{namespacemam__mode_adfe9e0c2cc0a6193ea352caf19bb8a34}{00839}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__mode_adfe9e0c2cc0a6193ea352caf19bb8a34}{load\_state}}( this, raw\_state, index )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00840}00840 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00841}00841     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}),  \textcolor{keywordtype}{intent(inout)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00842}00842 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)}    :: raw\_state(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00843}00843     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{optional},    \textcolor{keywordtype}{intent(inout)} :: index}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00844}00844 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00845}00845     \textcolor{keywordtype}{integer} :: id, last\_id}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00846}00846 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00847}00847     id = 1}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00848}00848     \textcolor{keywordflow}{if}( \textcolor{keyword}{present}( index ) ) id = index}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00849}00849     this\%wet\_number\_mode\_diameter\_\_m\_ = raw\_state( id )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00850}00850     this\%number\_mixing\_ratio\_\_num\_mol\_ = raw\_state( id + 1 )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00851}00851     id = id + 2}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00852}00852     last\_id = id + \textcolor{keyword}{size}( this\%mass\_mixing\_ratio\_\_kg\_kg\_ ) -\/ 1}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00853}00853     this\%mass\_mixing\_ratio\_\_kg\_kg\_(:) = raw\_state( id : last\_id )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00854}00854     \textcolor{keywordflow}{if}( \textcolor{keyword}{present}( index ) ) index = last\_id + 1}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00855}00855 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00856}00856   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__mode_adfe9e0c2cc0a6193ea352caf19bb8a34}{load\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00857}00857 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00858}00858 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00859}00859 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00860}00860 \textcolor{comment}{  !> Dumps the aerosol state into the raw state array}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00861}\mbox{\hyperlink{namespacemam__mode_a8c57172dd59c4b8a4c2d0c04ad5c8b27}{00861}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__mode_a8c57172dd59c4b8a4c2d0c04ad5c8b27}{dump\_state}}( this, raw\_state, index )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00862}00862 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00863}00863     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}),  \textcolor{keywordtype}{intent(in)}    :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00864}00864 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(inout)} :: raw\_state(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00865}00865     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{optional},    \textcolor{keywordtype}{intent(inout)} :: index}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00866}00866 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00867}00867     \textcolor{keywordtype}{integer} :: id, last\_id}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00868}00868 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00869}00869     id = 1}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00870}00870     \textcolor{keywordflow}{if}( \textcolor{keyword}{present}( index ) ) id = index}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00871}00871     raw\_state( id )     = this\%wet\_number\_mode\_diameter\_\_m\_}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00872}00872     raw\_state( id + 1 ) = this\%number\_mixing\_ratio\_\_num\_mol\_}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00873}00873     id = id + 2}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00874}00874     last\_id = id + \textcolor{keyword}{size}( this\%mass\_mixing\_ratio\_\_kg\_kg\_ ) -\/ 1}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00875}00875     raw\_state( id : last\_id ) = this\%mass\_mixing\_ratio\_\_kg\_kg\_(:)}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00876}00876     \textcolor{keywordflow}{if}( \textcolor{keyword}{present}( index ) ) index = last\_id + 1}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00877}00877 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00878}00878   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__mode_a8c57172dd59c4b8a4c2d0c04ad5c8b27}{dump\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00879}00879 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00880}00880 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00881}00881 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00882}00882 \textcolor{comment}{  !> Set the mode state to a random, but reasonable, state. For testing only.}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00883}\mbox{\hyperlink{namespacemam__mode_a7aee73762887a8cfc3474f9e4fde4e55}{00883}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__mode_a7aee73762887a8cfc3474f9e4fde4e55}{randomize}}( this )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00884}00884 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00885}00885     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}), \textcolor{keywordtype}{intent(inout)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00886}00886 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00887}00887 \textcolor{keywordtype}{    real}(kind=musica\_dk) :: rand\_val}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00888}00888     \textcolor{keywordtype}{integer}              :: i\_species}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00889}00889 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00890}00890     \textcolor{keyword}{call }random\_number( rand\_val )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00891}00891     this\%wet\_number\_mode\_diameter\_\_m\_ = 10.0**( rand\_val * 3 -\/ 5 )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00892}00892     this\%number\_mixing\_ratio\_\_num\_mol\_ = 10.0**( rand\_val * 6 )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00893}00893     \textcolor{keywordflow}{do} i\_species = 1, \textcolor{keyword}{size}( this\%mass\_mixing\_ratio\_\_kg\_kg\_ )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00894}00894       \textcolor{keyword}{call }random\_number( rand\_val )}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00895}00895       this\%mass\_mixing\_ratio\_\_kg\_kg\_( i\_species ) = rand\_val * 2.0e-\/9}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00896}00896 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00897}00897 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00898}00898   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__mode_a7aee73762887a8cfc3474f9e4fde4e55}{randomize}}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00899}00899 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00900}00900 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00901}00901 }
+\DoxyCodeLine{\Hypertarget{src_2mode_8F90_source_l00902}00902 \textcolor{keyword}{end module }\mbox{\hyperlink{namespacemam__mode}{mam\_mode}}}
+
+\end{DoxyCode}

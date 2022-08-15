@@ -1,0 +1,66 @@
+\hypertarget{test_2unit_2species_8F90_source}{}\doxysection{species.\+F90}
+\label{test_2unit_2species_8F90_source}\index{/github/workspace/test/unit/species.F90@{/github/workspace/test/unit/species.F90}}
+\mbox{\hyperlink{test_2unit_2species_8F90}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2021 National Center for Atmospheric Research}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00002}00002 \textcolor{comment}{! SPDX-\/License-\/Identifier: Apache-\/2.0}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00003}00003 \textcolor{comment}{!}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00004}00004 \textcolor{comment}{!> \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00005}00005 \textcolor{comment}{!> Tests for the mam\_species module}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00006}00006 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00007}00007 \textcolor{comment}{!> Test module for the species\_t type and related functions}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00008}\mbox{\hyperlink{test_2unit_2species_8F90_a61e9b2c68312193c5f087c55c79d9e39}{00008}} \textcolor{keyword}{program} \mbox{\hyperlink{test_2unit_2species_8F90_a61e9b2c68312193c5f087c55c79d9e39}{test\_species}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00009}00009 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00010}00010   \textcolor{keywordtype}{implicit none}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00011}00011 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00012}00012   \textcolor{keyword}{call }\mbox{\hyperlink{test_2unit_2species_8F90_aa840d2141ce1ea13965ff93091799452}{test\_species\_t}}( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00013}00013 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00014}00014 \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00015}00015 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00016}00016 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00017}00017 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00018}00018 \textcolor{comment}{  !> Tests for the \(\backslash\)c species\_t type}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00019}\mbox{\hyperlink{test_2unit_2species_8F90_aa840d2141ce1ea13965ff93091799452}{00019}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{test_2unit_2species_8F90_aa840d2141ce1ea13965ff93091799452}{test\_species\_t}}( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00020}00020 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00021}00021     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__species}{mam\_species}},                   \textcolor{keywordtype}{only} : \mbox{\hyperlink{structmam__species_1_1species__t}{species\_t}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00022}00022     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{onlY} : assert, almost\_equal}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00023}00023     \textcolor{keywordtype}{use }musica\_config,                 \textcolor{keywordtype}{only} : config\_t}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00024}00024     \textcolor{keywordtype}{use }musica\_constants,              \textcolor{keywordtype}{only} : dk => musica\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00025}00025 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00026}00026     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__species_1_1species__t}{species\_t}}) :: species}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00027}00027     \textcolor{keywordtype}{type}(config\_t)  :: config}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00028}00028 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00029}00029     \textcolor{keyword}{call }config\%from\_file( \textcolor{stringliteral}{"{}species\_config.json"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00030}00030     species = \mbox{\hyperlink{structmam__species_1_1species__t}{species\_t}}( config )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00031}00031 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00032}00032     \textcolor{keyword}{call }assert( 925498072, species\%name( ) .eq. \textcolor{stringliteral}{"{}foo"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00033}00033 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00034}00034     \textcolor{keyword}{call }assert( 297444708, species\%volume\_\_m3( 100.0\_dk )                    \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00035}00035                             .eq. 100.0\_dk / 814.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00036}00036 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00037}00037     \textcolor{keyword}{call }assert( 180314351,                                                   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00038}00038                  almost\_equal( species\%shortwave\_refractive\_index( 1 ),       \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00039}00039                                cmplx( 0.2\_dk, 12.3\_dk, kind = dk ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00040}00040     \textcolor{keyword}{call }assert( 712754854,                                                   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00041}00041                  almost\_equal( species\%shortwave\_refractive\_index( 3 ),       \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00042}00042                                cmplx( 1.0\_dk, 3.2\_dk, kind = dk ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00043}00043     \textcolor{keyword}{call }assert( 825073199,                                                   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00044}00044                  almost\_equal( species\%shortwave\_refractive\_index( 4 ),       \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00045}00045                                cmplx( 4.0\_dk, 4.8\_dk, kind = dk ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00046}00046     \textcolor{keyword}{call }assert( 654916295,                                                   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00047}00047                  almost\_equal( species\%longwave\_refractive\_index( 1 ),        \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00048}00048                                cmplx( 4.2\_dk, 3.2\_dk, kind = dk ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00049}00049     \textcolor{keyword}{call }assert( 149709890,                                                   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00050}00050                  almost\_equal( species\%longwave\_refractive\_index( 3 ),        \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00051}00051                                cmplx( -\/3.6\_dk, 6.5\_dk, kind = dk ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00052}00052     \textcolor{keyword}{call }assert( 879552985,                                                   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00053}00053                  almost\_equal( species\%longwave\_refractive\_index( 6 ),        \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00054}00054                                cmplx( 12.3\_dk, 102.4\_dk, kind = dk ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00055}00055 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00056}00056   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{test_2unit_2species_8F90_aa840d2141ce1ea13965ff93091799452}{test\_species\_t}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00057}00057 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00058}00058 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00059}00059 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2species_8F90_source_l00060}00060 \textcolor{keyword}{end program }\mbox{\hyperlink{test_2unit_2species_8F90_a61e9b2c68312193c5f087c55c79d9e39}{test\_species}}}
+
+\end{DoxyCode}

@@ -1,0 +1,605 @@
+\hypertarget{test_2unit_2mode_8F90_source}{}\doxysection{mode.\+F90}
+\label{test_2unit_2mode_8F90_source}\index{/github/workspace/test/unit/mode.F90@{/github/workspace/test/unit/mode.F90}}
+\mbox{\hyperlink{test_2unit_2mode_8F90}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2021 National Center for Atmospheric Research}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00002}00002 \textcolor{comment}{! SPDX-\/License-\/Identifier: Apache-\/2.0}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00003}00003 \textcolor{comment}{!}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00004}00004 \textcolor{comment}{!> \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00005}00005 \textcolor{comment}{!> Tests for the mam\_mode module}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00006}00006 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00007}00007 \textcolor{comment}{!> Test program for the mode\_t type and related functions}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00008}\mbox{\hyperlink{test_2unit_2mode_8F90_ad675fc929a03cce22326d4940b241741}{00008}} \textcolor{keyword}{program} \mbox{\hyperlink{test_2unit_2mode_8F90_ad675fc929a03cce22326d4940b241741}{test\_mode}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00009}00009 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00010}00010   \textcolor{keywordtype}{implicit none}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00011}00011 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00012}00012   \textcolor{keyword}{call }\mbox{\hyperlink{test_2unit_2mode_8F90_a4b3ec2e169311b36600f635f944af72a}{test\_mode\_t}}( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00013}00013 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00014}00014 \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00015}00015 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00016}00016 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00017}00017 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00018}\mbox{\hyperlink{test_2unit_2mode_8F90_a4b3ec2e169311b36600f635f944af72a}{00018}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{test_2unit_2mode_8F90_a4b3ec2e169311b36600f635f944af72a}{test\_mode\_t}}( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00019}00019 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00020}00020     \textcolor{keywordtype}{use }ai\_aerosol\_state,              \textcolor{keywordtype}{only} : aerosol\_state\_t}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00021}00021     \textcolor{keywordtype}{use }ai\_environmental\_state,        \textcolor{keywordtype}{only} : environmental\_state\_t}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00022}00022     \textcolor{keywordtype}{use }ai\_optics,                     \textcolor{keywordtype}{only} : optics\_t, optics\_ptr}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00023}00023     \textcolor{keywordtype}{use }ai\_wavelength\_grid,            \textcolor{keywordtype}{only} : wavelength\_grid\_t}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00024}00024     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__constants}{mam\_constants}},                 \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacemam__constants_a7e019f9e4ca78c7222796cafe81b7e2b}{kaccellerationbygravity}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00025}00025     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__mode}{mam\_mode}},                      \textcolor{keywordtype}{only} : \mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}, \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00026}00026     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__optics__lookup}{mam\_optics\_lookup}},             \textcolor{keywordtype}{only} : \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00027}00027     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : assert, die, almost\_equal}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00028}00028     \textcolor{keywordtype}{use }musica\_config,                 \textcolor{keywordtype}{only} : config\_t}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00029}00029     \textcolor{keywordtype}{use }musica\_constants,              \textcolor{keywordtype}{only} : dk => musica\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00030}00030     \textcolor{keywordtype}{use }musica\_property,               \textcolor{keywordtype}{only} : property\_t}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00031}00031 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00032}00032     \textcolor{keywordtype}{character(len=*)}, \textcolor{keywordtype}{parameter} :: my\_name = \textcolor{stringliteral}{"{}mode\_t tests"{}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00033}00033     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}) :: mode}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00034}00034     \textcolor{keywordtype}{class}(aerosol\_state\_t), \textcolor{keywordtype}{pointer} :: state\_a, state\_b}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00035}00035     \textcolor{keywordtype}{type}(config\_t) :: mode\_config, optics\_config}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00036}00036     \textcolor{keywordtype}{class}(optics\_t), \textcolor{keywordtype}{pointer} :: optics}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00037}00037     \textcolor{keywordtype}{type}(optics\_ptr), \textcolor{keywordtype}{allocatable} :: optics\_set(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00038}00038     \textcolor{keywordtype}{type}(environmental\_state\_t) :: env\_state}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00039}00039     \textcolor{keywordtype}{type}(wavelength\_grid\_t) :: grid}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00040}00040     \textcolor{keywordtype}{type}(property\_t) :: prop}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00041}00041     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}) :: mock\_optics\_lookup}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00042}00042 \textcolor{keywordtype}{    real}(kind=dk), \textcolor{keywordtype}{allocatable} :: raw\_state\_a(:), raw\_state\_b(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00043}00043 \textcolor{keywordtype}{    real}(kind=dk), \textcolor{keywordtype}{allocatable} :: optics\_values(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00044}00044 \textcolor{keywordtype}{    real}(kind=dk) :: temp\_value}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00045}00045     \textcolor{keywordtype}{complex(kind=dk)}, \textcolor{keywordtype}{allocatable} :: complex\_array\_a(:), complex\_array\_b(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00046}00046 \textcolor{keywordtype}{    real}(kind=dk),    \textcolor{keywordtype}{allocatable} :: absorption\_short(:), absorption\_long(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00047}00047 \textcolor{keywordtype}{    real}(kind=dk),    \textcolor{keywordtype}{allocatable} :: extinction\_short(:), extinction\_long(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00048}00048 \textcolor{keywordtype}{    real}(kind=dk),    \textcolor{keywordtype}{allocatable} :: asymmetry\_short(:), asymmetry\_long(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00049}00049 \textcolor{keywordtype}{    real}(kind=dk),    \textcolor{keywordtype}{allocatable} :: ssa\_short(:), aod\_short(:), aod\_long(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00050}00050 \textcolor{keywordtype}{    real}(kind=dk),    \textcolor{keywordtype}{allocatable} :: compare\_values(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00051}00051     \textcolor{keywordtype}{integer} :: i\_elem, i\_band}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00052}00052     \textcolor{keywordtype}{logical} :: flag}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00053}00053 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00054}00054     \textcolor{keyword}{call }mode\_config\%from\_file( \textcolor{stringliteral}{"{}mode\_config.json"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00055}00055     mode = \mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}( mode\_config )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00056}00056 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00057}00057     state\_a => mode\%new\_state( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00058}00058     state\_b => mode\%new\_state( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00059}00059 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00060}00060     \textcolor{comment}{! test mode\_state\_t functions}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00061}00061     \textcolor{keyword}{call }state\_a\%randomize( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00062}00062     \textcolor{keyword}{call }state\_b\%randomize( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00063}00063     \textcolor{keyword}{call }assert( 119422573, state\_a\%raw\_size( ) .eq. state\_b\%raw\_size( ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00064}00064     \textcolor{keyword}{allocate}( raw\_state\_a( state\_a\%raw\_size( ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00065}00065     \textcolor{keyword}{allocate}( raw\_state\_b( state\_b\%raw\_size( ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00066}00066     \textcolor{keyword}{call }state\_a\%dump\_state( raw\_state\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00067}00067     \textcolor{keyword}{call }state\_b\%dump\_state( raw\_state\_b )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00068}00068     flag = .true.}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00069}00069     \textcolor{keywordflow}{do} i\_elem = 1, \textcolor{keyword}{size}( raw\_state\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00070}00070       flag = flag .and. raw\_state\_a( i\_elem ) .eq. raw\_state\_b( i\_elem )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00071}00071 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00072}00072     \textcolor{keyword}{call }assert( 904197749, .not. flag )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00073}00073     \textcolor{keyword}{call }state\_b\%load\_state( raw\_state\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00074}00074     \textcolor{keyword}{call }state\_b\%dump\_state( raw\_state\_b )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00075}00075     flag = .true.}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00076}00076     \textcolor{keywordflow}{do} i\_elem = 1, \textcolor{keyword}{size}( raw\_state\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00077}00077       flag = flag .and. raw\_state\_a( i\_elem ) .eq. raw\_state\_b( i\_elem )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00078}00078 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00079}00079     \textcolor{keyword}{call }assert( 167637108, flag )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00080}00080 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00081}00081     \textcolor{keyword}{deallocate}( raw\_state\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00082}00082     \textcolor{keyword}{deallocate}( raw\_state\_b )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00083}00083     \textcolor{keyword}{allocate}( raw\_state\_a( state\_a\%raw\_size( ) + 15 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00084}00084     \textcolor{keyword}{allocate}( raw\_state\_b( state\_b\%raw\_size( ) + 25 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00085}00085     raw\_state\_a(:) = 12.5\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00086}00086     raw\_state\_b(:) = 43.1\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00087}00087     \textcolor{keyword}{call }state\_a\%randomize( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00088}00088     \textcolor{keyword}{call }state\_b\%randomize( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00089}00089     i\_elem = 11}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00090}00090     \textcolor{keyword}{call }state\_a\%dump\_state( raw\_state\_a, i\_elem )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00091}00091     \textcolor{keyword}{call }assert( 800815204, i\_elem .eq. 11 + state\_a\%raw\_size( ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00092}00092     i\_elem = 16}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00093}00093     \textcolor{keyword}{call }state\_b\%dump\_state( raw\_state\_b, i\_elem )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00094}00094     \textcolor{keyword}{call }assert( 850030683, i\_elem .eq. 16 + state\_b\%raw\_size( ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00095}00095     flag = .true.}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00096}00096     \textcolor{keywordflow}{do} i\_elem = 1, state\_a\%raw\_size( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00097}00097       flag = flag .and. raw\_state\_a( 10 + i\_elem ) .eq. raw\_state\_b( 15 + i\_elem )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00098}00098 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00099}00099     \textcolor{keyword}{call }assert( 173214135, .not. flag )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00100}00100     i\_elem = 11}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00101}00101     \textcolor{keyword}{call }state\_b\%load\_state( raw\_state\_a, i\_elem )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00102}00102     \textcolor{keyword}{call }assert( 161232282, i\_elem .eq. 11 + state\_b\%raw\_size( ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00103}00103     i\_elem = 16}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00104}00104     \textcolor{keyword}{call }state\_a\%dump\_state( raw\_state\_b, i\_elem )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00105}00105     \textcolor{keyword}{call }assert( 157873509, i\_elem .eq. 16 + state\_b\%raw\_size( ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00106}00106     flag = .true.}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00107}00107     \textcolor{keywordflow}{do} i\_elem = 1, state\_a\%raw\_size( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00108}00108       flag = flag .and. raw\_state\_a( 10 + i\_elem ) .eq. raw\_state\_b( 15 + i\_elem )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00109}00109 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00110}00110     \textcolor{keyword}{call }assert( 272097388, flag )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00111}00111     \textcolor{keywordflow}{do} i\_elem = 1, 10}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00112}00112       \textcolor{keyword}{call }assert( 661626675, raw\_state\_a( i\_elem ) .eq. 12.5\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00113}00113 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00114}00114     \textcolor{keywordflow}{do} i\_elem = 11 + state\_a\%raw\_size( ), 15 + state\_a\%raw\_size( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00115}00115       \textcolor{keyword}{call }assert( 642927276, raw\_state\_a( i\_elem ) .eq. 12.5\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00116}00116 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00117}00117     \textcolor{keywordflow}{do} i\_elem = 1, 15}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00118}00118       \textcolor{keyword}{call }assert( 472770372, raw\_state\_b( i\_elem ) .eq. 43.1\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00119}00119 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00120}00120     \textcolor{keywordflow}{do} i\_elem = 16 + state\_a\%raw\_size( ), 25 + state\_a\%raw\_size( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00121}00121       \textcolor{keyword}{call }assert( 867563966, raw\_state\_b( i\_elem ) .eq. 43.1\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00122}00122 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00123}00123 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00124}00124     \textcolor{keyword}{deallocate}( raw\_state\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00125}00125     \textcolor{keyword}{deallocate}( raw\_state\_b )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00126}00126     \textcolor{keyword}{deallocate}(     state\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00127}00127     \textcolor{keyword}{deallocate}(     state\_b )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00128}00128 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00129}00129     \textcolor{comment}{! grid accessors}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00130}00130     grid = wavelength\_grid\_t( (/ 12.3\_dk, 100.0\_dk /),                        \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00131}00131                               (/ 92.3\_dk, 1145.0\_dk /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00132}00132     \textcolor{keyword}{call }assert( 588709033, grid .eq. mode\%shortwave\_grid( ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00133}00133     grid = wavelength\_grid\_t( (/ 12.3\_dk, 200.0\_dk /),                        \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00134}00134                               (/ 92.3\_dk, 2290.0\_dk /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00135}00135     \textcolor{keyword}{call }assert( 179027108, grid .eq. mode\%longwave\_grid( ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00136}00136 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00137}00137     \textcolor{comment}{! simple accessors/calculators}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00138}00138     state\_a => mode\%new\_state( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00139}00139     \textcolor{keyword}{call }state\_a\%randomize( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00140}00140     \textcolor{keyword}{allocate}( raw\_state\_a( state\_a\%raw\_size( ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00141}00141     \textcolor{keyword}{call }state\_a\%dump\_state( raw\_state\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00142}00142     \textcolor{comment}{! IMPORTANT: this is just for testing -\/ never rely on the raw state data}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00143}00143     \textcolor{comment}{!            outside of tests. It will change often}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00144}00144     associate( wet\_diameter => raw\_state\_a( 1 ),                              \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00145}00145                number\_mr    => raw\_state\_a( 2 ),                              \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00146}00146                foo\_mass     => raw\_state\_a( 3 ),                              \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00147}00147                bar\_mass     => raw\_state\_a( 4 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00148}00148     \textcolor{keywordflow}{select type}( state\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00149}00149 \textcolor{keywordflow}{    type is}( \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00150}00150     \textcolor{keyword}{call }assert( 680874740,                                                   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00151}00151           mode\%geometric\_mean\_diameter\_of\_number\_distribution\_\_m( state\_a )   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00152}00152           .eq. 42.53\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00153}00153     \textcolor{keyword}{call }assert( 961896750,                                                   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00154}00154           mode\%geometric\_standard\_deviation\_of\_number\_distribution( state\_a ) \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00155}00155           .eq. 2.4\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00156}00156     temp\_value = foo\_mass * 6.0\_dk + bar\_mass * 3.0\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00157}00157     \textcolor{keyword}{call }assert( 267834042,                                                   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00158}00158                  mode\%wet\_volume\_to\_mass\_mixing\_ratio\_\_m3\_kg( state\_a )       \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00159}00159                  .eq. temp\_value )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00160}00160     \textcolor{keyword}{call }assert( 315596282, mode\%wet\_number\_mode\_radius\_\_m( state\_a )         \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00161}00161                             .eq. wet\_diameter * 0.5\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00162}00162     \textcolor{keyword}{call }assert( 371981602, mode\%wet\_number\_mode\_diameter\_\_m( state\_a )       \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00163}00163                             .eq. wet\_diameter )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00164}00164     temp\_value = wet\_diameter * exp( 2.0\_dk * ( log( 2.4\_dk ) )**2 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00165}00165     \textcolor{keyword}{call }assert( 102514747, mode\%wet\_surface\_mode\_diameter\_\_m( state\_a )      \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00166}00166                             .eq. temp\_value )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00167}00167     temp\_value = temp\_value * 0.5\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00168}00168     \textcolor{keyword}{call }assert( 543165047, mode\%wet\_surface\_mode\_radius\_\_m( state\_a )        \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00169}00169                             .eq. temp\_value )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00170}00170     \textcolor{keyword}{call }assert( 769707271, mode\%number\_mixing\_ratio\_\_num\_mol( state\_a )      \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00171}00171                             .eq. number\_mr )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00172}00172 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00173}00173     \textcolor{comment}{! net refractive indices}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00174}00174     \textcolor{keyword}{allocate}( complex\_array\_a( 2 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00175}00175     \textcolor{keyword}{allocate}( complex\_array\_b( 2 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00176}00176     complex\_array\_a = mode\%net\_shortwave\_refractive\_index( state\_a, 2 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00177}00177     complex\_array\_b = \mbox{\hyperlink{test_2unit_2mode_8F90_a5a6751772cc8d9d74d4c801dc963b24a}{net\_refractive\_index}}( state\_a, 2 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00178}00178     \textcolor{keyword}{call }assert( 847572900, complex\_array\_a(1) .eq. complex\_array\_b(1) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00179}00179     \textcolor{keyword}{call }assert( 934499897, complex\_array\_a(2) .eq. complex\_array\_b(2) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00180}00180     complex\_array\_a = mode\%net\_longwave\_refractive\_index( state\_a, 2 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00181}00181     complex\_array\_b = \mbox{\hyperlink{test_2unit_2mode_8F90_a5a6751772cc8d9d74d4c801dc963b24a}{net\_refractive\_index}}( state\_a, 1 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00182}00182     \textcolor{keyword}{call }assert( 764342993, complex\_array\_a(1) .eq. complex\_array\_b(1) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00183}00183     \textcolor{keyword}{call }assert( 594186089, complex\_array\_a(2) .eq. complex\_array\_b(2) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00184}00184     \textcolor{keyword}{deallocate}( complex\_array\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00185}00185     \textcolor{keyword}{deallocate}( complex\_array\_b )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00186}00186 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00187}00187     \textcolor{comment}{! optics functions}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00188}00188     \textcolor{keyword}{call }env\_state\%randomize( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00189}00189     \textcolor{keyword}{allocate}( absorption\_long(  2 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00190}00190     \textcolor{keyword}{allocate}( absorption\_short( 2 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00191}00191     \textcolor{keyword}{allocate}( extinction\_long(  2 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00192}00192     \textcolor{keyword}{allocate}( extinction\_short( 2 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00193}00193     \textcolor{keyword}{allocate}( asymmetry\_long(   2 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00194}00194     \textcolor{keyword}{allocate}( asymmetry\_short(  2 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00195}00195     \textcolor{keyword}{allocate}( ssa\_short(        2 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00196}00196     \textcolor{keyword}{allocate}( aod\_short(        2 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00197}00197     \textcolor{keyword}{allocate}( aod\_long(         2 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00198}00198     \textcolor{keyword}{allocate}( compare\_values(   2 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00199}00199     absorption\_long  = \mbox{\hyperlink{test_2unit_2mode_8F90_a1c73c432491ad865c87c66c0b544343c}{specific\_absorption}}( mode, state\_a, 1 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00200}00200     absorption\_short = \mbox{\hyperlink{test_2unit_2mode_8F90_a1c73c432491ad865c87c66c0b544343c}{specific\_absorption}}( mode, state\_a, 2 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00201}00201     extinction\_long  = \mbox{\hyperlink{test_2unit_2mode_8F90_aa6375010e65030f1c5b9eebf3050fa1f}{specific\_extinction}}( mode, state\_a, 1 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00202}00202     extinction\_short = \mbox{\hyperlink{test_2unit_2mode_8F90_aa6375010e65030f1c5b9eebf3050fa1f}{specific\_extinction}}( mode, state\_a, 2 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00203}00203     asymmetry\_long   = \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(    mode, state\_a, 1 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00204}00204     asymmetry\_short  = \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(    mode, state\_a, 2 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00205}00205 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00206}00206     absorption\_short(:) = min( absorption\_short(:), extinction\_short(:) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00207}00207     ssa\_short(:) = 1.0\_dk -\/ absorption\_short(:) /                             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00208}00208                             ( max( extinction\_short(:), 1.0e-\/40\_dk ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00209}00209     aod\_short(:) = extinction\_short(:) * env\_state\%layer\_thickness\_\_Pa( ) /   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00210}00210                    \mbox{\hyperlink{namespacemam__constants_a7e019f9e4ca78c7222796cafe81b7e2b}{kaccellerationbygravity}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00211}00211     aod\_long(:)  = absorption\_long(:)  * env\_state\%layer\_thickness\_\_Pa( ) /   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00212}00212                    \mbox{\hyperlink{namespacemam__constants_a7e019f9e4ca78c7222796cafe81b7e2b}{kaccellerationbygravity}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00213}00213 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00214}00214     \textcolor{comment}{! get optics shortwave}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00215}00215     \textcolor{keyword}{call }optics\_config\%empty( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00216}00216     \textcolor{keyword}{call }optics\_config\%add( \textcolor{stringliteral}{"{}type"{}}, 1, my\_name )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00217}00217     mock\_optics\_lookup = \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}( optics\_config )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00218}00218     grid    =  mode\%shortwave\_grid( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00219}00219     \textcolor{keyword}{allocate}( optics\_values( grid\%number\_of\_sections( ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00220}00220 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00221}00221     \textcolor{comment}{! scalar get optics}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00222}00222     optics  => mode\%new\_optics( property\_t( my\_name, \textcolor{stringliteral}{"{}asymmetry factor"{}} ),    \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00223}00223                                 grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00224}00224     \textcolor{keyword}{call }assert( 771601198, optics\%native\_grid( ) .eq.                        \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00225}00225                             mock\_optics\_lookup\%grid( ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00226}00226     \textcolor{keyword}{call }assert( 560399600, optics\%output\_grid( ) .eq. grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00227}00227     \textcolor{keyword}{call }mode\%shortwave\_optics( env\_state, state\_a, optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00228}00228     \textcolor{keyword}{call }optics\%get\_values( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00229}00229     compare\_values(:) = aod\_short(:) * ssa\_short(:) * asymmetry\_short(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00230}00230     \textcolor{keyword}{call }assert( 187282691, \textcolor{keyword}{size}( optics\_values ) .eq. \textcolor{keyword}{size}( compare\_values ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00231}00231     \textcolor{keywordflow}{do} i\_band = 1, \textcolor{keyword}{size}( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00232}00232       \textcolor{keyword}{call }assert( 803354202, optics\_values( i\_band ) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00233}00233       \textcolor{keyword}{call }assert( 175300838, optics\_values( i\_band ) .lt. 1.0e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00234}00234       \textcolor{keyword}{call }assert( 229780624, almost\_equal( optics\_values(  i\_band ),         \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00235}00235                                             compare\_values( i\_band ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00236}00236 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00237}00237     \textcolor{keyword}{deallocate}(        optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00238}00238 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00239}00239     \textcolor{comment}{! array get optics}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00240}00240     \textcolor{keyword}{allocate}( optics\_set( 3 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00241}00241     prop = property\_t( my\_name, \textcolor{stringliteral}{"{}layer extinction optical depth"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00242}00242     optics\_set( 1 )\%ptr\_ => mode\%new\_optics( prop, grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00243}00243     prop = property\_t( my\_name, \textcolor{stringliteral}{"{}layer single-\/scatter albedo"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00244}00244     optics\_set( 2 )\%ptr\_ => mode\%new\_optics( prop, grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00245}00245     prop = property\_t( my\_name, \textcolor{stringliteral}{"{}forward scattered fraction"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00246}00246     optics\_set( 3 )\%ptr\_ => mode\%new\_optics( prop, grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00247}00247     \textcolor{keyword}{call }mode\%shortwave\_optics( env\_state, state\_a, optics\_set )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00248}00248     \textcolor{keyword}{call }optics\_set( 1 )\%ptr\_\%get\_values( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00249}00249     compare\_values(:) = aod\_short(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00250}00250     \textcolor{keywordflow}{do} i\_band = 1, \textcolor{keyword}{size}( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00251}00251       \textcolor{keyword}{call }assert( 986456716, optics\_values( i\_band ) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00252}00252       \textcolor{keyword}{call }assert( 198775062, optics\_values( i\_band ) .lt. 1.0e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00253}00253       \textcolor{keyword}{call }assert( 646142908, almost\_equal( optics\_values(  i\_band ),         \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00254}00254                                             compare\_values( i\_band ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00255}00255 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00256}00256     \textcolor{keyword}{call }optics\_set( 2 )\%ptr\_\%get\_values( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00257}00257     compare\_values(:) = aod\_short(:) * ssa\_short(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00258}00258     \textcolor{keywordflow}{do} i\_band = 1, \textcolor{keyword}{size}( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00259}00259       \textcolor{keyword}{call }assert( 312998941, optics\_values( i\_band ) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00260}00260       \textcolor{keyword}{call }assert( 360308886, optics\_values( i\_band ) .lt. 1.0e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00261}00261       \textcolor{keyword}{call }assert( 255160382, almost\_equal( optics\_values(  i\_band ),         \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00262}00262                                             compare\_values( i\_band ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00263}00263 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00264}00264     \textcolor{keyword}{call }optics\_set( 3 )\%ptr\_\%get\_values( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00265}00265     compare\_values(:) = aod\_short(:) * ssa\_short(:) * asymmetry\_short(:)      \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00266}00266                         * asymmetry\_short(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00267}00267     \textcolor{keywordflow}{do} i\_band = 1, \textcolor{keyword}{size}( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00268}00268       \textcolor{keyword}{call }assert( 414788672, optics\_values( i\_band ) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00269}00269       \textcolor{keyword}{call }assert( 244631768, optics\_values( i\_band ) .lt. 1.0e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00270}00270       \textcolor{keyword}{call }assert( 139483264, almost\_equal( optics\_values(  i\_band ),         \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00271}00271                                             compare\_values( i\_band ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00272}00272 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00273}00273     \textcolor{keyword}{deallocate}(    optics\_set )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00274}00274     \textcolor{keyword}{deallocate}( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00275}00275 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00276}00276     \textcolor{comment}{! get optics longwave}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00277}00277     \textcolor{keyword}{call }optics\_config\%empty( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00278}00278     \textcolor{keyword}{call }optics\_config\%add( \textcolor{stringliteral}{"{}type"{}}, 2, my\_name )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00279}00279     mock\_optics\_lookup = \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}( optics\_config )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00280}00280     grid    =  mode\%longwave\_grid( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00281}00281     \textcolor{keyword}{allocate}( optics\_values( grid\%number\_of\_sections( ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00282}00282 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00283}00283     \textcolor{comment}{! scalar get optics}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00284}00284     prop = property\_t( my\_name, \textcolor{stringliteral}{"{}layer absorption optical depth"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00285}00285     optics  => mode\%new\_optics( prop, grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00286}00286     \textcolor{keyword}{call }assert( 691311390, optics\%native\_grid( ) .eq.                        \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00287}00287                             mock\_optics\_lookup\%grid( ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00288}00288     \textcolor{keyword}{call }assert( 121096585, optics\%output\_grid( ) .eq. grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00289}00289     \textcolor{keyword}{call }mode\%longwave\_optics( env\_state, state\_a, optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00290}00290     \textcolor{keyword}{call }optics\%get\_values( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00291}00291     compare\_values(:) = aod\_long(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00292}00292     \textcolor{keyword}{call }assert( 517795713, \textcolor{keyword}{size}( optics\_values ) .eq. \textcolor{keyword}{size}( compare\_values ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00293}00293     \textcolor{keywordflow}{do} i\_band = 1, \textcolor{keyword}{size}( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00294}00294       \textcolor{keyword}{call }assert( 295064557, optics\_values( i\_band ) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00295}00295       \textcolor{keyword}{call }assert( 742432403, optics\_values( i\_band ) .lt. 1.0e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00296}00296       \textcolor{keyword}{call }assert( 572275499, almost\_equal( optics\_values(  i\_band ),         \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00297}00297                                             compare\_values( i\_band ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00298}00298 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00299}00299 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00300}00300     \textcolor{comment}{! array get optics}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00301}00301     \textcolor{keyword}{allocate}( optics\_set( 1 ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00302}00302     optics\_set( 1 )\%ptr\_ => optics}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00303}00303     \textcolor{keyword}{call }mode\%longwave\_optics( env\_state, state\_a, optics\_set )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00304}00304     \textcolor{keyword}{call }optics\_set( 1 )\%ptr\_\%get\_values( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00305}00305     compare\_values(:) = aod\_long(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00306}00306     \textcolor{keyword}{call }assert( 836051349, \textcolor{keyword}{size}( optics\_values ) .eq. \textcolor{keyword}{size}( compare\_values ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00307}00307     \textcolor{keywordflow}{do} i\_band = 1, \textcolor{keyword}{size}( optics\_values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00308}00308       \textcolor{keyword}{call }assert( 383419196, optics\_values( i\_band ) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00309}00309       \textcolor{keyword}{call }assert( 213262292, optics\_values( i\_band ) .lt. 1.0e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00310}00310       \textcolor{keyword}{call }assert( 108113788, almost\_equal( optics\_values(  i\_band ),         \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00311}00311                                             compare\_values( i\_band ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00312}00312 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00313}00313 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00314}00314     \textcolor{keyword}{deallocate}(     optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00315}00315     \textcolor{keyword}{deallocate}( optics\_set )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00316}00316 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00317}00317 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00318}00318 \textcolor{keywordflow}{    class default}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00319}00319       \textcolor{keyword}{call }die( 889482580 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00320}00320 \textcolor{keywordflow}{    end select}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00321}00321     \textcolor{keyword}{end }associate}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00322}00322     \textcolor{keyword}{deallocate}( state\_a )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00323}00323 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00324}00324   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{test_2unit_2mode_8F90_a4b3ec2e169311b36600f635f944af72a}{test\_mode\_t}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00325}00325 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00326}00326 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00327}00327 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00328}\mbox{\hyperlink{test_2unit_2mode_8F90_a5a6751772cc8d9d74d4c801dc963b24a}{00328}}   \textcolor{keyword}{function }\mbox{\hyperlink{test_2unit_2mode_8F90_a5a6751772cc8d9d74d4c801dc963b24a}{net\_refractive\_index}}( mode\_state, long\_or\_short )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00329}00329 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00330}00330     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__mode}{mam\_mode}},                      \textcolor{keywordtype}{only} : \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00331}00331     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : die}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00332}00332     \textcolor{keywordtype}{use }musica\_constants,              \textcolor{keywordtype}{only} : dk => musica\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00333}00333 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00334}00334     \textcolor{keywordtype}{complex(kind=dk)}                :: \mbox{\hyperlink{test_2unit_2mode_8F90_a5a6751772cc8d9d74d4c801dc963b24a}{net\_refractive\_index}}(2)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00335}00335     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: mode\_state}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00336}00336     \textcolor{keywordtype}{integer},             \textcolor{keywordtype}{intent(in)} :: long\_or\_short \textcolor{comment}{! 1=long; 2=short}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00337}00337 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00338}00338 \textcolor{keywordtype}{    real}(kind=dk), \textcolor{keywordtype}{allocatable} :: raw\_state(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00339}00339 \textcolor{keywordtype}{    real}(kind=dk) :: real\_comp, imag\_comp}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00340}00340 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00341}00341     \textcolor{comment}{! select coefficients for long/short wave refractive index in mock\_species}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00342}00342     \textcolor{keywordflow}{select case}( long\_or\_short )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00343}00343     \textcolor{keywordflow}{case}( 1 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00344}00344       real\_comp = 15.6\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00345}00345       imag\_comp = 1.32\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00346}00346     \textcolor{keywordflow}{case}( 2 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00347}00347       real\_comp = 12.5\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00348}00348       imag\_comp = 2.53\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00349}00349 \textcolor{keywordflow}{    case default}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00350}00350       \textcolor{keyword}{call }die( 530770503 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00351}00351 \textcolor{keywordflow}{    end select}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00352}00352 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00353}00353     \textcolor{keyword}{allocate}( raw\_state( mode\_state\%raw\_size( ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00354}00354     \textcolor{keyword}{call }mode\_state\%dump\_state( raw\_state )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00355}00355     \textcolor{comment}{! IMPORTANT: this is just for testing -\/ never rely on the raw state data}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00356}00356     \textcolor{comment}{!            outside of tests. It will change often}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00357}00357     associate( foo\_mmr => raw\_state(3), bar\_mmr => raw\_state(4) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00358}00358       \mbox{\hyperlink{test_2unit_2mode_8F90_a5a6751772cc8d9d74d4c801dc963b24a}{net\_refractive\_index}}(1) =                                               \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00359}00359           cmplx( real\_comp, 6 + imag\_comp, kind=dk ) * ( foo\_mmr * 6 ) +      \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00360}00360           cmplx( real\_comp, 3 + imag\_comp, kind=dk ) * ( bar\_mmr * 3 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00361}00361       \mbox{\hyperlink{test_2unit_2mode_8F90_a5a6751772cc8d9d74d4c801dc963b24a}{net\_refractive\_index}}(2) =                                               \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00362}00362           cmplx( 2 * real\_comp, 6 + imag\_comp, kind=dk ) * ( foo\_mmr * 6 ) +  \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00363}00363           cmplx( 2 * real\_comp, 3 + imag\_comp, kind=dk ) * ( bar\_mmr * 3 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00364}00364       \mbox{\hyperlink{test_2unit_2mode_8F90_a5a6751772cc8d9d74d4c801dc963b24a}{net\_refractive\_index}}(:) = \mbox{\hyperlink{test_2unit_2mode_8F90_a5a6751772cc8d9d74d4c801dc963b24a}{net\_refractive\_index}}(:)                       \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00365}00365                                 / max( foo\_mmr * 6 + bar\_mmr * 3, 1.0e-\/60\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00366}00366     \textcolor{keyword}{end }associate}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00367}00367 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00368}00368   \textcolor{keyword}{end function }\mbox{\hyperlink{test_2unit_2mode_8F90_a5a6751772cc8d9d74d4c801dc963b24a}{net\_refractive\_index}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00369}00369 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00370}00370 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00371}00371 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00372}\mbox{\hyperlink{test_2unit_2mode_8F90_a1c73c432491ad865c87c66c0b544343c}{00372}}   \textcolor{keyword}{function }\mbox{\hyperlink{test_2unit_2mode_8F90_a1c73c432491ad865c87c66c0b544343c}{specific\_absorption}}( mode, mode\_state, long\_or\_short )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00373}00373 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00374}00374     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__constants}{mam\_constants}},                 \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacemam__constants_aba3922cce725e4e68e9f3d90b21f16b3}{kwaterdensitystp}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00375}00375     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__mode}{mam\_mode}},                      \textcolor{keywordtype}{only} : \mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}, \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00376}00376     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__optics__lookup}{mam\_optics\_lookup}},             \textcolor{keywordtype}{only} : \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00377}00377     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : assert, die, almost\_equal}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00378}00378     \textcolor{keywordtype}{use }musica\_config,                 \textcolor{keywordtype}{only} : config\_t}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00379}00379     \textcolor{keywordtype}{use }musica\_constants,              \textcolor{keywordtype}{only} : dk => musica\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00380}00380     \textcolor{keywordtype}{use }musica\_math,                   \textcolor{keywordtype}{only} : chebyshev\_function,             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00381}00381                                               weighted\_chebyshev}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00382}00382 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00383}00383 \textcolor{keywordtype}{    real}(kind=dk)                   :: \mbox{\hyperlink{test_2unit_2mode_8F90_a1c73c432491ad865c87c66c0b544343c}{specific\_absorption}}(2)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00384}00384     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),       \textcolor{keywordtype}{intent(in)} :: mode}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00385}00385     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: mode\_state}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00386}00386     \textcolor{keywordtype}{integer},             \textcolor{keywordtype}{intent(in)} :: long\_or\_short \textcolor{comment}{! 1=long, 2=short}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00387}00387 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00388}00388     \textcolor{keywordtype}{character(len=*)}, \textcolor{keywordtype}{parameter} :: my\_name = \textcolor{stringliteral}{"{}mode absorption test"{}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00389}00389     \textcolor{keywordtype}{type}(config\_t)              :: lookup\_config}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00390}00390     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}})       :: mock\_optics\_lookup}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00391}00391 \textcolor{keywordtype}{    real}(kind=dk)               :: cheby\_coeff(3,2)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00392}00392 \textcolor{keywordtype}{    real}(kind=dk)               :: cheby\_func(3)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00393}00393 \textcolor{keywordtype}{    real}(kind=dk)               :: normal\_radius, wet\_surface\_radius}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00394}00394 \textcolor{keywordtype}{    real}(kind=dk)               :: compare\_values(2)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00395}00395 \textcolor{keywordtype}{    real}(kind=dk), \textcolor{keywordtype}{allocatable}  :: raw\_state(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00396}00396 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00397}00397     \textcolor{keyword}{call }lookup\_config\%empty( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00398}00398     \textcolor{keywordflow}{select case}( long\_or\_short )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00399}00399     \textcolor{keywordflow}{case}( 1 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00400}00400       \textcolor{keyword}{call }lookup\_config\%add( \textcolor{stringliteral}{"{}type"{}}, 2, my\_name )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00401}00401     \textcolor{keywordflow}{case}( 2 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00402}00402       \textcolor{keyword}{call }lookup\_config\%add( \textcolor{stringliteral}{"{}type"{}}, 1, my\_name )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00403}00403 \textcolor{keywordflow}{    case default}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00404}00404       \textcolor{keyword}{call }die( 373295283 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00405}00405 \textcolor{keywordflow}{    end select}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00406}00406     mock\_optics\_lookup = \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}( lookup\_config )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00407}00407     \textcolor{keyword}{call }mock\_optics\_lookup\%get\_optics( (/ ( 0.0\_dk, 0.0\_dk ),                \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00408}00408                                            ( 0.0\_dk, 0.0\_dk ) /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00409}00409                                         \mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{absorption}} = cheby\_coeff )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00410}00410     \textcolor{keyword}{allocate}( raw\_state( mode\_state\%raw\_size( ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00411}00411     \textcolor{keyword}{call }mode\_state\%dump\_state( raw\_state )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00412}00412     \textcolor{comment}{! IMPORTANT: this is just for testing -\/ never rely on the raw state data}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00413}00413     \textcolor{comment}{!            outside of tests. It will change often}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00414}00414     associate( wet\_diameter => raw\_state(1),                                  \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00415}00415                foo\_mass     => raw\_state(3),                                  \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00416}00416                bar\_mass     => raw\_state(4) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00417}00417     wet\_surface\_radius = ( 0.5\_dk * wet\_diameter )                            \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00418}00418                          * exp( 2.0\_dk * ( log( 2.4\_dk ) )**2 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00419}00419     normal\_radius = mock\_optics\_lookup\%normalize\_radius( wet\_surface\_radius )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00420}00420     \textcolor{keyword}{call }chebyshev\_function( normal\_radius, cheby\_func )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00421}00421     \mbox{\hyperlink{test_2unit_2mode_8F90_a1c73c432491ad865c87c66c0b544343c}{specific\_absorption}}(1) =                                                  \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00422}00422         weighted\_chebyshev( 3, cheby\_coeff(:,1), cheby\_func )                 \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00423}00423         \textcolor{comment}{! wet volume to mass mixing ratio}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00424}00424         * ( foo\_mass * 6 + bar\_mass * 3 ) * \mbox{\hyperlink{namespacemam__constants_aba3922cce725e4e68e9f3d90b21f16b3}{kwaterdensitystp}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00425}00425     \mbox{\hyperlink{test_2unit_2mode_8F90_a1c73c432491ad865c87c66c0b544343c}{specific\_absorption}}(1) = max( \mbox{\hyperlink{test_2unit_2mode_8F90_a1c73c432491ad865c87c66c0b544343c}{specific\_absorption}}(1), 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00426}00426     \mbox{\hyperlink{test_2unit_2mode_8F90_a1c73c432491ad865c87c66c0b544343c}{specific\_absorption}}(2) =                                                  \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00427}00427         weighted\_chebyshev( 3, cheby\_coeff(:,2), cheby\_func )                 \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00428}00428         \textcolor{comment}{! wet volume to mass mixing ratio}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00429}00429         * ( foo\_mass * 6 + bar\_mass * 3 ) * \mbox{\hyperlink{namespacemam__constants_aba3922cce725e4e68e9f3d90b21f16b3}{kwaterdensitystp}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00430}00430     \mbox{\hyperlink{test_2unit_2mode_8F90_a1c73c432491ad865c87c66c0b544343c}{specific\_absorption}}(2) = max( \mbox{\hyperlink{test_2unit_2mode_8F90_a1c73c432491ad865c87c66c0b544343c}{specific\_absorption}}(2), 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00431}00431     \textcolor{keyword}{end }associate}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00432}00432 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00433}00433     compare\_values = mode\%specific\_absorption\_\_m2\_kg( mode\_state, 2, 3,       \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00434}00434                                                       cheby\_coeff, cheby\_func )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00435}00435     \textcolor{keyword}{call }assert( 715576209, compare\_values(1) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00436}00436     \textcolor{keyword}{call }assert( 770055995, compare\_values(1) .lt. 1e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00437}00437     \textcolor{keyword}{call }assert( 446787188,                                                   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00438}00438                  almost\_equal( compare\_values(1), \mbox{\hyperlink{test_2unit_2mode_8F90_a1c73c432491ad865c87c66c0b544343c}{specific\_absorption}}(1) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00439}00439     \textcolor{keyword}{call }assert( 654378877, compare\_values(2) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00440}00440     \textcolor{keyword}{call }assert( 201746724, compare\_values(2) .lt. 1e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00441}00441     \textcolor{keyword}{call }assert( 501266974,                                                   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00442}00442                  almost\_equal( compare\_values(2), \mbox{\hyperlink{test_2unit_2mode_8F90_a1c73c432491ad865c87c66c0b544343c}{specific\_absorption}}(2) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00443}00443     compare\_values =                                                          \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00444}00444         mode\%specific\_absorption\_\_m2\_kg( mode\_state, 2, 3,cheby\_coeff,        \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00445}00445                                        cheby\_func,                            \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00446}00446                                        max\_absorption = (/ 0.0\_dk, 0.0\_dk /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00447}00447     \textcolor{keyword}{call }assert( 656083252, compare\_values(1) .eq. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00448}00448     \textcolor{keyword}{call }assert( 485926348, compare\_values(2) .eq. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00449}00449 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00450}00450   \textcolor{keyword}{end function }\mbox{\hyperlink{test_2unit_2mode_8F90_a1c73c432491ad865c87c66c0b544343c}{specific\_absorption}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00451}00451 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00452}00452 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00453}00453 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00454}\mbox{\hyperlink{test_2unit_2mode_8F90_aa6375010e65030f1c5b9eebf3050fa1f}{00454}}   \textcolor{keyword}{function }\mbox{\hyperlink{test_2unit_2mode_8F90_aa6375010e65030f1c5b9eebf3050fa1f}{specific\_extinction}}( mode, mode\_state, long\_or\_short )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00455}00455 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00456}00456     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__constants}{mam\_constants}},                 \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacemam__constants_aba3922cce725e4e68e9f3d90b21f16b3}{kwaterdensitystp}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00457}00457     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__mode}{mam\_mode}},                      \textcolor{keywordtype}{only} : \mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}, \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00458}00458     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__optics__lookup}{mam\_optics\_lookup}},             \textcolor{keywordtype}{only} : \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00459}00459     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : assert, die, almost\_equal}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00460}00460     \textcolor{keywordtype}{use }musica\_config,                 \textcolor{keywordtype}{only} : config\_t}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00461}00461     \textcolor{keywordtype}{use }musica\_constants,              \textcolor{keywordtype}{only} : dk => musica\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00462}00462     \textcolor{keywordtype}{use }musica\_math,                   \textcolor{keywordtype}{only} : chebyshev\_function,             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00463}00463                                               weighted\_chebyshev}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00464}00464 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00465}00465 \textcolor{keywordtype}{    real}(kind=dk)                   :: \mbox{\hyperlink{test_2unit_2mode_8F90_aa6375010e65030f1c5b9eebf3050fa1f}{specific\_extinction}}(2)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00466}00466     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),       \textcolor{keywordtype}{intent(in)} :: mode}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00467}00467     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: mode\_state}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00468}00468     \textcolor{keywordtype}{integer},             \textcolor{keywordtype}{intent(in)} :: long\_or\_short \textcolor{comment}{! 1=long, 2=short}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00469}00469 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00470}00470     \textcolor{keywordtype}{character(len=*)}, \textcolor{keywordtype}{parameter} :: my\_name = \textcolor{stringliteral}{"{}mode extinction test"{}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00471}00471     \textcolor{keywordtype}{type}(config\_t)              :: lookup\_config}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00472}00472     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}})       :: mock\_optics\_lookup}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00473}00473 \textcolor{keywordtype}{    real}(kind=dk)               :: cheby\_coeff(3,2)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00474}00474 \textcolor{keywordtype}{    real}(kind=dk)               :: cheby\_func(3)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00475}00475 \textcolor{keywordtype}{    real}(kind=dk)               :: normal\_radius, wet\_surface\_radius}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00476}00476 \textcolor{keywordtype}{    real}(kind=dk)               :: compare\_values(2)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00477}00477 \textcolor{keywordtype}{    real}(kind=dk), \textcolor{keywordtype}{allocatable}  :: raw\_state(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00478}00478 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00479}00479     \textcolor{keyword}{call }lookup\_config\%empty( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00480}00480     \textcolor{keywordflow}{select case}( long\_or\_short )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00481}00481     \textcolor{keywordflow}{case}( 1 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00482}00482       \textcolor{keyword}{call }lookup\_config\%add( \textcolor{stringliteral}{"{}type"{}}, 2, my\_name )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00483}00483     \textcolor{keywordflow}{case}( 2 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00484}00484       \textcolor{keyword}{call }lookup\_config\%add( \textcolor{stringliteral}{"{}type"{}}, 1, my\_name )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00485}00485 \textcolor{keywordflow}{    case default}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00486}00486       \textcolor{keyword}{call }die( 995833204 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00487}00487 \textcolor{keywordflow}{    end select}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00488}00488     mock\_optics\_lookup = \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}( lookup\_config )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00489}00489     \textcolor{keyword}{call }mock\_optics\_lookup\%get\_optics( (/ ( 0.0\_dk, 0.0\_dk ),                \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00490}00490                                            ( 0.0\_dk, 0.0\_dk ) /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00491}00491                                         \mbox{\hyperlink{src_2optics__lookup_8F90_adf05b821a31ec1048d1c124d5ceab938}{extinction}} = cheby\_coeff )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00492}00492     \textcolor{keyword}{allocate}( raw\_state( mode\_state\%raw\_size( ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00493}00493     \textcolor{keyword}{call }mode\_state\%dump\_state( raw\_state )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00494}00494     \textcolor{comment}{! IMPORTANT: this is just for testing -\/ never rely on the raw state data}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00495}00495     \textcolor{comment}{!            outside of tests. It will change often}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00496}00496     associate( wet\_diameter => raw\_state(1),                                  \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00497}00497                foo\_mass     => raw\_state(3),                                  \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00498}00498                bar\_mass     => raw\_state(4) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00499}00499     wet\_surface\_radius = ( 0.5\_dk * wet\_diameter )                            \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00500}00500                          * exp( 2.0\_dk * ( log( 2.4\_dk ) )**2 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00501}00501     normal\_radius = mock\_optics\_lookup\%normalize\_radius( wet\_surface\_radius )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00502}00502     \textcolor{keyword}{call }chebyshev\_function( normal\_radius, cheby\_func )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00503}00503     \textcolor{keywordflow}{if}( wet\_surface\_radius .le. mock\_optics\_lookup\%maximum\_radius\_\_m( ) ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00504}00504       \mbox{\hyperlink{test_2unit_2mode_8F90_aa6375010e65030f1c5b9eebf3050fa1f}{specific\_extinction}}(1) =                                                \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00505}00505           exp( weighted\_chebyshev( 3, cheby\_coeff(:,1), cheby\_func ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00506}00506       \mbox{\hyperlink{test_2unit_2mode_8F90_aa6375010e65030f1c5b9eebf3050fa1f}{specific\_extinction}}(2) =                                                \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00507}00507           exp( weighted\_chebyshev( 3, cheby\_coeff(:,2), cheby\_func ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00508}00508     \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00509}00509       \mbox{\hyperlink{test_2unit_2mode_8F90_aa6375010e65030f1c5b9eebf3050fa1f}{specific\_extinction}}(:) =                                                \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00510}00510           1.5\_dk / ( wet\_surface\_radius * \mbox{\hyperlink{namespacemam__constants_aba3922cce725e4e68e9f3d90b21f16b3}{kwaterdensitystp}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00511}00511 \textcolor{keywordflow}{    end if}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00512}00512     \mbox{\hyperlink{test_2unit_2mode_8F90_aa6375010e65030f1c5b9eebf3050fa1f}{specific\_extinction}}(:) = \mbox{\hyperlink{test_2unit_2mode_8F90_aa6375010e65030f1c5b9eebf3050fa1f}{specific\_extinction}}(:)                           \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00513}00513         \textcolor{comment}{! wet volume to mass mixing ratio}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00514}00514         * ( foo\_mass * 6 + bar\_mass * 3 ) * \mbox{\hyperlink{namespacemam__constants_aba3922cce725e4e68e9f3d90b21f16b3}{kwaterdensitystp}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00515}00515     \textcolor{keyword}{end }associate}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00516}00516 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00517}00517     compare\_values = mode\%specific\_extinction\_\_m2\_kg( mode\_state, 2, 3,       \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00518}00518                                                       cheby\_coeff, cheby\_func,\&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00519}00519                                                       mock\_optics\_lookup )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00520}00520     \textcolor{keyword}{call }assert( 933495353, compare\_values(1) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00521}00521     \textcolor{keyword}{call }assert( 480863200, compare\_values(1) .lt. 1e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00522}00522     \textcolor{keyword}{call }assert( 108102181,                                                   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00523}00523                  almost\_equal( compare\_values(1), \mbox{\hyperlink{test_2unit_2mode_8F90_aa6375010e65030f1c5b9eebf3050fa1f}{specific\_extinction}}(1) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00524}00524     \textcolor{keyword}{call }assert( 310706296, compare\_values(2) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00525}00525     \textcolor{keyword}{call }assert( 140549392, compare\_values(2) .lt. 1e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00526}00526     \textcolor{keyword}{call }assert( 837945276,                                                   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00527}00527                  almost\_equal( compare\_values(2), \mbox{\hyperlink{test_2unit_2mode_8F90_aa6375010e65030f1c5b9eebf3050fa1f}{specific\_extinction}}(2) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00528}00528 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00529}00529   \textcolor{keyword}{end function }\mbox{\hyperlink{test_2unit_2mode_8F90_aa6375010e65030f1c5b9eebf3050fa1f}{specific\_extinction}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00530}00530 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00531}00531 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00532}00532 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00533}\mbox{\hyperlink{test_2unit_2mode_8F90_a6269266e079f8970802163c9c5faac0f}{00533}}   \textcolor{keyword}{function }\mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}( mode, mode\_state, long\_or\_short )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00534}00534 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00535}00535     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__constants}{mam\_constants}},                 \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacemam__constants_aba3922cce725e4e68e9f3d90b21f16b3}{kwaterdensitystp}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00536}00536     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__mode}{mam\_mode}},                      \textcolor{keywordtype}{only} : \mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}, \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00537}00537     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__optics__lookup}{mam\_optics\_lookup}},             \textcolor{keywordtype}{only} : \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00538}00538     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : assert, die, almost\_equal}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00539}00539     \textcolor{keywordtype}{use }musica\_config,                 \textcolor{keywordtype}{only} : config\_t}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00540}00540     \textcolor{keywordtype}{use }musica\_constants,              \textcolor{keywordtype}{only} : dk => musica\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00541}00541     \textcolor{keywordtype}{use }musica\_math,                   \textcolor{keywordtype}{only} : chebyshev\_function,             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00542}00542                                               weighted\_chebyshev}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00543}00543 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00544}00544 \textcolor{keywordtype}{    real}(kind=dk)                   :: \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(2)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00545}00545     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}),       \textcolor{keywordtype}{intent(in)} :: mode}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00546}00546     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: mode\_state}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00547}00547     \textcolor{keywordtype}{integer},             \textcolor{keywordtype}{intent(in)} :: long\_or\_short \textcolor{comment}{! 1=long, 2=short}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00548}00548 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00549}00549     \textcolor{keywordtype}{character(len=*)}, \textcolor{keywordtype}{parameter} :: my\_name = \textcolor{stringliteral}{"{}mode asymmetry factor test"{}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00550}00550     \textcolor{keywordtype}{type}(config\_t)              :: lookup\_config}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00551}00551     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}})       :: mock\_optics\_lookup}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00552}00552 \textcolor{keywordtype}{    real}(kind=dk)               :: cheby\_coeff(3,2)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00553}00553 \textcolor{keywordtype}{    real}(kind=dk)               :: cheby\_func(3)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00554}00554 \textcolor{keywordtype}{    real}(kind=dk)               :: normal\_radius, wet\_surface\_radius}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00555}00555 \textcolor{keywordtype}{    real}(kind=dk)               :: compare\_values(2)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00556}00556 \textcolor{keywordtype}{    real}(kind=dk), \textcolor{keywordtype}{allocatable}  :: raw\_state(:)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00557}00557 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00558}00558     \textcolor{keyword}{call }lookup\_config\%empty( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00559}00559     \textcolor{keywordflow}{select case}( long\_or\_short )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00560}00560     \textcolor{keywordflow}{case}( 1 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00561}00561       \textcolor{keyword}{call }lookup\_config\%add( \textcolor{stringliteral}{"{}type"{}}, 2, my\_name )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00562}00562     \textcolor{keywordflow}{case}( 2 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00563}00563       \textcolor{keyword}{call }lookup\_config\%add( \textcolor{stringliteral}{"{}type"{}}, 1, my\_name )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00564}00564 \textcolor{keywordflow}{    case default}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00565}00565       \textcolor{keyword}{call }die( 567537861 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00566}00566 \textcolor{keywordflow}{    end select}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00567}00567     mock\_optics\_lookup = \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}( lookup\_config )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00568}00568     \textcolor{keyword}{call }mock\_optics\_lookup\%get\_optics( (/ ( 0.0\_dk, 0.0\_dk ),                \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00569}00569                                            ( 0.0\_dk, 0.0\_dk ) /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00570}00570                                         \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}} = cheby\_coeff )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00571}00571     \textcolor{keyword}{allocate}( raw\_state( mode\_state\%raw\_size( ) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00572}00572     \textcolor{keyword}{call }mode\_state\%dump\_state( raw\_state )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00573}00573     \textcolor{comment}{! IMPORTANT: this is just for testing -\/ never rely on the raw state data}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00574}00574     \textcolor{comment}{!            outside of tests. It will change often}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00575}00575     associate( wet\_diameter => raw\_state(1) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00576}00576     wet\_surface\_radius = ( 0.5\_dk * wet\_diameter )                            \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00577}00577                          * exp( 2.0\_dk * ( log( 2.4\_dk ) )**2 )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00578}00578     normal\_radius = mock\_optics\_lookup\%normalize\_radius( wet\_surface\_radius )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00579}00579     \textcolor{keyword}{call }chebyshev\_function( normal\_radius, cheby\_func )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00580}00580     \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(1) = weighted\_chebyshev( 3, cheby\_coeff(:,1), cheby\_func )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00581}00581     \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(2) = weighted\_chebyshev( 3, cheby\_coeff(:,2), cheby\_func )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00582}00582     \textcolor{keyword}{end }associate}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00583}00583 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00584}00584     compare\_values = mode\%asymmetry\_factor( mode\_state, 2, 3, cheby\_coeff,    \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00585}00585                                             cheby\_func )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00586}00586     \textcolor{keyword}{call }assert( 174649801, compare\_values(1) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00587}00587     \textcolor{keyword}{call }assert( 904492896, compare\_values(1) .lt. 1e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00588}00588     \textcolor{keyword}{call }assert( 734335992,                                                   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00589}00589                  almost\_equal( compare\_values(1), \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(1) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00590}00590     \textcolor{keyword}{call }assert( 281703839, compare\_values(2) .gt. 0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00591}00591     \textcolor{keyword}{call }assert( 394022184, compare\_values(2) .lt. 1e200\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00592}00592     \textcolor{keyword}{call }assert( 223865280,                                                   \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00593}00593                  almost\_equal( compare\_values(2), \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(2) ) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00594}00594 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00595}00595   \textcolor{keyword}{end function }\mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00596}00596 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00597}00597 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00598}00598 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2mode_8F90_source_l00599}00599 \textcolor{keyword}{end program }\mbox{\hyperlink{test_2unit_2mode_8F90_ad675fc929a03cce22326d4940b241741}{test\_mode}}}
+
+\end{DoxyCode}

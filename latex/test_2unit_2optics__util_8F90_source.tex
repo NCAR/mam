@@ -1,0 +1,216 @@
+\hypertarget{test_2unit_2optics__util_8F90_source}{}\doxysection{optics\+\_\+util.\+F90}
+\label{test_2unit_2optics__util_8F90_source}\index{/github/workspace/test/unit/optics\_util.F90@{/github/workspace/test/unit/optics\_util.F90}}
+\mbox{\hyperlink{test_2unit_2optics__util_8F90}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2021 National Center for Atmospheric Research}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00002}00002 \textcolor{comment}{! SPDX-\/License-\/Identifier: Apache-\/2.0}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00003}00003 \textcolor{comment}{!}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00004}00004 \textcolor{comment}{!> \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00005}00005 \textcolor{comment}{!> Tests for the mam\_optics\_util module}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00006}00006 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00007}00007 \textcolor{comment}{!> Tests for optics utility functions}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00008}\mbox{\hyperlink{test_2unit_2optics__util_8F90_a1634f95bae5e687f3702fdcce8c5c931}{00008}} \textcolor{keyword}{program} \mbox{\hyperlink{test_2unit_2optics__util_8F90_a1634f95bae5e687f3702fdcce8c5c931}{test\_optics\_util}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00009}00009 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00010}00010   \textcolor{keywordtype}{implicit none}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00011}00011 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00012}00012   \textcolor{keyword}{call }\mbox{\hyperlink{test_2unit_2optics__util_8F90_ac5ebb5fd71d5e88df876039ccea1205d}{test\_optics\_util\_functions}}( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00013}00013 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00014}00014 \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00015}00015 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00016}00016 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00017}00017 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00018}\mbox{\hyperlink{test_2unit_2optics__util_8F90_ac5ebb5fd71d5e88df876039ccea1205d}{00018}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{test_2unit_2optics__util_8F90_ac5ebb5fd71d5e88df876039ccea1205d}{test\_optics\_util\_functions}}( )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00019}00019 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00020}00020     \textcolor{keywordtype}{use }ai\_wavelength\_grid,            \textcolor{keywordtype}{only} : wavelength\_grid\_t}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00021}00021     \textcolor{keywordtype}{use }ai\_optics,                     \textcolor{keywordtype}{only} : optics\_t}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00022}00022     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__optics__util}{mam\_optics\_util}},               \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}},                  \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00023}00023                                               \mbox{\hyperlink{namespacemam__optics__util_ab1d8fd653e3523e1e8d23ce7ba21f5d7}{add\_shortwave\_property}},         \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00024}00024                                               \mbox{\hyperlink{namespacemam__optics__util_ab252336adf9500f549d921fd1a461840}{add\_longwave\_property}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00025}00025     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : assert}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00026}00026     \textcolor{keywordtype}{use }musica\_constants,              \textcolor{keywordtype}{only} : dk => musica\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00027}00027     \textcolor{keywordtype}{use }musica\_property,               \textcolor{keywordtype}{only} : property\_t}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00028}00028     \textcolor{keywordtype}{use }mock\_interpolation\_strategy,   \textcolor{keywordtype}{only} : foo\_mapper}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00029}00029 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00030}00030     \textcolor{keywordtype}{character(len=*)}, \textcolor{keywordtype}{parameter} :: my\_name = \textcolor{stringliteral}{"{}optics utility tests"{}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00031}00031     \textcolor{keywordtype}{type}(wavelength\_grid\_t)     :: native\_sw\_grid, native\_lw\_grid, output\_grid}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00032}00032     \textcolor{keywordtype}{type}(property\_t)            :: property}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00033}00033     \textcolor{keywordtype}{class}(optics\_t), \textcolor{keywordtype}{pointer}    :: optics}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00034}00034 \textcolor{keywordtype}{    real}(kind=dk)               :: values(3)}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00036}00036     native\_sw\_grid = wavelength\_grid\_t( (/  0.0\_dk,  10.0\_dk, 200.0\_dk /),    \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00037}00037                                         (/ 10.0\_dk, 110.0\_dk, 400.0\_dk /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00038}00038     native\_lw\_grid = wavelength\_grid\_t( (/ 10.0\_dk, 400.0\_dk /),              \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00039}00039                                         (/ 20.0\_dk, 600.0\_dk /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00040}00040 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00041}00041     \textcolor{comment}{! no interpolation}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00042}00042     output\_grid    =  native\_sw\_grid}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00043}00043     property       =  property\_t( my\_name,                                    \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00044}00044                                   name = \textcolor{stringliteral}{"{}layer extinction optical depth"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00045}00045     optics         => \mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}}( property, native\_sw\_grid, native\_lw\_grid,\&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00046}00046                                      output\_grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00047}00047     \textcolor{keyword}{call }optics\%set\_values( (/ 0.0\_dk, 0.0\_dk, 0.0\_dk /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00048}00048     \textcolor{keyword}{call }\mbox{\hyperlink{namespacemam__optics__util_ab1d8fd653e3523e1e8d23ce7ba21f5d7}{add\_shortwave\_property}}( (/ 150.0\_dk, 0.0\_dk, 10.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00049}00049                                  (/   2.0\_dk, 5.0\_dk,  1.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00050}00050                                  (/  10.0\_dk, 4.0\_dk, 25.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00051}00051                                  optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00052}00052     values(:) = 0.0\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00053}00053     \textcolor{keyword}{call }optics\%get\_values( values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00054}00054     \textcolor{keyword}{call }assert( 201129633, values(1) .eq. 150.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00055}00055     \textcolor{keyword}{call }assert( 930972728, values(2) .eq.   0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00056}00056     \textcolor{keyword}{call }assert( 143291074, values(3) .eq.  10.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00057}00057     \textcolor{keyword}{deallocate}( optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00058}00058 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00059}00059     property       =  property\_t( my\_name,                                    \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00060}00060                                   name = \textcolor{stringliteral}{"{}layer single-\/scatter albedo"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00061}00061     optics         => \mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}}( property, native\_sw\_grid, native\_lw\_grid,\&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00062}00062                                      output\_grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00063}00063     \textcolor{keyword}{call }optics\%set\_values( (/ 0.0\_dk, 0.0\_dk, 0.0\_dk /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00064}00064     \textcolor{keyword}{call }\mbox{\hyperlink{namespacemam__optics__util_ab1d8fd653e3523e1e8d23ce7ba21f5d7}{add\_shortwave\_property}}( (/ 150.0\_dk, 0.0\_dk, 10.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00065}00065                                  (/   2.0\_dk, 5.0\_dk,  1.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00066}00066                                  (/  10.0\_dk, 4.0\_dk, 25.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00067}00067                                  optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00068}00068     values(:) = 0.0\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00069}00069     \textcolor{keyword}{call }optics\%get\_values( values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00070}00070     \textcolor{keyword}{call }assert( 692900946, values(1) .eq. 300.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00071}00071     \textcolor{keyword}{call }assert( 805219291, values(2) .eq.   0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00072}00072     \textcolor{keyword}{call }assert( 635062387, values(3) .eq.  10.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00073}00073     \textcolor{keyword}{deallocate}( optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00074}00074 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00075}00075     property       =  property\_t( my\_name,                                    \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00076}00076                                   name = \textcolor{stringliteral}{"{}asymmetry factor"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00077}00077     optics         => \mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}}( property, native\_sw\_grid, native\_lw\_grid,\&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00078}00078                                      output\_grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00079}00079     \textcolor{keyword}{call }optics\%set\_values( (/ 0.0\_dk, 0.0\_dk, 0.0\_dk /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00080}00080     \textcolor{keyword}{call }\mbox{\hyperlink{namespacemam__optics__util_ab1d8fd653e3523e1e8d23ce7ba21f5d7}{add\_shortwave\_property}}( (/ 150.0\_dk, 0.0\_dk, 10.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00081}00081                                  (/   2.0\_dk, 5.0\_dk,  1.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00082}00082                                  (/  10.0\_dk, 4.0\_dk, 25.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00083}00083                                  optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00084}00084     values(:) = 0.0\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00085}00085     \textcolor{keyword}{call }optics\%get\_values( values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00086}00086     \textcolor{keyword}{call }assert( 914178863, values(1) .eq. 3000.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00087}00087     \textcolor{keyword}{call }assert( 461546710, values(2) .eq.    0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00088}00088     \textcolor{keyword}{call }assert( 356398206, values(3) .eq.  250.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00089}00089     \textcolor{keyword}{deallocate}( optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00090}00090 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00091}00091     property       =  property\_t( my\_name,                                    \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00092}00092                                   name = \textcolor{stringliteral}{"{}forward scattered fraction"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00093}00093     optics         => \mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}}( property, native\_sw\_grid, native\_lw\_grid,\&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00094}00094                                      output\_grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00095}00095     \textcolor{keyword}{call }optics\%set\_values( (/ 0.0\_dk, 0.0\_dk, 0.0\_dk /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00096}00096     \textcolor{keyword}{call }\mbox{\hyperlink{namespacemam__optics__util_ab1d8fd653e3523e1e8d23ce7ba21f5d7}{add\_shortwave\_property}}( (/ 150.0\_dk, 0.0\_dk, 10.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00097}00097                                  (/   2.0\_dk, 5.0\_dk,  1.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00098}00098                                  (/  10.0\_dk, 4.0\_dk, 25.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00099}00099                                  optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00100}00100     values(:) = 0.0\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00101}00101     \textcolor{keyword}{call }optics\%get\_values( values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00102}00102     \textcolor{keyword}{call }assert( 630250375, values(1) .eq. 30000.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00103}00103     \textcolor{keyword}{call }assert( 177618222, values(2) .eq.     0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00104}00104     \textcolor{keyword}{call }assert( 907461317, values(3) .eq.  6250.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00105}00105     \textcolor{keyword}{deallocate}( optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00106}00106 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00107}00107     output\_grid    =  native\_lw\_grid}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00108}00108     property       =  property\_t( my\_name,                                    \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00109}00109                                   name = \textcolor{stringliteral}{"{}layer absorption optical depth"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00110}00110     optics         => \mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}}( property, native\_sw\_grid, native\_lw\_grid,\&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00111}00111                                      output\_grid )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00112}00112     \textcolor{keyword}{call }optics\%set\_values( (/ 0.0\_dk, 0.0\_dk /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00113}00113     \textcolor{keyword}{call }\mbox{\hyperlink{namespacemam__optics__util_ab252336adf9500f549d921fd1a461840}{add\_longwave\_property}}( (/ 150.0\_dk, 0.0\_dk /), optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00114}00114     values(:) = 0.0\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00115}00115     \textcolor{keyword}{call }optics\%get\_values( values(1:2) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00116}00116     \textcolor{keyword}{call }assert( 228739235, values(1) .eq. 150.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00117}00117     \textcolor{keyword}{call }assert( 676107081, values(2) .eq.   0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00118}00118     \textcolor{keyword}{call }assert( 223474928, values(3) .eq.   0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00119}00119     \textcolor{keyword}{deallocate}( optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00120}00120 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00121}00121     \textcolor{comment}{! custom interpolation strategy}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00122}00122     output\_grid    = wavelength\_grid\_t( (/  4.0\_dk,  14.0\_dk, 210.0\_dk /),    \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00123}00123                                         (/ 13.0\_dk, 105.0\_dk, 403.0\_dk /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00124}00124     property       =  property\_t( my\_name,                                    \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00125}00125                                   name = \textcolor{stringliteral}{"{}layer extinction optical depth"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00126}00126     optics         => \mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}}( property, native\_sw\_grid, native\_lw\_grid,\&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00127}00127                                      output\_grid,                             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00128}00128                                      interpolation\_strategy = foo\_mapper )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00129}00129     \textcolor{keyword}{call }optics\%set\_values( (/ 0.0\_dk, 0.0\_dk, 0.0\_dk /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00130}00130     \textcolor{keyword}{call }\mbox{\hyperlink{namespacemam__optics__util_ab1d8fd653e3523e1e8d23ce7ba21f5d7}{add\_shortwave\_property}}( (/ 150.0\_dk, 1.0\_dk, 10.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00131}00131                                  (/   2.0\_dk, 5.0\_dk,  1.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00132}00132                                  (/  10.0\_dk, 4.0\_dk, 25.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00133}00133                                  optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00134}00134     values(:) = 0.0\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00135}00135     \textcolor{keyword}{call }optics\%get\_values( values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00136}00136     \textcolor{keyword}{call }assert( 577249425, values(1) .eq. 150.5\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00137}00137     \textcolor{keyword}{call }assert( 689567770, values(2) .eq.   0.5\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00138}00138     \textcolor{keyword}{call }assert( 519410866, values(3) .eq.   0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00139}00139     \textcolor{keyword}{deallocate}( optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00140}00140 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00141}00141     property       =  property\_t( my\_name,                                    \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00142}00142                                   name = \textcolor{stringliteral}{"{}layer single-\/scatter albedo"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00143}00143     optics         => \mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}}( property, native\_sw\_grid, native\_lw\_grid,\&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00144}00144                                      output\_grid,                             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00145}00145                                      interpolation\_strategy = foo\_mapper )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00146}00146     \textcolor{keyword}{call }optics\%set\_values( (/ 0.0\_dk, 0.0\_dk, 0.0\_dk /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00147}00147     \textcolor{keyword}{call }\mbox{\hyperlink{namespacemam__optics__util_ab1d8fd653e3523e1e8d23ce7ba21f5d7}{add\_shortwave\_property}}( (/ 150.0\_dk, 1.0\_dk, 10.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00148}00148                                  (/   2.0\_dk, 5.0\_dk,  1.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00149}00149                                  (/  10.0\_dk, 4.0\_dk, 25.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00150}00150                                  optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00151}00151     values(:) = 0.0\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00152}00152     \textcolor{keyword}{call }optics\%get\_values( values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00153}00153     \textcolor{keyword}{call }assert( 110016064, values(1) .eq. 302.5\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00154}00154     \textcolor{keyword}{call }assert( 287342809, values(2) .eq.   2.5\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00155}00155     \textcolor{keyword}{call }assert( 734710655, values(3) .eq.   0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00156}00156     \textcolor{keyword}{deallocate}( optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00157}00157 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00158}00158     property       =  property\_t( my\_name,                                    \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00159}00159                                   name = \textcolor{stringliteral}{"{}asymmetry factor"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00160}00160     optics         => \mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}}( property, native\_sw\_grid, native\_lw\_grid,\&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00161}00161                                      output\_grid,                             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00162}00162                                      interpolation\_strategy = foo\_mapper )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00163}00163     \textcolor{keyword}{call }optics\%set\_values( (/ 0.0\_dk, 0.0\_dk, 0.0\_dk /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00164}00164     \textcolor{keyword}{call }\mbox{\hyperlink{namespacemam__optics__util_ab1d8fd653e3523e1e8d23ce7ba21f5d7}{add\_shortwave\_property}}( (/ 150.0\_dk, 1.0\_dk, 10.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00165}00165                                  (/   2.0\_dk, 5.0\_dk,  1.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00166}00166                                  (/  10.0\_dk, 4.0\_dk, 25.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00167}00167                                  optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00168}00168     values(:) = 0.0\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00169}00169     \textcolor{keyword}{call }optics\%get\_values( values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00170}00170     \textcolor{keyword}{call }assert( 283984036, values(1) .eq. 3010.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00171}00171     \textcolor{keyword}{call }assert( 113827132, values(2) .eq.   10.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00172}00172     \textcolor{keyword}{call }assert( 561194978, values(3) .eq.    0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00173}00173     \textcolor{keyword}{deallocate}( optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00174}00174 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00175}00175     property       =  property\_t( my\_name,                                    \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00176}00176                                   name = \textcolor{stringliteral}{"{}forward scattered fraction"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00177}00177     optics         => \mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}}( property, native\_sw\_grid, native\_lw\_grid,\&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00178}00178                                      output\_grid,                             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00179}00179                                      interpolation\_strategy = foo\_mapper )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00180}00180     \textcolor{keyword}{call }optics\%set\_values( (/ 0.0\_dk, 0.0\_dk, 0.0\_dk /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00181}00181     \textcolor{keyword}{call }\mbox{\hyperlink{namespacemam__optics__util_ab1d8fd653e3523e1e8d23ce7ba21f5d7}{add\_shortwave\_property}}( (/ 150.0\_dk, 1.0\_dk, 10.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00182}00182                                  (/   2.0\_dk, 5.0\_dk,  1.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00183}00183                                  (/  10.0\_dk, 4.0\_dk, 25.0\_dk /),             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00184}00184                                  optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00185}00185     values(:) = 0.0\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00186}00186     \textcolor{keyword}{call }optics\%get\_values( values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00187}00187     \textcolor{keyword}{call }assert( 892885706, values(1) .eq. 30040.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00188}00188     \textcolor{keyword}{call }assert( 440253553, values(2) .eq.    40.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00189}00189     \textcolor{keyword}{call }assert( 335105049, values(3) .eq.     0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00190}00190     \textcolor{keyword}{deallocate}( optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00191}00191 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00192}00192     property       =  property\_t( my\_name,                                    \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00193}00193                                   name = \textcolor{stringliteral}{"{}layer absorption optical depth"{}} )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00194}00194     optics         => \mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}}( property, native\_sw\_grid, native\_lw\_grid,\&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00195}00195                                      output\_grid,                             \&}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00196}00196                                      interpolation\_strategy = foo\_mapper )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00197}00197     \textcolor{keyword}{call }optics\%set\_values( (/ 0.0\_dk, 0.0\_dk /) )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00198}00198     \textcolor{keyword}{call }\mbox{\hyperlink{namespacemam__optics__util_ab252336adf9500f549d921fd1a461840}{add\_longwave\_property}}( (/ 150.0\_dk, 1.0\_dk /), optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00199}00199     values(:) = 0.0\_dk}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00200}00200     \textcolor{keyword}{call }optics\%get\_values( values )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00201}00201     \textcolor{keyword}{call }assert( 214163624, values(1) .eq. 150.5\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00202}00202     \textcolor{keyword}{call }assert( 944006719, values(2) .eq.   0.5\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00203}00203     \textcolor{keyword}{call }assert( 491374566, values(3) .eq.   0.0\_dk )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00204}00204     \textcolor{keyword}{deallocate}( optics )}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00205}00205 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00206}00206   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{test_2unit_2optics__util_8F90_ac5ebb5fd71d5e88df876039ccea1205d}{test\_optics\_util\_functions}}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00207}00207 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00208}00208 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00209}00209 }
+\DoxyCodeLine{\Hypertarget{test_2unit_2optics__util_8F90_source_l00210}00210 \textcolor{keyword}{end program }\mbox{\hyperlink{test_2unit_2optics__util_8F90_a1634f95bae5e687f3702fdcce8c5c931}{test\_optics\_util}}}
+
+\end{DoxyCode}

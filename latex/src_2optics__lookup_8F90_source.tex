@@ -1,0 +1,386 @@
+\hypertarget{src_2optics__lookup_8F90_source}{}\doxysection{optics\+\_\+lookup.\+F90}
+\label{src_2optics__lookup_8F90_source}\index{/github/workspace/src/optics\_lookup.F90@{/github/workspace/src/optics\_lookup.F90}}
+\mbox{\hyperlink{src_2optics__lookup_8F90}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2021 National Center for Atmospheric Research}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00002}00002 \textcolor{comment}{! SPDX-\/License-\/Identifier: Apache-\/2.0}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00003}00003 \textcolor{comment}{!}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00004}00004 \textcolor{comment}{!> \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00005}00005 \textcolor{comment}{!> The mam\_optics\_lookup module}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00006}00006 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00007}00007 \textcolor{comment}{!> The optics\_lookup\_t type and related functions}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00008}\mbox{\hyperlink{namespacemam__optics__lookup}{00008}} \textcolor{keyword}{module} \mbox{\hyperlink{namespacemam__optics__lookup}{mam\_optics\_lookup}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00009}00009 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00010}00010   \textcolor{keywordtype}{use }ai\_wavelength\_grid,              \textcolor{keywordtype}{only} : wavelength\_grid\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00011}00011   \textcolor{keywordtype}{use }musica\_constants,                \textcolor{keywordtype}{only} : musica\_dk}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00012}00012   \textcolor{keywordtype}{use }musica\_lookup\_2d\_axis,           \textcolor{keywordtype}{only} : lookup\_2d\_axis\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00013}00013   \textcolor{keywordtype}{use }musica\_string,                   \textcolor{keywordtype}{only} : string\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00014}00014 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00015}00015   \textcolor{keywordtype}{implicit none}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00016}00016   \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00017}00017 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00018}00018   \textcolor{keywordtype}{public} :: \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00019}00019 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00020}00020 \textcolor{comment}{  !> \(\backslash\)todo are "{}specific extinction"{}, "{}specific absorption"{}, and}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00021}00021 \textcolor{comment}{  !!       "{}asymmetry factor"{} the correct names for the optical}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00022}00022 \textcolor{comment}{  !!       properties returned from the lookup tables?}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00023}00023 \textcolor{comment}{  !> @name Local indices for optics parameters}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00024}00024 \textcolor{comment}{  !! @\{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00025}\mbox{\hyperlink{namespacemam__optics__lookup_af793630c001ae1aa5a1625ea94cbe2b2}{00025}}   \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacemam__optics__lookup_af793630c001ae1aa5a1625ea94cbe2b2}{kabsorption}}      = 1}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00026}\mbox{\hyperlink{namespacemam__optics__lookup_ab5ccce6b29a1ca2362df9f9d7a769a98}{00026}}   \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacemam__optics__lookup_ab5ccce6b29a1ca2362df9f9d7a769a98}{kextinction}}      = 2}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00027}\mbox{\hyperlink{namespacemam__optics__lookup_abb8a7bf5f5865cd3a440c862d6d49e95}{00027}}   \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacemam__optics__lookup_abb8a7bf5f5865cd3a440c862d6d49e95}{kasymmetryfactor}} = 3\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00028}00028 \textcolor{comment}{  !> @\}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00029}00029 \textcolor{comment}{  !> Number of possible optics parameters}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00030}\mbox{\hyperlink{namespacemam__optics__lookup_a25b4140efe403c2b093d49121a140ecb}{00030}}   \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacemam__optics__lookup_a25b4140efe403c2b093d49121a140ecb}{knumberofparameters}} = 3}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00031}00031 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00032}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t}{00032}}   \textcolor{keyword}{type} :: \mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t}{optics\_data\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00033}00033     \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00034}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t_a3fa6635d43cf9b0fbb5165e82544c9ff}{00034}}     \textcolor{keywordtype}{type}(string\_t) :: parameter\_name\_}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00035}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t_a6c369e96706711cde45d943a7b23a779}{00035}}     \textcolor{keywordtype}{logical}        :: is\_loaded\_      = .false.\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00036}00036 \textcolor{comment}{    !> Optics lookup data (Chebychev coefficients, real refractive index,}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00037}00037 \textcolor{comment}{    !!                     imaginary refractive index, band)}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00038}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t_a8b9dde80773a182dc6f3483e5b490913}{00038}} \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{allocatable} :: values\_(:,:,:,:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00039}00039   \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00040}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t_a936bf10d56b88a0f6a60400fd072bb08}{00040}}     \textcolor{keywordtype}{procedure} :: lookup => \mbox{\hyperlink{namespacemam__optics__lookup_a3775b34fd6bb7508e765faaf4cf089dc}{optics\_data\_lookup}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00041}00041   \textcolor{keyword}{end type }\mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t}{optics\_data\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00042}00042 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00043}00043   \textcolor{keyword}{interface} \mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t}{optics\_data\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00044}00044     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__optics__lookup_a692a456c1da640740b6ebe16797746cf}{optics\_data\_constructor}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00045}00045   \textcolor{keyword}{end interface }\mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t}{optics\_data\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00046}00046 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00047}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{00047}}   \textcolor{keyword}{type} :: \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00048}00048     \textcolor{keywordtype}{private}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00049}00049 \textcolor{comment}{    !> Optics parameter lookup data}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00050}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_a4b0fde1bbaa4e34be2231de26342bdbd}{00050}}     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t}{optics\_data\_t}})     :: data\_( \mbox{\hyperlink{namespacemam__optics__lookup_a25b4140efe403c2b093d49121a140ecb}{knumberofparameters}} )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00051}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_ac2c868b3ca3d9ad390ca9e83f8028d2f}{00051}}     \textcolor{keywordtype}{integer}                 :: number\_of\_chebyshev\_coefficients\_ = 0}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00052}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_a3f79c683dd8b68240e1cbbb79b616bce}{00052}}     \textcolor{keywordtype}{type}(wavelength\_grid\_t) :: grid\_}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00053}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_aab91eaeb6be5ebcf6ec80b97e5104936}{00053}} \textcolor{keywordtype}{    real}(kind=musica\_dk)    :: minimum\_ln\_radius\_ = 0.0}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00054}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_a840227c28cb0a13606eb5877577b1d5f}{00054}} \textcolor{keywordtype}{    real}(kind=musica\_dk)    :: maximum\_ln\_radius\_ = 0.0}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00055}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_afb819f205ecc76a78c68efa4352c3fca}{00055}}     \textcolor{keywordtype}{type}(lookup\_2d\_axis\_t), \textcolor{keywordtype}{allocatable} :: axes\_(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00056}00056   \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00057}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_aa3f12ee4cbaab74c94d7fb9fef7a2b2b}{00057}}     \textcolor{keywordtype}{procedure} :: get\_optics}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00058}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_a5ed35c0c6051a344515b2b813f773fcc}{00058}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__optics__lookup_aab3c18493c8a1663fe05663ad01aac7f}{normalize\_radius}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00059}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_a93d5f4133a42d9b71f2f419f235fc351}{00059}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__optics__lookup_ac64637637d7c4166c672bf46ed5926e6}{maximum\_radius\_\_m}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00060}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_a6718aae30c394a1f8df6e2f1713f2eba}{00060}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__optics__lookup_aadd628bc57707b0967e3a3f297dbb2d3}{minimum\_radius\_\_m}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00061}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_ae5e1dc275fab666f08278745657382f9}{00061}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__optics__lookup_a009d2e0ad6ef5c9ec5ca4a1df99269a8}{number\_of\_chebyshev\_coefficients}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00062}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_a6994dcee7a0ea00a6bb17d1997dfa346}{00062}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__optics__lookup_a332aa347ee13edfa7207ae4d0206f630}{number\_of\_wavelength\_bands}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00063}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_ac4902e12f4a08b88f71fd18e2da78796}{00063}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__optics__lookup_ac76503e0606565cf77239b75bee750c9}{grid}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00064}\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t_a9b2e82a328ae34163416393b105534d2}{00064}}     \textcolor{keywordtype}{procedure}, \textcolor{keywordtype}{private} :: \mbox{\hyperlink{namespacemam__optics__lookup_a0e33f680a9c60c70b36792e5967ff642}{set\_grid}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00065}00065   \textcolor{keyword}{end type }\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00066}00066 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00067}00067   \textcolor{keyword}{interface} \mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00068}00068     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__optics__lookup_a29d1c55a5ebabea6a9f59b1483b9af48}{constructor}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00069}00069   \textcolor{keyword}{end interface }\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00070}00070 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00071}00071 \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00072}00072 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00073}00073 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00074}00074 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00075}00075 \textcolor{comment}{  !> Constructor of optics lookup objects}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00076}\mbox{\hyperlink{namespacemam__optics__lookup_a29d1c55a5ebabea6a9f59b1483b9af48}{00076}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__optics__lookup_a29d1c55a5ebabea6a9f59b1483b9af48}{constructor}}( config ) \textcolor{keyword}{result}( new\_lookup )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00077}00077 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00078}00078     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : assert, assert\_msg}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00079}00079     \textcolor{keywordtype}{use }musica\_config,                 \textcolor{keywordtype}{only} : config\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00080}00080     \textcolor{keywordtype}{use }musica\_lookup\_axis,            \textcolor{keywordtype}{only} : lookup\_axis\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00081}00081     \textcolor{keywordtype}{use }musica\_io,                     \textcolor{keywordtype}{only} : io\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00082}00082     \textcolor{keywordtype}{use }musica\_io\_netcdf,              \textcolor{keywordtype}{only} : io\_netcdf\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00083}00083 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00084}00084     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}})                :: new\_lookup}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00085}00085     \textcolor{keywordtype}{class}(config\_t),       \textcolor{keywordtype}{intent(inout)} :: config}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00086}00086 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00087}00087     \textcolor{keywordtype}{character(len=*)}, \textcolor{keywordtype}{parameter} :: my\_name = \textcolor{stringliteral}{"{}optics\_lookup\_t constructor"{}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00088}00088     \textcolor{keywordtype}{class}(io\_t), \textcolor{keywordtype}{pointer} :: lookup\_file}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00089}00089     \textcolor{keywordtype}{type}(config\_t) :: grid\_config}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00090}00090     \textcolor{keywordtype}{type}(string\_t) :: file\_path, variable\_name, axis\_real\_name, axis\_imag\_name}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00091}00091     \textcolor{keywordtype}{type}(lookup\_axis\_t) :: axis\_real, axis\_imag}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00092}00092 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{allocatable} :: axis\_real\_values(:,:), axis\_imag\_values(:,:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00093}00093     \textcolor{keywordtype}{integer} :: \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}}, i\_param}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00094}00094     \textcolor{keywordtype}{logical} :: found}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00095}00095 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00096}00096     \textcolor{keyword}{call }config\%get( \textcolor{stringliteral}{"{}file path"{}}, file\_path, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00097}00097     lookup\_file => io\_netcdf\_t( file\_path )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00098}00098     \textcolor{keyword}{call }config\%get( \textcolor{stringliteral}{"{}grid"{}}, grid\_config, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00099}00099     \textcolor{keyword}{call }new\_lookup\%set\_grid( grid\_config, lookup\_file )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00100}00100     \textcolor{keyword}{call }config\%get( \textcolor{stringliteral}{"{}real axis"{}}, axis\_real\_name, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00101}00101     \textcolor{keyword}{call }lookup\_file\%read( axis\_real\_name, axis\_real\_values, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00102}00102     \textcolor{keyword}{call }config\%get( \textcolor{stringliteral}{"{}imaginary axis"{}}, axis\_imag\_name, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00103}00103     \textcolor{keyword}{call }lookup\_file\%read( axis\_imag\_name, axis\_imag\_values, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00104}00104     \textcolor{keyword}{call }assert\_msg( 756675500, \textcolor{keyword}{size}( axis\_real\_values, 2 ) .eq.                 \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00105}00105                                 \textcolor{keyword}{size}( axis\_imag\_values, 2 ),                     \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00106}00106                      \textcolor{stringliteral}{"{}Optics lookup axis dimension mismatch"{}} )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00107}00107     \textcolor{keyword}{allocate}( new\_lookup\%axes\_( new\_lookup\%grid\_\%number\_of\_sections( ) ) )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00108}00108     \textcolor{keywordflow}{do} \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} = 1, new\_lookup\%grid\_\%number\_of\_sections( )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00109}00109       axis\_real = lookup\_axis\_t( axis\_real\_name, axis\_real\_values( :, \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ) )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00110}00110       axis\_imag = lookup\_axis\_t( axis\_imag\_name, axis\_imag\_values( :, \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ) )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00111}00111       new\_lookup\%axes\_( \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ) = lookup\_2d\_axis\_t( axis\_real, axis\_imag )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00112}00112 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00113}00113     variable\_name = \textcolor{stringliteral}{"{}minimum\_radius"{}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00114}00114     \textcolor{keyword}{call }lookup\_file\%read( variable\_name,                                     \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00115}00115                            new\_lookup\%minimum\_ln\_radius\_, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00116}00116     new\_lookup\%minimum\_ln\_radius\_ = log( new\_lookup\%minimum\_ln\_radius\_ )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00117}00117     variable\_name = \textcolor{stringliteral}{"{}maximum\_radius"{}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00118}00118     \textcolor{keyword}{call }lookup\_file\%read( variable\_name,                                     \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00119}00119                            new\_lookup\%maximum\_ln\_radius\_, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00120}00120     new\_lookup\%maximum\_ln\_radius\_ = log( new\_lookup\%maximum\_ln\_radius\_ )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00121}00121     new\_lookup\%data\_( \mbox{\hyperlink{namespacemam__optics__lookup_af793630c001ae1aa5a1625ea94cbe2b2}{kabsorption}}      ) =                                    \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00122}00122         \mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t}{optics\_data\_t}}( \textcolor{stringliteral}{"{}specific absorption lookup"{}}, lookup\_file, config )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00123}00123     new\_lookup\%data\_( \mbox{\hyperlink{namespacemam__optics__lookup_ab5ccce6b29a1ca2362df9f9d7a769a98}{kextinction}}      ) =                                    \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00124}00124         \mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t}{optics\_data\_t}}( \textcolor{stringliteral}{"{}specific extinction lookup"{}}, lookup\_file, config )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00125}00125     new\_lookup\%data\_( \mbox{\hyperlink{namespacemam__optics__lookup_abb8a7bf5f5865cd3a440c862d6d49e95}{kasymmetryfactor}} ) =                                    \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00126}00126         \mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t}{optics\_data\_t}}( \textcolor{stringliteral}{"{}asymmetry factor lookup"{}},    lookup\_file, config )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00127}00127     \textcolor{keywordflow}{do} i\_param = 1, \mbox{\hyperlink{namespacemam__optics__lookup_a25b4140efe403c2b093d49121a140ecb}{knumberofparameters}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00128}00128       \textcolor{keywordflow}{if}( .not. new\_lookup\%data\_( i\_param )\%is\_loaded\_ ) cycle}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00129}00129       \textcolor{keywordflow}{if}( new\_lookup\%number\_of\_chebyshev\_coefficients\_ .eq. 0 ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00130}00130         new\_lookup\%number\_of\_chebyshev\_coefficients\_ =                        \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00131}00131           \textcolor{keyword}{size}( new\_lookup\%data\_( i\_param )\%values\_, 1 )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00132}00132       \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00133}00133         \textcolor{keyword}{call }assert\_msg( 168034110,                                           \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00134}00134                          \textcolor{keyword}{size}( new\_lookup\%data\_( i\_param )\%values\_, 1 )       \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00135}00135                          .eq. new\_lookup\%number\_of\_chebyshev\_coefficients\_,   \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00136}00136                          \textcolor{stringliteral}{"{}Dimension mismatch in optics\_lookup\_t data"{}} )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00137}00137 \textcolor{keywordflow}{      end if}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00138}00138       \textcolor{keyword}{call }assert\_msg( 531859329,                                             \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00139}00139                        \textcolor{keyword}{size}( new\_lookup\%data\_( i\_param )\%values\_, 2 )         \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00140}00140                        .eq. axis\_real\%size( ),                                \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00141}00141                        \textcolor{stringliteral}{"{}Dimension mismatch in optics\_lookup\_t data"{}} )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00142}00142       \textcolor{keyword}{call }assert\_msg( 521820197,                                             \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00143}00143                        \textcolor{keyword}{size}( new\_lookup\%data\_( i\_param )\%values\_, 3 )         \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00144}00144                        .eq. axis\_imag\%size( ),                                \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00145}00145                        \textcolor{stringliteral}{"{}Dimension mismatch in optics\_lookup\_t data"{}} )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00146}00146       \textcolor{keyword}{call }assert\_msg( 284936197,                                             \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00147}00147                        \textcolor{keyword}{size}( new\_lookup\%data\_( i\_param )\%values\_, 4 )         \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00148}00148                        .eq. new\_lookup\%grid\_\%number\_of\_sections( ),           \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00149}00149                        \textcolor{stringliteral}{"{}Dimension mismatch in optics\_lookup\_t data"{}} )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00150}00150 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00151}00151     \textcolor{keyword}{deallocate}( lookup\_file )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00152}00152 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00153}00153   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__optics__lookup_a29d1c55a5ebabea6a9f59b1483b9af48}{constructor}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00154}00154 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00155}00155 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00156}00156 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00157}00157 \textcolor{comment}{  !> Lookup optics properties for a given wavelength-\/dependent refractive}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00158}00158 \textcolor{comment}{  !! index}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00159}00159 \textcolor{comment}{  !!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00160}00160 \textcolor{comment}{  !! \(\backslash\)todo there is no check to make sure the requested data is actually}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00161}00161 \textcolor{comment}{  !!       present, as this would require making this not a pure function.}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00162}00162 \textcolor{comment}{  !!       Check to see if this being a pure function has any benefit}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00163}00163   \textcolor{keywordtype}{pure} \textcolor{keyword}{subroutine }get\_optics( this, refractive\_indices, absorption,           \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00164}00164       extinction, asymmetry\_factor )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00165}00165 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00166}00166     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}),         \textcolor{keywordtype}{intent(in)}  :: this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00167}00167 \textcolor{comment}{    !> Complex indices of refraction (wavelength band)}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00168}00168     \textcolor{keywordtype}{complex(kind=musica\_dk)},        \textcolor{keywordtype}{intent(in)}  :: refractive\_indices(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00169}00169 \textcolor{comment}{    !> @name optical properties (Chebychev coefficient, wavelength band)}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00170}00170 \textcolor{comment}{    !! @\{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00171}\mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{00171}} \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{optional}, \textcolor{keywordtype}{intent(out)} :: \mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{absorption}}(:,:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00172}\mbox{\hyperlink{src_2optics__lookup_8F90_adf05b821a31ec1048d1c124d5ceab938}{00172}} \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{optional}, \textcolor{keywordtype}{intent(out)} :: \mbox{\hyperlink{src_2optics__lookup_8F90_adf05b821a31ec1048d1c124d5ceab938}{extinction}}(:,:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00173}\mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{00173}} \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{optional}, \textcolor{keywordtype}{intent(out)} :: \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}(:,:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00174}00174 \textcolor{comment}{    !> @\}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00175}00175 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00176}\mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{00176}}     \textcolor{keywordtype}{integer}              :: \mbox{\hyperlink{src_2optics__lookup_8F90_a7d62753c7be0c5a0df77a902d79d3997}{indices}}(2), \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00177}\mbox{\hyperlink{src_2optics__lookup_8F90_a9aa907f76b5f51fb8755b09fabbf2691}{00177}} \textcolor{keywordtype}{    real}(kind=musica\_dk) :: \mbox{\hyperlink{src_2optics__lookup_8F90_a9aa907f76b5f51fb8755b09fabbf2691}{residuals}}(2)}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00178}00178 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00179}00179     \textcolor{keywordflow}{do} \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} = 1, this\%grid\_\%number\_of\_sections( )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00180}00180     associate( axis => this\%axes\_( \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ) )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00181}00181       \mbox{\hyperlink{src_2optics__lookup_8F90_a7d62753c7be0c5a0df77a902d79d3997}{indices}}(:) = 1}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00182}00182       \textcolor{keyword}{call }axis\%find( (/real( refractive\_indices( \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ) ),                 \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00183}00183                         abs( aimag( refractive\_indices( \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ) ) )/),       \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00184}00184                       \mbox{\hyperlink{src_2optics__lookup_8F90_a7d62753c7be0c5a0df77a902d79d3997}{indices}}, \mbox{\hyperlink{src_2optics__lookup_8F90_a9aa907f76b5f51fb8755b09fabbf2691}{residuals}} )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00185}00185       \textcolor{keywordflow}{if}( \textcolor{keyword}{present}( \mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{absorption}} ) ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00186}00186         \textcolor{keyword}{call }this\%data\_( \mbox{\hyperlink{namespacemam__optics__lookup_af793630c001ae1aa5a1625ea94cbe2b2}{kabsorption}} )\%lookup( \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}}, \mbox{\hyperlink{src_2optics__lookup_8F90_a7d62753c7be0c5a0df77a902d79d3997}{indices}}, \mbox{\hyperlink{src_2optics__lookup_8F90_a9aa907f76b5f51fb8755b09fabbf2691}{residuals}},    \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00187}00187                                                axis, \mbox{\hyperlink{src_2optics__lookup_8F90_a62df88c72b5b5b724502d284ecfba23d}{absorption}}( :, \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ) )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00188}00188 \textcolor{keywordflow}{      end if}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00189}00189       \textcolor{keywordflow}{if}( \textcolor{keyword}{present}( \mbox{\hyperlink{src_2optics__lookup_8F90_adf05b821a31ec1048d1c124d5ceab938}{extinction}} ) ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00190}00190         \textcolor{keyword}{call }this\%data\_( \mbox{\hyperlink{namespacemam__optics__lookup_ab5ccce6b29a1ca2362df9f9d7a769a98}{kextinction}} )\%lookup( \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}}, \mbox{\hyperlink{src_2optics__lookup_8F90_a7d62753c7be0c5a0df77a902d79d3997}{indices}}, \mbox{\hyperlink{src_2optics__lookup_8F90_a9aa907f76b5f51fb8755b09fabbf2691}{residuals}},    \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00191}00191                                                axis, \mbox{\hyperlink{src_2optics__lookup_8F90_adf05b821a31ec1048d1c124d5ceab938}{extinction}}( :, \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ) )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00192}00192 \textcolor{keywordflow}{      end if}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00193}00193       \textcolor{keywordflow}{if}( \textcolor{keyword}{present}( \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}} ) ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00194}00194         \textcolor{keyword}{call }this\%data\_( \mbox{\hyperlink{namespacemam__optics__lookup_abb8a7bf5f5865cd3a440c862d6d49e95}{kasymmetryfactor}} )\%lookup( \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}}, \mbox{\hyperlink{src_2optics__lookup_8F90_a7d62753c7be0c5a0df77a902d79d3997}{indices}},          \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00195}00195                                                \mbox{\hyperlink{src_2optics__lookup_8F90_a9aa907f76b5f51fb8755b09fabbf2691}{residuals}}, axis,               \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00196}00196                                                \mbox{\hyperlink{src_2optics__lookup_8F90_a600b9e2ad5b4a943785202a051fca993}{asymmetry\_factor}}( :, \mbox{\hyperlink{src_2optics__lookup_8F90_a7438579e1345df10891347350101d019}{i\_band}} ) )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00197}00197 \textcolor{keywordflow}{      end if}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00198}00198     \textcolor{keyword}{end }associate}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00199}00199 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00200}00200 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00201}00201   \textcolor{keyword}{end subroutine }get\_optics}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00202}00202 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00203}00203 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00204}00204 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00205}00205 \textcolor{comment}{  !> Normalizes a radius to the range used to calculate the Chebychev}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00206}00206 \textcolor{comment}{  !! coefficients}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00207}00207 \textcolor{comment}{  !!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00208}00208 \textcolor{comment}{  !! Radii are converted to ln(radius) prior to normalization}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00209}00209 \textcolor{comment}{  !!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00210}00210 \textcolor{comment}{  !! Normalized radii range from -\/1...1}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00211}\mbox{\hyperlink{namespacemam__optics__lookup_aab3c18493c8a1663fe05663ad01aac7f}{00211}} \textcolor{keywordtype}{  real}(kind=musica\_dk) \textcolor{keywordtype}{elemental} \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__optics__lookup_aab3c18493c8a1663fe05663ad01aac7f}{normalize\_radius}}( this, radius\_\_m )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00212}00212 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00213}00213     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}), \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00214}00214 \textcolor{comment}{    !> Aerosol surface mode radius}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00215}00215 \textcolor{comment}{    !! (mode radius of the surface area distribution)}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00216}00216 \textcolor{keywordtype}{    real}(kind=musica\_dk),   \textcolor{keywordtype}{intent(in)} :: radius\_\_m}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00217}00217 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00218}00218     associate( rmin => this\%minimum\_ln\_radius\_,                               \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00219}00219                rmax => this\%maximum\_ln\_radius\_ )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00220}00220       \mbox{\hyperlink{namespacemam__optics__lookup_aab3c18493c8a1663fe05663ad01aac7f}{normalize\_radius}} = log( radius\_\_m )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00221}00221       \mbox{\hyperlink{namespacemam__optics__lookup_aab3c18493c8a1663fe05663ad01aac7f}{normalize\_radius}} = max( \mbox{\hyperlink{namespacemam__optics__lookup_aab3c18493c8a1663fe05663ad01aac7f}{normalize\_radius}}, rmin )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00222}00222       \mbox{\hyperlink{namespacemam__optics__lookup_aab3c18493c8a1663fe05663ad01aac7f}{normalize\_radius}} = min( \mbox{\hyperlink{namespacemam__optics__lookup_aab3c18493c8a1663fe05663ad01aac7f}{normalize\_radius}}, rmax )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00223}00223       \mbox{\hyperlink{namespacemam__optics__lookup_aab3c18493c8a1663fe05663ad01aac7f}{normalize\_radius}} = ( 2.0\_musica\_dk * \mbox{\hyperlink{namespacemam__optics__lookup_aab3c18493c8a1663fe05663ad01aac7f}{normalize\_radius}} -\/ rmax -\/ rmin ) / \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00224}00224                          ( rmax -\/ rmin )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00225}00225     \textcolor{keyword}{end }associate}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00226}00226 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00227}00227   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__optics__lookup_aab3c18493c8a1663fe05663ad01aac7f}{normalize\_radius}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00228}00228 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00229}00229 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00230}00230 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00231}00231 \textcolor{comment}{  !> Returns the maximum radius of the range used to calculate the Chebychev}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00232}00232 \textcolor{comment}{  !! coefficients}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00233}\mbox{\hyperlink{namespacemam__optics__lookup_ac64637637d7c4166c672bf46ed5926e6}{00233}} \textcolor{keywordtype}{  real}(kind=musica\_dk) \textcolor{keywordtype}{elemental} \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__optics__lookup_ac64637637d7c4166c672bf46ed5926e6}{maximum\_radius\_\_m}}( this )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00234}00234 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00235}00235     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}), \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00236}00236 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00237}00237     \mbox{\hyperlink{namespacemam__optics__lookup_ac64637637d7c4166c672bf46ed5926e6}{maximum\_radius\_\_m}} = exp( this\%maximum\_ln\_radius\_ )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00238}00238 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00239}00239   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__optics__lookup_ac64637637d7c4166c672bf46ed5926e6}{maximum\_radius\_\_m}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00240}00240 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00241}00241 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00242}00242 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00243}00243 \textcolor{comment}{  !> Returns the minimum radius of the range used to calculate the Chebychev}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00244}00244 \textcolor{comment}{  !! coefficients}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00245}\mbox{\hyperlink{namespacemam__optics__lookup_aadd628bc57707b0967e3a3f297dbb2d3}{00245}} \textcolor{keywordtype}{  real}(kind=musica\_dk) \textcolor{keywordtype}{elemental} \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__optics__lookup_aadd628bc57707b0967e3a3f297dbb2d3}{minimum\_radius\_\_m}}( this )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00246}00246 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00247}00247     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}), \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00248}00248 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00249}00249     \mbox{\hyperlink{namespacemam__optics__lookup_aadd628bc57707b0967e3a3f297dbb2d3}{minimum\_radius\_\_m}} = exp( this\%minimum\_ln\_radius\_ )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00250}00250 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00251}00251   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__optics__lookup_aadd628bc57707b0967e3a3f297dbb2d3}{minimum\_radius\_\_m}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00252}00252 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00253}00253 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00254}00254 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00255}00255 \textcolor{comment}{  !> Returns the number of Chebyshev coefficients per band and property}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00256}\mbox{\hyperlink{namespacemam__optics__lookup_a009d2e0ad6ef5c9ec5ca4a1df99269a8}{00256}}   \textcolor{keywordtype}{integer} \textcolor{keywordtype}{elemental} function \mbox{\hyperlink{namespacemam__optics__lookup_a009d2e0ad6ef5c9ec5ca4a1df99269a8}{number\_of\_chebyshev\_coefficients}}( this )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00257}00257 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00258}00258     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}), \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00259}00259 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00260}00260     \mbox{\hyperlink{namespacemam__optics__lookup_a009d2e0ad6ef5c9ec5ca4a1df99269a8}{number\_of\_chebyshev\_coefficients}} = this\%number\_of\_chebyshev\_coefficients\_}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00261}00261 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00262}00262   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__optics__lookup_a009d2e0ad6ef5c9ec5ca4a1df99269a8}{number\_of\_chebyshev\_coefficients}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00263}00263 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00264}00264 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00265}00265 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00266}00266 \textcolor{comment}{  !> Returns the number of wavelength bands for each property}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00267}\mbox{\hyperlink{namespacemam__optics__lookup_a332aa347ee13edfa7207ae4d0206f630}{00267}}   \textcolor{keywordtype}{integer} \textcolor{keywordtype}{elemental} function \mbox{\hyperlink{namespacemam__optics__lookup_a332aa347ee13edfa7207ae4d0206f630}{number\_of\_wavelength\_bands}}( this )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00268}00268 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00269}00269     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}), \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00270}00270 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00271}00271     \mbox{\hyperlink{namespacemam__optics__lookup_a332aa347ee13edfa7207ae4d0206f630}{number\_of\_wavelength\_bands}} = this\%grid\_\%number\_of\_sections( )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00272}00272 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00273}00273   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__optics__lookup_a332aa347ee13edfa7207ae4d0206f630}{number\_of\_wavelength\_bands}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00274}00274 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00275}00275 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00276}00276 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00277}00277 \textcolor{comment}{  !> Returns the wavelength grid that the properties are returned on}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00278}\mbox{\hyperlink{namespacemam__optics__lookup_ac76503e0606565cf77239b75bee750c9}{00278}}   \textcolor{keywordtype}{type}(wavelength\_grid\_t) function \mbox{\hyperlink{namespacemam__optics__lookup_ac76503e0606565cf77239b75bee750c9}{grid}}( this )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00279}00279 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00280}00280     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}), \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00281}00281 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00282}00282     \mbox{\hyperlink{namespacemam__optics__lookup_ac76503e0606565cf77239b75bee750c9}{grid}} = this\%grid\_}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00283}00283 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00284}00284   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__optics__lookup_ac76503e0606565cf77239b75bee750c9}{grid}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00285}00285 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00286}00286 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00287}00287 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00288}00288 \textcolor{comment}{!! Private functions}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00289}00289 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00290}00290 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00291}00291 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00292}00292 \textcolor{comment}{  !> Sets the wavelength grid for an optics\_lookup\_t object}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00293}\mbox{\hyperlink{namespacemam__optics__lookup_a0e33f680a9c60c70b36792e5967ff642}{00293}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__optics__lookup_a0e33f680a9c60c70b36792e5967ff642}{set\_grid}}( this, config, lookup\_file )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00294}00294 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00295}00295     \textcolor{keywordtype}{use }ai\_wavelength\_grid,            \textcolor{keywordtype}{only} : kcentimeter, kwavenumber}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00296}00296     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : assert\_msg}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00297}00297     \textcolor{keywordtype}{use }musica\_config,                 \textcolor{keywordtype}{only} : config\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00298}00298     \textcolor{keywordtype}{use }musica\_io,                     \textcolor{keywordtype}{only} : io\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00299}00299 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00300}00300     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__lookup__t}{optics\_lookup\_t}}), \textcolor{keywordtype}{intent(inout)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00301}00301     \textcolor{keywordtype}{class}(config\_t),        \textcolor{keywordtype}{intent(inout)} :: config}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00302}00302     \textcolor{keywordtype}{class}(io\_t),            \textcolor{keywordtype}{intent(inout)} :: lookup\_file}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00303}00303 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00304}00304     \textcolor{keywordtype}{character(len=*)}, \textcolor{keywordtype}{parameter} :: my\_name = \textcolor{stringliteral}{"{}optics\_lookup\_t grid loader"{}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00305}00305     \textcolor{keywordtype}{type}(string\_t) :: var\_name, lb\_units, ub\_units}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00306}00306 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{allocatable} :: lower\_bounds(:), upper\_bounds(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00307}00307 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00308}00308     \textcolor{keyword}{call }config\%get( \textcolor{stringliteral}{"{}lower bounds"{}}, var\_name, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00309}00309     \textcolor{keyword}{call }lookup\_file\%read( var\_name, lower\_bounds, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00310}00310     lb\_units = lookup\_file\%variable\_units( var\_name, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00311}00311     \textcolor{keyword}{call }config\%get( \textcolor{stringliteral}{"{}upper bounds"{}}, var\_name, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00312}00312     \textcolor{keyword}{call }lookup\_file\%read( var\_name, upper\_bounds, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00313}00313     ub\_units = lookup\_file\%variable\_units( var\_name, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00314}00314     \textcolor{keyword}{call }assert\_msg( 950480637, lb\_units .eq. ub\_units,                       \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00315}00315                      \textcolor{stringliteral}{"{}Units mismatch for upper and lower wavelength "{}}//       \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00316}00316                      \textcolor{stringliteral}{"{}bounds"{}} )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00317}00317     \textcolor{keyword}{call }assert\_msg( 709050082, lb\_units .eq. \textcolor{stringliteral}{"{}cm-\/1"{}},                         \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00318}00318                      \textcolor{stringliteral}{"{}Expected wavlength bounds in units of 'cm-\/1'"{}} )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00319}00319     this\%grid\_ = wavelength\_grid\_t( lower\_bounds = lower\_bounds,              \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00320}00320                                     upper\_bounds = upper\_bounds,              \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00321}00321                                     bounds\_in    = kwavenumber,               \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00322}00322                                     base\_unit    = kcentimeter )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00323}00323 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00324}00324   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__optics__lookup_a0e33f680a9c60c70b36792e5967ff642}{set\_grid}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00325}00325 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00326}00326 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00327}00327 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00328}00328 \textcolor{comment}{  !> Constructor of optics lookup data objects}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00329}\mbox{\hyperlink{namespacemam__optics__lookup_a692a456c1da640740b6ebe16797746cf}{00329}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__optics__lookup_a692a456c1da640740b6ebe16797746cf}{optics\_data\_constructor}}( parameter\_name, lookup\_file, config )     \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00330}00330       result( new\_data )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00331}00331 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00332}00332     \textcolor{keywordtype}{use }musica\_config,                 \textcolor{keywordtype}{only} : config\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00333}00333     \textcolor{keywordtype}{use }musica\_io,                     \textcolor{keywordtype}{only} : io\_t}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00334}00334 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00335}00335     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t}{optics\_data\_t}})               :: new\_data}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00336}00336     \textcolor{keywordtype}{character(len=*)},   \textcolor{keywordtype}{intent(in)}    :: parameter\_name}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00337}00337     \textcolor{keywordtype}{class}(io\_t),        \textcolor{keywordtype}{intent(inout)} :: lookup\_file}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00338}00338     \textcolor{keywordtype}{class}(config\_t),    \textcolor{keywordtype}{intent(inout)} :: config}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00339}00339 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00340}00340     \textcolor{keywordtype}{character(len=*)}, \textcolor{keywordtype}{parameter} :: my\_name = \textcolor{stringliteral}{"{}optics table loader"{}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00341}00341     \textcolor{keywordtype}{type}(config\_t) :: table\_config}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00342}00342     \textcolor{keywordtype}{type}(string\_t) :: variable\_name}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00343}00343     \textcolor{keywordtype}{logical}        :: found}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00344}00344 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00345}00345     new\_data\%parameter\_name\_ = parameter\_name}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00346}00346     \textcolor{keyword}{call }config\%get( parameter\_name, table\_config, my\_name, found = found )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00347}00347     \textcolor{keywordflow}{if}( .not. found ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00348}00348       \textcolor{keyword}{allocate}( new\_data\%values\_(0,0,0,0) )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00349}00349       \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00350}00350 \textcolor{keywordflow}{    end if}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00351}00351     \textcolor{keyword}{call }table\_config\%get( \textcolor{stringliteral}{"{}variable name"{}}, variable\_name, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00352}00352     \textcolor{keyword}{call }lookup\_file\%read( variable\_name, new\_data\%values\_, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00353}00353     new\_data\%is\_loaded\_ = .true.}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00354}00354 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00355}00355   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__optics__lookup_a692a456c1da640740b6ebe16797746cf}{optics\_data\_constructor}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00356}00356 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00357}00357 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00358}00358 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00359}00359 \textcolor{comment}{  !> Looks up optical property data at a given wavelength band}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00360}\mbox{\hyperlink{namespacemam__optics__lookup_a3775b34fd6bb7508e765faaf4cf089dc}{00360}}   \textcolor{keywordtype}{pure} \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__optics__lookup_a3775b34fd6bb7508e765faaf4cf089dc}{optics\_data\_lookup}}( this, band\_index, indices, residuals,   \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00361}00361       axis, chebyshev\_values )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00362}00362 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00363}00363     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__optics__lookup_1_1optics__data__t}{optics\_data\_t}}),   \textcolor{keywordtype}{intent(in)}  :: this}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00364}00364     \textcolor{keywordtype}{integer},                \textcolor{keywordtype}{intent(in)}  :: band\_index}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00365}00365     \textcolor{keywordtype}{integer},                \textcolor{keywordtype}{intent(in)}  :: \mbox{\hyperlink{src_2optics__lookup_8F90_a7d62753c7be0c5a0df77a902d79d3997}{indices}}(2)}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00366}00366 \textcolor{keywordtype}{    real}(kind=musica\_dk),   \textcolor{keywordtype}{intent(in)}  :: \mbox{\hyperlink{src_2optics__lookup_8F90_a9aa907f76b5f51fb8755b09fabbf2691}{residuals}}(2)}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00367}00367     \textcolor{keywordtype}{type}(lookup\_2d\_axis\_t), \textcolor{keywordtype}{intent(in)}  :: axis}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00368}00368 \textcolor{keywordtype}{    real}(kind=musica\_dk),   \textcolor{keywordtype}{intent(out)} :: chebyshev\_values(:)}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00369}00369 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00370}00370     \textcolor{keyword}{call }axis\%interpolate( this\%values\_( :,                                   \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00371}00371                                          \mbox{\hyperlink{src_2optics__lookup_8F90_a7d62753c7be0c5a0df77a902d79d3997}{indices}}(1):\mbox{\hyperlink{src_2optics__lookup_8F90_a7d62753c7be0c5a0df77a902d79d3997}{indices}}(1)+1,             \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00372}00372                                          \mbox{\hyperlink{src_2optics__lookup_8F90_a7d62753c7be0c5a0df77a902d79d3997}{indices}}(2):\mbox{\hyperlink{src_2optics__lookup_8F90_a7d62753c7be0c5a0df77a902d79d3997}{indices}}(2)+1,             \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00373}00373                                          band\_index ),                        \&}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00374}00374                            \mbox{\hyperlink{src_2optics__lookup_8F90_a9aa907f76b5f51fb8755b09fabbf2691}{residuals}}, chebyshev\_values )}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00375}00375 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00376}00376   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__optics__lookup_a3775b34fd6bb7508e765faaf4cf089dc}{optics\_data\_lookup}}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00377}00377 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00378}00378 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00379}00379 }
+\DoxyCodeLine{\Hypertarget{src_2optics__lookup_8F90_source_l00380}00380 \textcolor{keyword}{end module }\mbox{\hyperlink{namespacemam__optics__lookup}{mam\_optics\_lookup}}}
+
+\end{DoxyCode}

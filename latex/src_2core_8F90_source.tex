@@ -1,0 +1,406 @@
+\hypertarget{src_2core_8F90_source}{}\doxysection{core.\+F90}
+\label{src_2core_8F90_source}\index{/github/workspace/src/core.F90@{/github/workspace/src/core.F90}}
+\mbox{\hyperlink{src_2core_8F90}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2021 National Center for Atmospheric Research}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00002}00002 \textcolor{comment}{! SPDX-\/License-\/Identifier: Apache-\/2.0}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00003}00003 \textcolor{comment}{!}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00004}00004 \textcolor{comment}{!> \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00005}00005 \textcolor{comment}{!> The mam\_core module}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00006}00006 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00007}00007 \textcolor{comment}{!> The core\_t type and related functions}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00008}\mbox{\hyperlink{namespacemam__core}{00008}} \textcolor{keyword}{module} \mbox{\hyperlink{namespacemam__core}{mam\_core}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00009}00009 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00010}00010   \textcolor{keywordtype}{use }ai\_aerosol,                      \textcolor{keywordtype}{only} : aerosol\_t}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00011}00011   \textcolor{keywordtype}{use }ai\_aerosol\_state,                \textcolor{keywordtype}{only} : aerosol\_state\_t}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00012}00012   \textcolor{keywordtype}{use }ai\_wavelength\_grid,              \textcolor{keywordtype}{only} : wavelength\_grid\_t}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00013}00013   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__mode}{mam\_mode}},                        \textcolor{keywordtype}{only} : \mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}, \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00014}00014 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00015}00015   \textcolor{keywordtype}{implicit none}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00016}00016   \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00017}00017 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00018}00018   \textcolor{keywordtype}{public} :: \mbox{\hyperlink{structmam__core_1_1core__t}{core\_t}}, \mbox{\hyperlink{structmam__core_1_1state__t}{state\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00019}00019 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00020}00020 \textcolor{comment}{  !> The Modal Aerosol Model core}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00021}\mbox{\hyperlink{structmam__core_1_1core__t}{00021}}   \textcolor{keyword}{type}, \textcolor{keyword}{extends}(aerosol\_t) :: \mbox{\hyperlink{structmam__core_1_1core__t}{core\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00022}00022     \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00023}\mbox{\hyperlink{structmam__core_1_1core__t_a9dafd8510f4f5fe217c5819ddb27221d}{00023}}     \textcolor{keywordtype}{type}(wavelength\_grid\_t)   :: shortwave\_grid\_}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00024}\mbox{\hyperlink{structmam__core_1_1core__t_ab434c572746cefb66106c44079cac4b0}{00024}}     \textcolor{keywordtype}{type}(wavelength\_grid\_t)   :: longwave\_grid\_}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00025}\mbox{\hyperlink{structmam__core_1_1core__t_aeb2c2c0ca4ff2c9b336632817c2c9d7d}{00025}}     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}), \textcolor{keywordtype}{allocatable} :: modes\_(:)}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00026}00026   \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00027}\mbox{\hyperlink{structmam__core_1_1core__t_aebd986face959fe2fcc88a72a08ab529}{00027}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__core_ab7d7ff8982a32d27ba44773903fcf66b}{new\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00028}\mbox{\hyperlink{structmam__core_1_1core__t_a89538cd1a74da882e375c9ae4ef925d9}{00028}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__core_a8469bb451ef0bfcd96906a2fa19adfbd}{new\_optics}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00029}\mbox{\hyperlink{structmam__core_1_1core__t_a6fe884877133eaa6e3858346ca7a41a3}{00029}}     \textcolor{keywordtype}{procedure}, \textcolor{keywordtype}{private} :: \mbox{\hyperlink{namespacemam__core_a3e0c7ee6e84786ce37891d4165c189bd}{shortwave\_optics\_scalar}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00030}\mbox{\hyperlink{structmam__core_1_1core__t_a6e19b14c4bc92bcd86da988b08498bd7}{00030}}     \textcolor{keywordtype}{procedure}, \textcolor{keywordtype}{private} :: \mbox{\hyperlink{namespacemam__core_ae6cd279203db7eb49db508e11f74b3e3}{shortwave\_optics\_array}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00031}\mbox{\hyperlink{structmam__core_1_1core__t_a9661fd747a6fbc176a5e5d4efa77fad6}{00031}}     \textcolor{keywordtype}{procedure}, \textcolor{keywordtype}{private} :: \mbox{\hyperlink{namespacemam__core_a8fb18d5e4cca878d9b2ebdc78a63ab09}{longwave\_optics\_scalar}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00032}\mbox{\hyperlink{structmam__core_1_1core__t_a02cfdcd903176fa73a15b866bd614ef8}{00032}}     \textcolor{keywordtype}{procedure}, \textcolor{keywordtype}{private} :: \mbox{\hyperlink{namespacemam__core_ab46ae1cd09b4d03f56700254f22d02d1}{longwave\_optics\_array}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00033}\mbox{\hyperlink{structmam__core_1_1core__t_ace0ab3b5db8c84dbc16889672be35ca1}{00033}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__core_a015983f7a94157fec64b4c2fda9a88de}{print\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00034}00034   \textcolor{keyword}{end type }\mbox{\hyperlink{structmam__core_1_1core__t}{core\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00036}00036   \textcolor{keyword}{interface} \mbox{\hyperlink{structmam__core_1_1core__t}{core\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00037}00037     \textcolor{keyword}{module procedure} :: \mbox{\hyperlink{namespacemam__core_a5ec6bd0eba56e1a4be69c98362ea0277}{constructor}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00038}00038   \textcolor{keyword}{end interface}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00039}00039 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00040}00040 \textcolor{comment}{  !> Modal aerosol state}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00041}\mbox{\hyperlink{structmam__core_1_1state__t}{00041}}   \textcolor{keyword}{type}, \textcolor{keyword}{extends}(aerosol\_state\_t) :: \mbox{\hyperlink{structmam__core_1_1state__t}{state\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00042}00042     \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00043}\mbox{\hyperlink{structmam__core_1_1state__t_abaf84400c6b2641c4a3f8a9d5cf8bb66}{00043}}     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}}), \textcolor{keywordtype}{allocatable} :: mode\_states\_(:)}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00044}00044   \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00045}\mbox{\hyperlink{structmam__core_1_1state__t_a4ee6f0285fc56b0ede1e424510d53f60}{00045}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__core_a97c1bf5912aba1bf45b0ac3aca6ff854}{raw\_size}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00046}\mbox{\hyperlink{structmam__core_1_1state__t_a5f0a2de681f88a640af16616f1db2b08}{00046}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__core_a1d53ee74f0d674f9e9da19d36947685b}{load\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00047}\mbox{\hyperlink{structmam__core_1_1state__t_aecf5c8feafdde542ff9fb9ce4834a435}{00047}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__core_af2cf8240e9e66c3089115c9fc633c100}{dump\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00048}\mbox{\hyperlink{structmam__core_1_1state__t_ad937a3608cc58268d4549a591b69bcb2}{00048}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacemam__core_a10c027e271425cd2975f83fdacebdda5}{randomize}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00049}00049   \textcolor{keyword}{end type }\mbox{\hyperlink{structmam__core_1_1state__t}{state\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00050}00050 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00051}00051 \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00052}00052 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00053}00053 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00054}00054 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00055}00055 \textcolor{comment}{  !> Constructor of the MAM core}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00056}\mbox{\hyperlink{structmam__core_1_1core__t_ad3db461d37062da24c4510e3f1209cfa}{00056}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__core_a5ec6bd0eba56e1a4be69c98362ea0277}{constructor}}( config ) \textcolor{keyword}{result}( new\_core )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00057}00057 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00058}00058     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__species}{mam\_species}},                   \textcolor{keywordtype}{only} : \mbox{\hyperlink{structmam__species_1_1species__t}{species\_t}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00059}00059     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : assert\_msg}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00060}00060     \textcolor{keywordtype}{use }musica\_config,                 \textcolor{keywordtype}{only} : config\_t}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00061}00061     \textcolor{keywordtype}{use }musica\_iterator,               \textcolor{keywordtype}{only} : iterator\_t}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00062}00062     \textcolor{keywordtype}{use }musica\_string,                 \textcolor{keywordtype}{only} : string\_t}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00063}00063 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00064}00064     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structmam__core_1_1core__t}{core\_t}}),    \textcolor{keywordtype}{pointer}       :: new\_core}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00065}00065     \textcolor{keywordtype}{class}(config\_t), \textcolor{keywordtype}{intent(inout)} :: config}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00066}00066 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00067}00067     \textcolor{keywordtype}{character(len=*)}, \textcolor{keywordtype}{parameter} :: my\_name = \textcolor{stringliteral}{"{}MAM core\_t constructor"{}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00068}00068     \textcolor{keywordtype}{type}(config\_t)              :: modes, mode}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00069}00069     \textcolor{keywordtype}{type}(string\_t)              :: file\_name}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00070}00070     \textcolor{keywordtype}{class}(iterator\_t), \textcolor{keywordtype}{pointer}  :: iter}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00071}00071     \textcolor{keywordtype}{integer}                     :: i\_mode}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00072}00072     \textcolor{keywordtype}{type}(wavelength\_grid\_t)     :: mode\_grid}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00073}00073 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00074}00074     \textcolor{keyword}{allocate}( new\_core )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00075}00075     \textcolor{keyword}{call }config\%get( \textcolor{stringliteral}{"{}modes"{}}, modes, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00076}00076     \textcolor{keyword}{allocate}( new\_core\%modes\_( modes\%number\_of\_children( ) ) )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00077}00077     iter => modes\%get\_iterator( )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00078}00078     i\_mode = 1}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00079}00079     \textcolor{keywordflow}{do} \textcolor{keywordflow}{while}( iter\%next( ) )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00080}00080       \textcolor{keyword}{call }modes\%get( iter, mode, my\_name )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00081}00081       new\_core\%modes\_( i\_mode ) = \mbox{\hyperlink{structmam__mode_1_1mode__t}{mode\_t}}( mode )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00082}00082       \textcolor{keywordflow}{if}( i\_mode .eq. 1 ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00083}00083         new\_core\%shortwave\_grid\_ = new\_core\%modes\_( i\_mode )\%shortwave\_grid( )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00084}00084         new\_core\%longwave\_grid\_  = new\_core\%modes\_( i\_mode )\%longwave\_grid( )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00085}00085       \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00086}00086         \textcolor{keyword}{call }assert\_msg( 253107950, new\_core\%shortwave\_grid\_ .eq.            \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00087}00087                          new\_core\%modes\_( i\_mode )\%shortwave\_grid( ),        \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00088}00088                          \textcolor{stringliteral}{"{}MAM is not currently set up to use different "{}}//   \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00089}00089                          \textcolor{stringliteral}{"{}shortwave wavelength grids for individual modes."{}} )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00090}00090         \textcolor{keyword}{call }assert\_msg( 525506880, new\_core\%longwave\_grid\_ .eq.             \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00091}00091                          new\_core\%modes\_( i\_mode )\%longwave\_grid( ),         \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00092}00092                          \textcolor{stringliteral}{"{}MAM is not currently set up to use different "{}}//   \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00093}00093                          \textcolor{stringliteral}{"{}longwave wavelength grids for individual modes."{}} )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00094}00094 \textcolor{keywordflow}{      end if}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00095}00095       i\_mode = i\_mode + 1}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00096}00096 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00097}00097     \textcolor{keyword}{deallocate}( iter )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00098}00098 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00099}00099   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__core_a5ec6bd0eba56e1a4be69c98362ea0277}{constructor}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00100}00100 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00101}00101 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00102}00102 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00103}00103 \textcolor{comment}{  !> Creates a new state object for the modal aerosol}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00104}\mbox{\hyperlink{namespacemam__core_ab7d7ff8982a32d27ba44773903fcf66b}{00104}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__core_ab7d7ff8982a32d27ba44773903fcf66b}{new\_state}}( this )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00105}00105 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00106}00106     \textcolor{keywordtype}{class}(aerosol\_state\_t), \textcolor{keywordtype}{pointer}    :: \mbox{\hyperlink{namespacemam__core_ab7d7ff8982a32d27ba44773903fcf66b}{new\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00107}00107     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__core_1_1core__t}{core\_t}}),          \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00108}00108 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00109}00109     \textcolor{keywordtype}{class}(aerosol\_state\_t), \textcolor{keywordtype}{pointer} :: mode\_state}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00110}00110     \textcolor{keywordtype}{integer} :: i\_mode}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00111}00111 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00112}00112     \textcolor{keyword}{allocate}( \mbox{\hyperlink{structmam__core_1_1state__t}{state\_t}} :: \mbox{\hyperlink{namespacemam__core_ab7d7ff8982a32d27ba44773903fcf66b}{new\_state}} )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00113}00113     \textcolor{keywordflow}{select type}( \mbox{\hyperlink{namespacemam__core_ab7d7ff8982a32d27ba44773903fcf66b}{new\_state}} )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00114}00114 \textcolor{keywordflow}{    type is}( \mbox{\hyperlink{structmam__core_1_1state__t}{state\_t}} )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00115}00115       \textcolor{keyword}{allocate}( \mbox{\hyperlink{namespacemam__core_ab7d7ff8982a32d27ba44773903fcf66b}{new\_state}}\%mode\_states\_( \textcolor{keyword}{size}( this\%modes\_ ) ) )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00116}00116       \textcolor{keywordflow}{do} i\_mode = 1, \textcolor{keyword}{size}( this\%modes\_ )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00117}00117         mode\_state => this\%modes\_( i\_mode )\%new\_state( )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00118}00118         \textcolor{keywordflow}{select type}( mode\_state )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00119}00119 \textcolor{keywordflow}{        class is}( \mbox{\hyperlink{structmam__mode_1_1mode__state__t}{mode\_state\_t}} )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00120}00120           \mbox{\hyperlink{namespacemam__core_ab7d7ff8982a32d27ba44773903fcf66b}{new\_state}}\%mode\_states\_( i\_mode ) = mode\_state}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00121}00121 \textcolor{keywordflow}{        end select}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00122}00122         \textcolor{keyword}{deallocate}( mode\_state )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00123}00123 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00124}00124 \textcolor{keywordflow}{    end select}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00125}00125 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00126}00126   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__core_ab7d7ff8982a32d27ba44773903fcf66b}{new\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00127}00127 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00128}00128 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00129}00129 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00130}00130 \textcolor{comment}{  !> Creates an optics\_t object for a given property}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00131}\mbox{\hyperlink{namespacemam__core_a8469bb451ef0bfcd96906a2fa19adfbd}{00131}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__core_a8469bb451ef0bfcd96906a2fa19adfbd}{new\_optics}}( this, property, output\_grid, interpolation\_strategy )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00132}00132 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00133}00133     \textcolor{keywordtype}{use }ai\_optics,                     \textcolor{keywordtype}{only} : optics\_t}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00134}00134     \textcolor{keywordtype}{use }ai\_wavelength\_grid,            \textcolor{keywordtype}{only} : wavelength\_grid\_t}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00135}00135     \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacemam__optics__util}{mam\_optics\_util}},               \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00136}00136     \textcolor{keywordtype}{use }musica\_interpolator,           \textcolor{keywordtype}{only} : interpolation\_strategy\_i}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00137}00137     \textcolor{keywordtype}{use }musica\_property,               \textcolor{keywordtype}{only} : property\_t}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00138}00138 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00139}00139     \textcolor{keywordtype}{class}(optics\_t),                   \textcolor{keywordtype}{pointer}    :: \mbox{\hyperlink{namespacemam__core_a8469bb451ef0bfcd96906a2fa19adfbd}{new\_optics}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00140}00140     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__core_1_1core__t}{core\_t}}),                     \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00141}00141     \textcolor{keywordtype}{class}(property\_t),                 \textcolor{keywordtype}{intent(in)} :: property}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00142}00142     \textcolor{keywordtype}{type}(wavelength\_grid\_t),           \textcolor{keywordtype}{intent(in)} :: output\_grid}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00143}00143     \textcolor{keywordtype}{procedure}(interpolation\_strategy\_i), \textcolor{keywordtype}{optional} :: interpolation\_strategy}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00144}00144 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00145}00145     \mbox{\hyperlink{namespacemam__core_a8469bb451ef0bfcd96906a2fa19adfbd}{new\_optics}} =>                                                             \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00146}00146         \mbox{\hyperlink{namespacemam__optics__util_aacc74dc2c8800e5dc9a07d9b412ffe55}{create\_optics}}( property, this\%shortwave\_grid\_, this\%longwave\_grid\_,   \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00147}00147                        output\_grid, interpolation\_strategy )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00148}00148 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00149}00149   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__core_a8469bb451ef0bfcd96906a2fa19adfbd}{new\_optics}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00150}00150 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00151}00151 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00152}00152 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00153}00153 \textcolor{comment}{  !> Returns shortwave optical properties}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00154}\mbox{\hyperlink{namespacemam__core_a3e0c7ee6e84786ce37891d4165c189bd}{00154}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__core_a3e0c7ee6e84786ce37891d4165c189bd}{shortwave\_optics\_scalar}}( this, environmental\_state,              \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00155}00155       aerosol\_state, optics )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00156}00156 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00157}00157     \textcolor{keywordtype}{use }ai\_environmental\_state,        \textcolor{keywordtype}{only} : environmental\_state\_t}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00158}00158     \textcolor{keywordtype}{use }ai\_optics,                     \textcolor{keywordtype}{only} : optics\_t, optics\_ptr}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00159}00159 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00160}00160     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__core_1_1core__t}{core\_t}}),                \textcolor{keywordtype}{intent(in)}    :: this}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00161}00161     \textcolor{keywordtype}{class}(environmental\_state\_t), \textcolor{keywordtype}{intent(in)}    :: environmental\_state}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00162}00162     \textcolor{keywordtype}{class}(aerosol\_state\_t),       \textcolor{keywordtype}{intent(in)}    :: aerosol\_state}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00163}00163     \textcolor{keywordtype}{class}(optics\_t), \textcolor{keywordtype}{target},      \textcolor{keywordtype}{intent(inout)} :: optics}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00164}00164 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00165}00165     \textcolor{keywordtype}{type}(optics\_ptr) :: optics\_set(1)}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00166}00166 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00167}00167     optics\_set(1)\%ptr\_ => optics}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00168}00168     \textcolor{keyword}{call }this\%shortwave\_optics( environmental\_state, aerosol\_state,           \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00169}00169                                 optics\_set )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00170}00170     \textcolor{keyword}{nullify}( optics\_set(1)\%ptr\_ )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00171}00171 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00172}00172   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__core_a3e0c7ee6e84786ce37891d4165c189bd}{shortwave\_optics\_scalar}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00173}00173 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00174}00174 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00175}00175 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00176}00176 \textcolor{comment}{  !> Returns shortwave optical properties}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00177}\mbox{\hyperlink{namespacemam__core_ae6cd279203db7eb49db508e11f74b3e3}{00177}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__core_ae6cd279203db7eb49db508e11f74b3e3}{shortwave\_optics\_array}}( this, environmental\_state,               \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00178}00178       aerosol\_state, optics )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00179}00179 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00180}00180     \textcolor{keywordtype}{use }ai\_environmental\_state,        \textcolor{keywordtype}{only} : environmental\_state\_t}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00181}00181     \textcolor{keywordtype}{use }ai\_optics,                     \textcolor{keywordtype}{only} : optics\_ptr}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00182}00182     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : die\_msg}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00183}00183 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00184}00184     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__core_1_1core__t}{core\_t}}),                \textcolor{keywordtype}{intent(in)}    :: this}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00185}00185     \textcolor{keywordtype}{class}(environmental\_state\_t), \textcolor{keywordtype}{intent(in)}    :: environmental\_state}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00186}00186     \textcolor{keywordtype}{class}(aerosol\_state\_t),       \textcolor{keywordtype}{intent(in)}    :: aerosol\_state}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00187}00187     \textcolor{keywordtype}{type}(optics\_ptr),             \textcolor{keywordtype}{intent(inout)} :: optics(:)}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00188}00188 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00189}00189     \textcolor{keywordtype}{integer} :: i\_mode, i\_prop}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00190}00190 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00191}00191     \textcolor{keywordflow}{select type}( aerosol\_state )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00192}00192 \textcolor{keywordflow}{    class is}( \mbox{\hyperlink{structmam__core_1_1state__t}{state\_t}} )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00193}00193       \textcolor{keywordflow}{do} i\_prop = 1, \textcolor{keyword}{size}( optics )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00194}00194         \textcolor{keyword}{call }optics( i\_prop )\%ptr\_\%reset\_values( )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00195}00195 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00196}00196       \textcolor{keywordflow}{do} i\_mode = 1, \textcolor{keyword}{size}( this\%modes\_ )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00197}00197       associate( mode\_state => aerosol\_state\%mode\_states\_( i\_mode ),          \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00198}00198                  mode       => this\%modes\_( i\_mode ) )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00199}00199         \textcolor{keyword}{call }mode\%add\_shortwave\_optics( environmental\_state,                  \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00200}00200                                         mode\_state,                           \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00201}00201                                         optics )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00202}00202       \textcolor{keyword}{end }associate}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00203}00203 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00204}00204 \textcolor{keywordflow}{    class default}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00205}00205       \textcolor{keyword}{call }die\_msg( 822004975, \textcolor{stringliteral}{"{}Invalid state passed to MAM shortwave "{}}//     \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00206}00206                                \textcolor{stringliteral}{"{}optics calculator"{}} )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00207}00207 \textcolor{keywordflow}{    end select}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00208}00208 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00209}00209   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__core_ae6cd279203db7eb49db508e11f74b3e3}{shortwave\_optics\_array}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00210}00210 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00211}00211 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00212}00212 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00213}00213 \textcolor{comment}{  !> Returns longwave optical properties}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00214}\mbox{\hyperlink{namespacemam__core_a8fb18d5e4cca878d9b2ebdc78a63ab09}{00214}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__core_a8fb18d5e4cca878d9b2ebdc78a63ab09}{longwave\_optics\_scalar}}( this, environmental\_state,               \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00215}00215       aerosol\_state, optics )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00216}00216 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00217}00217     \textcolor{keywordtype}{use }ai\_environmental\_state,        \textcolor{keywordtype}{only} : environmental\_state\_t}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00218}00218     \textcolor{keywordtype}{use }ai\_optics,                     \textcolor{keywordtype}{only} : optics\_t, optics\_ptr}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00219}00219 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00220}00220     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__core_1_1core__t}{core\_t}}),                \textcolor{keywordtype}{intent(in)}    :: this}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00221}00221     \textcolor{keywordtype}{class}(environmental\_state\_t), \textcolor{keywordtype}{intent(in)}    :: environmental\_state}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00222}00222     \textcolor{keywordtype}{class}(aerosol\_state\_t),       \textcolor{keywordtype}{intent(in)}    :: aerosol\_state}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00223}00223     \textcolor{keywordtype}{class}(optics\_t), \textcolor{keywordtype}{target},      \textcolor{keywordtype}{intent(inout)} :: optics}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00224}00224 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00225}00225     \textcolor{keywordtype}{type}(optics\_ptr) :: optics\_set(1)}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00226}00226 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00227}00227     optics\_set(1)\%ptr\_ => optics}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00228}00228     \textcolor{keyword}{call }this\%longwave\_optics( environmental\_state, aerosol\_state,            \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00229}00229                                optics\_set )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00230}00230     \textcolor{keyword}{nullify}( optics\_set(1)\%ptr\_ )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00231}00231 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00232}00232   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__core_a8fb18d5e4cca878d9b2ebdc78a63ab09}{longwave\_optics\_scalar}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00233}00233 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00234}00234 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00235}00235 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00236}00236 \textcolor{comment}{  !> Returns longwave optical properties}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00237}\mbox{\hyperlink{namespacemam__core_ab46ae1cd09b4d03f56700254f22d02d1}{00237}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__core_ab46ae1cd09b4d03f56700254f22d02d1}{longwave\_optics\_array}}( this, environmental\_state,                \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00238}00238       aerosol\_state, optics )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00239}00239 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00240}00240     \textcolor{keywordtype}{use }ai\_environmental\_state,        \textcolor{keywordtype}{only} : environmental\_state\_t}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00241}00241     \textcolor{keywordtype}{use }ai\_optics,                     \textcolor{keywordtype}{only} : optics\_ptr}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00242}00242     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : die\_msg}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00243}00243 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00244}00244     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__core_1_1core__t}{core\_t}}),                \textcolor{keywordtype}{intent(in)}    :: this}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00245}00245     \textcolor{keywordtype}{class}(environmental\_state\_t), \textcolor{keywordtype}{intent(in)}    :: environmental\_state}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00246}00246     \textcolor{keywordtype}{class}(aerosol\_state\_t),       \textcolor{keywordtype}{intent(in)}    :: aerosol\_state}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00247}00247     \textcolor{keywordtype}{type}(optics\_ptr),             \textcolor{keywordtype}{intent(inout)} :: optics(:)}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00248}00248 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00249}00249     \textcolor{keywordtype}{integer} :: i\_mode, i\_prop}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00250}00250 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00251}00251     \textcolor{keywordflow}{select type}( aerosol\_state )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00252}00252 \textcolor{keywordflow}{    class is}( \mbox{\hyperlink{structmam__core_1_1state__t}{state\_t}} )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00253}00253       \textcolor{keywordflow}{do} i\_prop = 1, \textcolor{keyword}{size}( optics )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00254}00254         \textcolor{keyword}{call }optics( i\_prop )\%ptr\_\%reset\_values( )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00255}00255 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00256}00256       \textcolor{keywordflow}{do} i\_mode = 1, \textcolor{keyword}{size}( this\%modes\_ )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00257}00257       associate( mode\_state => aerosol\_state\%mode\_states\_( i\_mode ),          \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00258}00258                  mode       => this\%modes\_( i\_mode ) )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00259}00259         \textcolor{keyword}{call }mode\%add\_longwave\_optics( environmental\_state,                   \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00260}00260                                        mode\_state,                            \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00261}00261                                        optics )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00262}00262       \textcolor{keyword}{end }associate}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00263}00263 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00264}00264 \textcolor{keywordflow}{    class default}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00265}00265       \textcolor{keyword}{call }die\_msg( 466350541, \textcolor{stringliteral}{"{}Invalid state passed to MAM longwave "{}}//      \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00266}00266                                \textcolor{stringliteral}{"{}optics calculator"{}} )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00267}00267 \textcolor{keywordflow}{    end select}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00268}00268 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00269}00269   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__core_ab46ae1cd09b4d03f56700254f22d02d1}{longwave\_optics\_array}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00270}00270 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00271}00271 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00272}00272 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00273}00273 \textcolor{comment}{  !> Ouptuts the current aerosol state}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00274}\mbox{\hyperlink{namespacemam__core_a015983f7a94157fec64b4c2fda9a88de}{00274}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__core_a015983f7a94157fec64b4c2fda9a88de}{print\_state}}( this, aerosol\_state, io\_unit )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00275}00275 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00276}00276     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : die\_msg}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00277}00277     \textcolor{keywordtype}{use }musica\_string,                 \textcolor{keywordtype}{only} : to\_char}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00278}00278 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00279}00279 \textcolor{comment}{    !> MAM core}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00280}00280     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__core_1_1core__t}{core\_t}}),          \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00281}00281 \textcolor{comment}{    !> MAM aerosol state}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00282}00282     \textcolor{keywordtype}{class}(aerosol\_state\_t), \textcolor{keywordtype}{intent(in)} :: aerosol\_state\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00283}00283 \textcolor{comment}{    !> Optional output unit (defaults to 6)}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00284}00284     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{optional},      \textcolor{keywordtype}{intent(in)} :: io\_unit}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00285}00285 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00286}00286     \textcolor{keywordtype}{integer} :: lunit, i\_mode}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00287}00287 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00288}00288     lunit = 6}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00289}00289     \textcolor{keywordflow}{if}( \textcolor{keyword}{present}( io\_unit ) ) lunit = io\_unit}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00290}00290     \textcolor{keywordflow}{select type}( aerosol\_state )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00291}00291 \textcolor{keywordflow}{    class is}( \mbox{\hyperlink{structmam__core_1_1state__t}{state\_t}} )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00292}00292       \textcolor{keyword}{write}(lunit,*) \textcolor{stringliteral}{"{}**** MAM Aerosol State ****"{}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00293}00293       \textcolor{keywordflow}{if}( .not. \textcolor{keyword}{allocated}( this\%modes\_ ) ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00294}00294         \textcolor{keyword}{write}(lunit,*) \textcolor{stringliteral}{"{}-\/-\/-\/ Uninitialized MAM core -\/-\/-\/"{}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00295}00295         \textcolor{keyword}{write}(lunit,*) \textcolor{stringliteral}{"{}**** End MAM Aerosol State ****"{}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00296}00296         \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00297}00297 \textcolor{keywordflow}{      end if}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00298}00298       \textcolor{keywordflow}{if}( .not. \textcolor{keyword}{allocated}( aerosol\_state\%mode\_states\_ ) ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00299}00299         \textcolor{keyword}{write}(lunit,*) \textcolor{stringliteral}{"{}-\/-\/-\/ Uninitialized MAM state -\/-\/-\/"{}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00300}00300         \textcolor{keyword}{write}(lunit,*) \textcolor{stringliteral}{"{}**** End MAM Aerosol State ****"{}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00301}00301         \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00302}00302 \textcolor{keywordflow}{      end if}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00303}00303       \textcolor{keywordflow}{do} i\_mode = 1, \textcolor{keyword}{size}( this\%modes\_ )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00304}00304         \textcolor{keyword}{write}(lunit,*) \textcolor{stringliteral}{"{}*** Mode "{}}//trim( to\_char( i\_mode ) )//\textcolor{stringliteral}{"{} ***"{}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00305}00305         \textcolor{keyword}{call }this\%modes\_( i\_mode )\%print\_state(                               \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00306}00306                                aerosol\_state\%mode\_states\_( i\_mode ), io\_unit )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00307}00307 \textcolor{keywordflow}{      end do}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00308}00308       \textcolor{keyword}{write}(lunit,*) \textcolor{stringliteral}{"{}**** End MAM Aerosol State ****"{}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00309}00309 \textcolor{keywordflow}{    class default}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00310}00310       \textcolor{keyword}{call }die\_msg( 970908819, \textcolor{stringliteral}{"{}Invalid state passed to MAM aerosol"{}} )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00311}00311 \textcolor{keywordflow}{    end select}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00312}00312 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00313}00313   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__core_a015983f7a94157fec64b4c2fda9a88de}{print\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00314}00314 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00315}00315 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00316}00316 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00317}00317 \textcolor{comment}{!! state\_t functions}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00318}00318 \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00319}00319 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00320}00320 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00321}00321 \textcolor{comment}{  !> Returns the number of doubles needed to hold the raw MAM aerosol state}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00322}\mbox{\hyperlink{namespacemam__core_a97c1bf5912aba1bf45b0ac3aca6ff854}{00322}}   \textcolor{keyword}{integer }\textcolor{keyword}{function }\mbox{\hyperlink{namespacemam__core_a97c1bf5912aba1bf45b0ac3aca6ff854}{raw\_size}}( this )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00323}00323 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00324}00324     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__core_1_1state__t}{state\_t}}), \textcolor{keywordtype}{intent(in)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00325}00325 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00326}00326     \textcolor{keywordtype}{integer} :: i\_mode}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00327}00327 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00328}00328     \mbox{\hyperlink{namespacemam__core_a97c1bf5912aba1bf45b0ac3aca6ff854}{raw\_size}} = 0}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00329}00329     \textcolor{keywordflow}{do} i\_mode = 1, \textcolor{keyword}{size}( this\%mode\_states\_ )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00330}00330       \mbox{\hyperlink{namespacemam__core_a97c1bf5912aba1bf45b0ac3aca6ff854}{raw\_size}} = \mbox{\hyperlink{namespacemam__core_a97c1bf5912aba1bf45b0ac3aca6ff854}{raw\_size}} + this\%mode\_states\_( i\_mode )\%raw\_size( )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00331}00331 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00332}00332 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00333}00333   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacemam__core_a97c1bf5912aba1bf45b0ac3aca6ff854}{raw\_size}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00334}00334 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00335}00335 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00336}00336 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00337}00337 \textcolor{comment}{  !> Loads raw MAM state data to the state\_t object}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00338}\mbox{\hyperlink{namespacemam__core_a1d53ee74f0d674f9e9da19d36947685b}{00338}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__core_a1d53ee74f0d674f9e9da19d36947685b}{load\_state}}( this, raw\_state, index )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00339}00339 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00340}00340     \textcolor{keywordtype}{use }musica\_constants,              \textcolor{keywordtype}{only} : musica\_dk}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00341}00341 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00342}00342     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__core_1_1state__t}{state\_t}}),       \textcolor{keywordtype}{intent(inout)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00343}00343 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(in)}    :: raw\_state(:)}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00344}00344     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{optional},    \textcolor{keywordtype}{intent(inout)} :: index}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00345}00345 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00346}00346     \textcolor{keywordtype}{integer} :: i\_mode, lindex}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00347}00347 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00348}00348     lindex = 1}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00349}00349     \textcolor{keywordflow}{if}( \textcolor{keyword}{present}( index ) ) lindex = index}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00350}00350     \textcolor{keywordflow}{do} i\_mode = 1, \textcolor{keyword}{size}( this\%mode\_states\_ )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00351}00351       \textcolor{keyword}{call }this\%mode\_states\_( i\_mode )\%load\_state( raw\_state, lindex )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00352}00352 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00353}00353     \textcolor{keywordflow}{if}( \textcolor{keyword}{present}( index ) ) index = lindex}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00354}00354 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00355}00355   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__core_a1d53ee74f0d674f9e9da19d36947685b}{load\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00356}00356 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00357}00357 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00358}00358 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00359}00359 \textcolor{comment}{  !> Dumps the raw MAM state data to an array}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00360}\mbox{\hyperlink{namespacemam__core_af2cf8240e9e66c3089115c9fc633c100}{00360}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__core_af2cf8240e9e66c3089115c9fc633c100}{dump\_state}}( this, raw\_state, index )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00361}00361 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00362}00362     \textcolor{keywordtype}{use }musica\_constants,              \textcolor{keywordtype}{only} : musica\_dk}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00363}00363 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00364}00364     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__core_1_1state__t}{state\_t}}),       \textcolor{keywordtype}{intent(in)}    :: this}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00365}00365 \textcolor{keywordtype}{    real}(kind=musica\_dk), \textcolor{keywordtype}{intent(inout)} :: raw\_state(:)}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00366}00366     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{optional},    \textcolor{keywordtype}{intent(inout)} :: index}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00367}00367 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00368}00368     \textcolor{keywordtype}{integer} :: i\_mode, lindex}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00369}00369 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00370}00370     lindex = 1}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00371}00371     \textcolor{keywordflow}{if}( \textcolor{keyword}{present}( index ) ) lindex = index}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00372}00372     \textcolor{keywordflow}{do} i\_mode = 1, \textcolor{keyword}{size}( this\%mode\_states\_ )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00373}00373       \textcolor{keyword}{call }this\%mode\_states\_( i\_mode )\%dump\_state( raw\_state, lindex )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00374}00374 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00375}00375     \textcolor{keywordflow}{if}( \textcolor{keyword}{present}( index ) ) index = lindex}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00376}00376 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00377}00377   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__core_af2cf8240e9e66c3089115c9fc633c100}{dump\_state}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00378}00378 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00379}00379 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00380}00380 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00381}00381 \textcolor{comment}{  !> Sets the MAM state to a random, but reasonable, state. For testing only.}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00382}\mbox{\hyperlink{namespacemam__core_a10c027e271425cd2975f83fdacebdda5}{00382}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacemam__core_a10c027e271425cd2975f83fdacebdda5}{randomize}}( this )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00383}00383 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00384}00384     \textcolor{keywordtype}{use }musica\_assert,                 \textcolor{keywordtype}{only} : assert\_msg}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00385}00385 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00386}00386     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structmam__core_1_1state__t}{state\_t}}), \textcolor{keywordtype}{intent(inout)} :: this}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00387}00387 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00388}00388     \textcolor{keywordtype}{integer} :: i\_mode}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00389}00389 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00390}00390     \textcolor{keyword}{call }assert\_msg( 652075662, \textcolor{keyword}{allocated}( this\%mode\_states\_ ),               \&}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00391}00391                      \textcolor{stringliteral}{"{}Trying to randomize uninitialized MAM state"{}} )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00392}00392     \textcolor{keywordflow}{do} i\_mode = 1, \textcolor{keyword}{size}( this\%mode\_states\_ )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00393}00393       \textcolor{keyword}{call }this\%mode\_states\_( i\_mode )\%randomize( )}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00394}00394 \textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00395}00395 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00396}00396   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacemam__core_a10c027e271425cd2975f83fdacebdda5}{randomize}}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00397}00397 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00398}00398 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00399}00399 }
+\DoxyCodeLine{\Hypertarget{src_2core_8F90_source_l00400}00400 \textcolor{keyword}{end module }\mbox{\hyperlink{namespacemam__core}{mam\_core}}}
+
+\end{DoxyCode}
